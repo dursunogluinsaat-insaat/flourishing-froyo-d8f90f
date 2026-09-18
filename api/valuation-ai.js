@@ -1,0 +1,4 @@
+export default async function handler(req,res){
+  if(req.method!=="POST") return res.status(405).json({error:"Method not allowed"});
+  if(!process.env.OPENAI_API_KEY) return res.status(503).json({error:"AI servis anahtarı yapılandırılmamış",fallback:true});
+  try{const r=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${process.env.OPENAI_API_KEY}`},body:JSON.stringify({model:"gpt-4o-mini",temperature:.2,messages:[{role:"system",content:"Türkçe gayrimenkul emsal analisti. Sadece verilen veriyi yorumla, veri yoksa uydurma."},{role:"user",content:JSON.stringify(req.body)}]})});const d=await r.json();return res.status(r.ok?200:r.status).json({analysis:d.choices?.[0]?.message?.content||"AI yanıtı alınamadı"});}catch(e){return res.status(500).json({error:"AI servisine ulaşılamadı",fallback:true});}}
