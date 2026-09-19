@@ -2067,115 +2067,34 @@ tr:hover td{background:#F4F9FC}
 </div>
 <script>
 /* ============ VERİ KATMANI ============ */
-let localMembersSnapshot = JSON.parse(localStorage.getItem('crm_members_v2')||'[]');
-let members = localMembersSnapshot.slice();
+let members = JSON.parse(localStorage.getItem('crm_members_v2')||'[]');
 let portfolios = JSON.parse(localStorage.getItem('emlak_portfolios_v2')||'[]');
 let appointments = JSON.parse(localStorage.getItem('emlak_appointments_v2')||'[]');
 let customers = JSON.parse(localStorage.getItem('emlak_customers_v2')||'[]');
 let contracts = JSON.parse(localStorage.getItem('emlak_contracts_v1')||'[]');
 let advisors = JSON.parse(localStorage.getItem('emlak_advisors_v1')||'[]');
 let currentUser = null;
-let cloudToken = sessionStorage.getItem('crm_cloud_token') || '';
-let cloudReady = false;
-let cloudSyncTimer = null;
-let cloudSyncInProgress = false;
-let cloudSyncQueued = false;
-const CLOUD_FIELDS = ['portfolios','appointments','customers','contracts','advisors','talepkayitlari','notifications','usefulLinks','sysSettings','systemLogo','valuations','comparables'];
 
-function cloudErrorMessage(response, payload){
-  return payload?.error || (response.status===503 ? 'CRM bulut bağlantısı kurulamadı. Vercel MONGODB_URI ve Atlas erişimini kontrol edin.' : `CRM isteği başarısız oldu (${response.status}).`);
+// Varsayılan admin hesabı
+if(!members.find(m=>m.username==='admin')){
+  members.push({
+    id:1, ad:'Şevket', soyad:'Yıldız', username:'admin',
+    email:'sevket.yildiz1967@gmail.com', tel:'0500 000 00 00',
+    pass:'1234', role:'admin', emailVerified:true, approved:true,
+    permissions:{canViewPortfolio:true,canViewAppointments:true,canViewCustomers:true,canViewAllCustomers:true},
+    tarih:new Date().toLocaleDateString('tr-TR')
+  });
+  saveMembers();
 }
-async function cloudRequest(url, options={}){
-  const headers={...(options.headers||{}),'Content-Type':'application/json'};
-  if(cloudToken) headers['X-CRM-Token']=cloudToken;
-  const response=await fetch(url,{...options,headers,cache:'no-store'});
-  let payload={};
-  try{payload=await response.json();}catch(e){}
-  if(!response.ok) throw new Error(cloudErrorMessage(response,payload));
-  return payload;
+
+function saveMembers(){localStorage.setItem('crm_members_v2',JSON.stringify(members));}
+function save(){
+  localStorage.setItem('emlak_portfolios_v2',JSON.stringify(portfolios));
+  localStorage.setItem('emlak_appointments_v2',JSON.stringify(appointments));
 }
-function localCloudState(){
-  return {portfolios,appointments,customers,contracts,advisors,talepkayitlari,notifications:JSON.parse(localStorage.getItem('crm_notifications')||'[]'),usefulLinks,sysSettings:JSON.parse(localStorage.getItem('crm_sys_settings')||'{}'),systemLogo:localStorage.getItem('crm_system_logo')||null,valuations,comparables};
-}
-function applyCloudState(state){
-  if(Array.isArray(state.portfolios))portfolios=state.portfolios;
-  if(Array.isArray(state.appointments))appointments=state.appointments;
-  if(Array.isArray(state.customers))customers=state.customers;
-  if(Array.isArray(state.contracts))contracts=state.contracts;
-  if(Array.isArray(state.advisors))advisors=state.advisors;
-  if(Array.isArray(state.talepkayitlari))talepkayitlari=state.talepkayitlari;
-  if(Array.isArray(state.notifications))localStorage.setItem('crm_notifications',JSON.stringify(state.notifications));
-  if(Array.isArray(state.usefulLinks))usefulLinks=state.usefulLinks;
-  if(state.sysSettings&&typeof state.sysSettings==='object')localStorage.setItem('crm_sys_settings',JSON.stringify(state.sysSettings));
-  if(Object.prototype.hasOwnProperty.call(state,'systemLogo')&&state.systemLogo) localStorage.setItem('crm_system_logo',state.systemLogo);
-  if(Array.isArray(state.valuations))valuations=state.valuations;
-  if(Array.isArray(state.comparables))comparables=state.comparables;
-}
-function mergedById(cloudRows, localRows){
-  const map=new Map((Array.isArray(cloudRows)?cloudRows:[]).map(row=>[String(row.id),row]));
-  (Array.isArray(localRows)?localRows:[]).forEach(row=>{if(row?.id!==undefined&&!map.has(String(row.id)))map.set(String(row.id),row);});
-  return Array.from(map.values());
-}
-function cloudState(){return localCloudState();}
-async function syncCloudState(){
-  if(!cloudReady||!cloudToken)return;
-  if(cloudSyncInProgress){cloudSyncQueued=true;return;}
-  cloudSyncInProgress=true;
-  try{await cloudRequest('/api/crm',{method:'PUT',body:JSON.stringify(cloudState())});}
-  catch(error){console.error(error);showToast(error.message,'red');}
-  finally{cloudSyncInProgress=false;if(cloudSyncQueued){cloudSyncQueued=false;scheduleCloudSync();}}
-}
-function scheduleCloudSync(){
-  if(!cloudReady||!cloudToken)return;
-  clearTimeout(cloudSyncTimer);cloudSyncTimer=setTimeout(syncCloudState,400);
-}
-async function saveMembers(){
-  if(!cloudReady||!cloudToken||currentUser?.role!=='admin')return;
-  try{await cloudRequest('/api/crm?resource=members',{method:'PUT',body:JSON.stringify({members})});}
-  catch(error){console.error(error);showToast(error.message,'red');}
-}
-function save(){scheduleCloudSync();}
-function saveCustomers(){scheduleCloudSync();}
-function saveContracts(){scheduleCloudSync();}
-function saveAdvisors(){scheduleCloudSync();}
-async function loadCloudWorkspace(){
-  if(!cloudToken)throw new Error('CRM oturumu bulunamadı.');
-  const remote=await cloudRequest('/api/crm');
-  const local=localCloudState();
-  const hasRemote=Object.values(remote).some(value=>Array.isArray(value)?value.length:value&&typeof value==='object');
-  if(!hasRemote&&!sessionStorage.getItem('crm_cloud_bootstrapped')){
-    await cloudRequest('/api/crm',{method:'PUT',body:JSON.stringify(local)});
-    sessionStorage.setItem('crm_cloud_bootstrapped','1');
-    ['emlak_portfolios_v2','emlak_appointments_v2','emlak_customers_v2','emlak_contracts_v1','emlak_advisors_v1','emlak_talep_v1','crm_notifications','crm_useful_links','crm_sys_settings','crm_system_logo','emlak_valuations_v1','emlak_comparables_v1'].forEach(key=>localStorage.removeItem(key));
-  }else{
-    if(Array.isArray(remote.customers))remote.customers=mergedById(remote.customers,local.customers);
-    if(Array.isArray(remote.portfolios))remote.portfolios=mergedById(remote.portfolios,local.portfolios);
-    applyCloudState(remote);
-  }
-  cloudReady=true;
-}
-async function initializeCloud(){
-  try{
-    await cloudRequest('/api/crm?resource=health');
-    cloudReady=true;
-    if(localMembersSnapshot.length){
-      try{await cloudRequest('/api/crm?resource=auth',{method:'POST',body:JSON.stringify({action:'migrate',members:localMembersSnapshot})});}catch(error){console.warn('Üye migration:',error.message);}
-    }
-    const localAdmin=localMembersSnapshot.find(m=>m.role==='admin') || localMembersSnapshot[0];
-    if(!cloudToken && localAdmin?.pass){
-      const auth=await cloudRequest('/api/crm?resource=auth',{method:'POST',body:JSON.stringify({action:'login',username:localAdmin.username||localAdmin.email,password:localAdmin.pass})});
-      cloudToken=auth.token;sessionStorage.setItem('crm_cloud_token',cloudToken);members=[auth.member];
-    }
-    if(cloudToken){
-      const me=await cloudRequest('/api/crm?resource=me');
-      currentUser=me.member;
-      await loadCloudWorkspace();
-      if(currentUser?.role==='admin' || localAdmin?.role==='admin'){
-        try{members=await cloudRequest('/api/crm?resource=members');}catch(e){console.warn('Üye listesi yüklenemedi:',e.message);}
-      }
-    }
-  }catch(error){cloudReady=false;showToast(error.message,'red');throw error;}
-}
+function saveCustomers(){localStorage.setItem('emlak_customers_v2',JSON.stringify(customers));}
+function saveContracts(){localStorage.setItem('emlak_contracts_v1',JSON.stringify(contracts));}
+function saveAdvisors(){localStorage.setItem('emlak_advisors_v1',JSON.stringify(advisors));}
 
 /* ============ FAYDALIYALI LİNKLER & SİSTEM AYARLARI ============ */
 const DEFAULT_LINKS = [
@@ -2333,16 +2252,30 @@ document.getElementById('eyeBtn2').onclick=function(){
 };
 ['loginUser','loginPass'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();}));
 
-async function doLogin(){
+function doLogin(){
   const u=document.getElementById('loginUser').value.trim();
   const p=document.getElementById('loginPass').value;
   if(!u||!p){showToast('Kullanıcı adı/e-posta ve şifreyi girin','red');return;}
-  if(!cloudReady){showToast('Üye bölümü bağlantısı hazır değil. MongoDB/Vercel ayarlarını kontrol edin.','red');return;}
-  try{
-    const auth=await cloudRequest('/api/crm?resource=auth',{method:'POST',body:JSON.stringify({action:'login',username:u,password:p})});
-    cloudToken=auth.token;sessionStorage.setItem('crm_cloud_token',cloudToken);currentUser=auth.member;members=[auth.member];
-    await loadCloudWorkspace();saveSession();enterApp();
-  }catch(error){showToast(error.message,'red');}
+
+  // Eski kayıtlarla uyumluluk: büyük/küçük harf farkını kullanıcı adı ve e-postada yok say.
+  const un=u.toLocaleLowerCase('tr-TR');
+  const member=members.find(m=>
+    ((String(m.username||'').toLocaleLowerCase('tr-TR')===un || String(m.email||'').toLocaleLowerCase('tr-TR')===un)
+      && String(m.pass??'')===String(p))
+  );
+
+  if(!member){
+    showToast('Hatalı kullanıcı adı veya şifre. Gerekirse “Yönetici giriş bilgilerini sıfırla” seçeneğini kullanın.','red');return;
+  }
+  if(!member.emailVerified){
+    showToast('E-posta adresiniz henüz doğrulanmamış.','red');return;
+  }
+  if(!member.approved){
+    showToast('Hesabınız henüz admin onayı bekliyor.','red');return;
+  }
+  currentUser=member;
+  saveSession();
+  enterApp();
 }
 
 // Tarayıcıdaki eski/bozuk admin kaydını güvenli şekilde düzeltir.
@@ -2712,17 +2645,15 @@ function verifyOtp(){
   document.getElementById('emailVerifiedChip').classList.remove('hidden');
 }
 
-async function completeRegister(){
+function completeRegister(){
   pendingMember.id=Date.now();
   pendingMember.approved=false;
-  pendingMember.emailVerified=true;
-  try{
-    await cloudRequest('/api/crm?resource=auth',{method:'POST',body:JSON.stringify({action:'register',member:pendingMember})});
-    members.push({...pendingMember});
-    notifyAdmin(pendingMember);
-    showScreen('pendingScreen');
-    showToast('Hesap oluşturuldu! Yönetici onayı bekleniyor.','green');
-  }catch(error){showToast(error.message,'red');}
+  pendingMember.emailVerified=true; // Demo modda her zaman doğrulanmış say
+  members.push(pendingMember);
+  saveMembers();
+  notifyAdmin(pendingMember);
+  showScreen('pendingScreen');
+  showToast('Hesap oluşturuldu! Yönetici onayı bekleniyor.','green');
 }
 
 function notifyAdmin(m){
@@ -4827,15 +4758,7 @@ function deleteTalep(id){
 
 document.getElementById('rTarih').min=new Date().toISOString().split('T')[0];
 applySystemLogo();
-(async function bootCloud(){
-  try{
-    await initializeCloud();
-    if(restoreSession()){ enterApp(); }
-  }catch(error){
-    console.error('[CRM] Bulut başlangıcı başarısız:',error);
-    showToast(error.message,'red');
-  }
-})();
+if(restoreSession()){ enterApp(); }
 
 /* ============ VERİ YEDEKLEMEamE & GERİ YÜKLEME ============ */
 let _importData = null;
