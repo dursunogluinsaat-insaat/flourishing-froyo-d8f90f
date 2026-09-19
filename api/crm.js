@@ -82,7 +82,9 @@ async function getDb() {
 }
 
 function connectionError(res, error) {
-  console.error('[crm] MongoDB connection failure:', error?.code || error?.name || 'unknown');
+  const reason = error?.reason?.message || error?.cause?.message || error?.message || '';
+  const safeReason = String(reason).replace(/mongodb(?:\+srv)?:\/\/[^\s]+/gi, 'mongodb://[redacted]');
+  console.error('[crm] MongoDB connection failure:', error?.code || error?.name || 'unknown', safeReason.slice(0, 500));
   return json(res, 503, { error: 'CRM bulut bağlantısı kurulamadı. Vercel MONGODB_URI ve Atlas erişimini kontrol edin.' });
 }
 
