@@ -1,0 +1,11 @@
+{
+  "name": "dursunoglu-emlak-crm",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "mongodb": "^6.8.1"
+  }
+}
