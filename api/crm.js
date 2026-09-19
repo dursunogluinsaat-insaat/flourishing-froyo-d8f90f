@@ -222,9 +222,7 @@ module.exports = async function handler(req, res) {
       const incoming = Array.isArray(req.body?.members) ? req.body.members : [];
       for (const item of incoming) {
         if (!item.id) continue;
-        const update = { ad: item.ad, soyad: item.soyad, tel: item.tel, role: item.role, approved: Boolean(item.approved), emailVerified: Boolean(item.emailVerified), permissions: item.permissions || {} };
-        if (item.pass) Object.assign(update, hashPassword(item.pass));
-        await members.updateOne({ id: item.id }, { $set: update });
+        await members.updateOne({ id: item.id }, { $set: { ad: item.ad, soyad: item.soyad, tel: item.tel, role: item.role, approved: Boolean(item.approved), emailVerified: Boolean(item.emailVerified), permissions: item.permissions || {} } });
       }
       return json(res, 200, { ok: true });
     }
