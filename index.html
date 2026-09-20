@@ -287,15 +287,7 @@ tr:hover td{background:#F4F9FC}
         <span class="hint">İsteğe bağlı — doğrulama e-posta ile yapılacak</span>
       </div>
       <div class="field-row">
-        <label>Rol</label>
-        <div class="role-select">
-          <button class="role-btn selected" id="roleAgent" onclick="selectRole('agent',this)">
-            <i class="ti ti-user" style="font-size:18px;display:block;margin:0 auto 4px"></i> Broker / Acente
-          </button>
-          <button class="role-btn" id="roleAdmin" onclick="selectRole('admin',this)">
-            <i class="ti ti-shield" style="font-size:18px;display:block;margin:0 auto 4px"></i> Yönetici
-          </button>
-        </div>
+        <span class="hint">Rol ve erişim izinleriniz, başvurunuz onaylandıktan sonra yönetici tarafından belirlenir.</span>
       </div>
       <div class="grid2">
         <div class="field-row" style="position:relative">
@@ -437,6 +429,7 @@ tr:hover td{background:#F4F9FC}
       <button class="tab" id="tabRentals" onclick="showTab('rentals',this)"><i class="ti ti-key"></i> Kiralamalar</button>
       <button class="tab" id="tabContracts" onclick="showTab('contracts',this)"><i class="ti ti-file-text"></i> Sözleşmeler</button>
       <button class="tab" id="tabTalep" onclick="showTab('talep',this)"><i class="ti ti-clipboard-list"></i> Talep Formu</button>
+      <button class="tab" id="tabValuation" onclick="showTab('valuation',this)"><i class="ti ti-calculator"></i> Gayrimenkul Değerleme</button>
       <button class="tab" id="adminTab" onclick="showTab('members',this)" style="display:none"><i class="ti ti-shield-check"></i> Üyeler <span id="pendingBadge" class="hidden" style="background:#c0392b;color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;margin-left:4px"></span></button>
       <button class="tab" id="settingsTab" onclick="showTab('settings',this)" style="display:none"><i class="ti ti-settings"></i> Ayarlar</button>
     </div>
@@ -1090,7 +1083,7 @@ tr:hover td{background:#F4F9FC}
 
       <!-- Sözleşme Ekle Formu -->
       <div id="addContractForm" class="card hidden" style="margin-bottom:1rem;border-color:#AED6F1;background:#F4F9FC">
-        <div class="section-title"><i class="ti ti-file-plus"></i> Yeni Sözleşme</div>
+        <div class="section-title"><i class="ti ti-file-plus"></i> Yeni Sözleşme / Müşteri Takip Formu</div>
         <div style="display:flex;flex-direction:column;gap:14px">
 
           <!-- Sözleşme Tipi -->
@@ -1099,9 +1092,9 @@ tr:hover td{background:#F4F9FC}
               <label>Sözleşme Türü *</label>
               <select id="ctTur">
                 <option value="">Seçin</option>
-                <option value="Satış Sözleşmesi">Gayrimenkul Satış Sözleşmesi</option>
-                <option value="Konut Kira Kontratı">Konut Kira Kontratı</option><option value="Ticari Kira Kontratı">Ticari Kira Kontratı</option>
-                
+                <option>Satış Sözleşmesi</option>
+                <option>Kira Sözleşmesi</option>
+                <option>Müşteri Takip Formu</option>
               </select>
             </div>
             <div>
@@ -1310,9 +1303,9 @@ tr:hover td{background:#F4F9FC}
               <label>Sözleşme Türü *</label>
               <select id="ectTur">
                 <option value="">Seçin</option>
-                <option value="Satış Sözleşmesi">Gayrimenkul Satış Sözleşmesi</option>
-                <option value="Konut Kira Kontratı">Konut Kira Kontratı</option><option value="Ticari Kira Kontratı">Ticari Kira Kontratı</option>
-                
+                <option>Satış Sözleşmesi</option>
+                <option>Kira Sözleşmesi</option>
+                <option>Müşteri Takip Formu</option>
               </select>
             </div>
             <div><label>Belge Linki</label><input type="url" id="ectLink" placeholder="Google Drive linki..."/></div>
@@ -1392,9 +1385,9 @@ tr:hover td{background:#F4F9FC}
         <button class="primary" onclick="showAddContractForm()"><i class="ti ti-plus"></i> Yeni Sözleşme / Takip Formu</button>
         <select id="ctFilterTur" style="max-width:200px" onchange="renderContracts()">
           <option value="">Tüm türler</option>
-          <option value="Satış Sözleşmesi">Gayrimenkul Satış Sözleşmesi</option>
-          <option value="Konut Kira Kontratı">Konut Kira Kontratı</option><option value="Ticari Kira Kontratı">Ticari Kira Kontratı</option>
-          
+          <option>Satış Sözleşmesi</option>
+          <option>Kira Sözleşmesi</option>
+          <option>Müşteri Takip Formu</option>
         </select>
         <select id="ctFilterSonuc" style="max-width:180px" onchange="renderContracts()">
           <option value="">Tüm sonuçlar</option>
@@ -1889,6 +1882,22 @@ tr:hover td{background:#F4F9FC}
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- GAYRİMENKUL DEĞERLEME -->
+    <div id="tab-valuation" class="hidden">
+      <div class="section-title"><i class="ti ti-calculator"></i> Gayrimenkul Değerleme</div>
+      <div class="card" style="margin-bottom:1rem;border-color:#AED6F1;background:#F8FBFE">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><strong>AI destekli bölge ve emsal analizi</strong><div style="font-size:12px;color:#777;margin-top:4px">Kayıtlı emsalleri analiz eder; yetkili veri sağlayıcısı bağlanırsa dış verileri de kullanır.</div></div><span class="badge badge-purple">Hibrit analiz</span></div>
+        <div class="grid3" style="margin-top:14px"><div class="field-row"><label>Değerleme Türü *</label><select id="valType" onchange="toggleValuationFields()"><option value="konut">Konut</option><option value="arsa">Arsa</option><option value="tarla">Tarla</option><option value="isyeri">İşyeri</option></select></div><div class="field-row"><label>İl / İlçe / Mahalle *</label><input id="valLocation" placeholder="Örn. İstanbul / Kadıköy / Moda"></div><div class="field-row"><label>Portföye Bağla</label><select id="valPortfolio"><option value="">— Bağlantı yok —</option></select></div></div>
+        <div class="grid3" style="margin-top:12px"><div class="field-row"><label>Alan (m²) *</label><input id="valArea" type="number" min="0" placeholder="120"></div><div class="field-row"><label>Otomatik m² fiyatı</label><input id="valUnitPrice" type="number" min="0" placeholder="Emsallerden otomatik hesaplanır"><span class="hint">Emsal yoksa elle girilebilir.</span></div><div class="field-row"><label>Müşteriye Bağla</label><select id="valCustomer"><option value="">— Bağlantı yok —</option></select></div></div>
+        <div id="valKonutFields" class="grid3" style="margin-top:12px"><div class="field-row"><label>Oda Sayısı</label><select id="valRooms"><option>1+0</option><option>1+1</option><option selected>2+1</option><option>3+1</option><option>4+1</option><option>5+1</option></select></div><div class="field-row"><label>Bina Yaşı</label><input id="valAge" type="number" min="0" value="5"></div><div class="field-row"><label>Kat / Toplam Kat</label><input id="valFloor" placeholder="3 / 6"></div></div>
+        <div id="valLandFields" class="grid3 hidden" style="margin-top:12px"><div class="field-row"><label>İmar Durumu</label><select id="valZoning"><option value="1">Belirsiz / Yok</option><option value="1.25">Konut İmarlı</option><option value="1.35">Ticari İmarlı</option><option value="1.15">Tarım İmarlı</option></select></div><div class="field-row"><label>Emsal / KAKS</label><input id="valEmsal" type="number" min="0" step="0.01" placeholder="1.20"></div><div class="field-row"><label>Ada / Parsel</label><input id="valParcel" placeholder="123 / 45"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="primary" onclick="calculateValuation()"><i class="ti ti-sparkles"></i> Bölgeyi Analiz Et ve Hesapla</button><button onclick="clearValuationForm()">Temizle</button></div>
+      </div>
+      <div id="valAnalysis" class="card hidden" style="margin-bottom:1rem;border-color:#C39BD3;background:#FBF7FD"></div><div id="valResult" class="card hidden" style="margin-bottom:1rem;border-color:#A9DFBF;background:#F7FFF9"></div>
+      <div class="card" style="margin-bottom:1rem"><div class="section-title" style="font-size:14px"><i class="ti ti-database-plus"></i> Emsal İlan Ekle</div><div class="grid3"><div class="field-row"><label>İlan başlığı</label><input id="compTitle" placeholder="Kadıköy 3+1 Daire"></div><div class="field-row"><label>Konum</label><input id="compLocation" placeholder="İstanbul / Kadıköy / Moda"></div><div class="field-row"><label>Tür</label><select id="compType"><option value="konut">Konut</option><option value="arsa">Arsa</option><option value="tarla">Tarla</option><option value="isyeri">İşyeri</option></select></div><div class="field-row"><label>Alan (m²) *</label><input id="compArea" type="number" min="1"></div><div class="field-row"><label>Fiyat (₺) *</label><input id="compPrice" type="number" min="1"></div><div class="field-row"><label>İlan URL’si</label><input id="compUrl" type="url" placeholder="https://..."></div></div><button class="primary" style="margin-top:12px" onclick="addComparable()"><i class="ti ti-plus"></i> Emsali Kaydet</button><span class="hint" style="display:inline-block;margin-left:8px">AI analizi kayıtlı emsallerin m² fiyatlarını aykırı değerleri temizleyerek kullanır.</span></div>
+      <div class="card"><div class="section-title" style="font-size:14px"><i class="ti ti-history"></i> Emsal ve Değerleme Kayıtları</div><div style="overflow-x:auto"><table><thead><tr><th>Tür</th><th>Konum</th><th>Alan</th><th>Fiyat</th><th>m² fiyatı</th><th>Kaynak</th><th></th></tr></thead><tbody id="compsTable"></tbody></table></div></div>
     </div>
 
     <!-- AYARLAR (sadece admin) -->
@@ -2485,9 +2494,17 @@ function openPermModal(memberId){
   const m=members.find(x=>x.id===memberId);
   if(!m)return;
   const perms=m.permissions||{};
+  const roleBlock=(currentUser&&m.id!==currentUser.id)?`<div style="margin-bottom:14px">
+    <label>Rol</label>
+    <select id="permRoleSelect">
+      <option value="agent" ${m.role!=='admin'?'selected':''}>Broker / Acente</option>
+      <option value="admin" ${m.role==='admin'?'selected':''}>Yönetici (tam yetki)</option>
+    </select>
+    <div style="font-size:12px;color:#888;margin-top:4px">Yönetici rolünde tüm sayfalar ve üye yönetimi açıktır. Aşağıdaki izinler yalnızca Broker rolü için geçerlidir.</div>
+  </div>`:'';
   let html=`<div style="font-size:14px;color:#555;margin-bottom:12px">
-    <strong>${m.ad} ${m.soyad}</strong> için platform erişim izinlerini seçin:
-  </div><div class="perm-grid">`;
+    <strong>${m.ad} ${m.soyad}</strong> için rol ve platform erişim izinlerini belirleyin:
+  </div>${roleBlock}<div class="perm-grid">`;
   Object.entries(PERM_LABELS).forEach(([key,label])=>{
     const active=perms[key]?'active':'';
     html+=`<div class="perm-chip ${active}" id="pchip_${key}" onclick="togglePermChip('${key}')">
@@ -2513,11 +2530,23 @@ function savePermissions(){
   Object.keys(PERM_LABELS).forEach(key=>{
     perms[key]=document.getElementById('pchip_'+key).classList.contains('active');
   });
+  const roleSel=document.getElementById('permRoleSelect');
+  if(roleSel && roleSel.value!==(m.role==='admin'?'admin':'agent')){
+    const newRole=roleSel.value;
+    if(newRole==='agent' && members.filter(x=>x.role==='admin').length<=1){
+      showToast('Sistemde en az bir yönetici kalmalı','red');return;
+    }
+    const msg=newRole==='admin'
+      ? `${m.ad} ${m.soyad} YÖNETİCİ yapılsın mı? Tüm verilere ve üye yönetimine erişebilir.`
+      : `${m.ad} ${m.soyad} Broker rolüne düşürülsün mü?`;
+    if(!confirm(msg))return;
+    m.role=newRole;
+  }
   m.permissions=perms;
   saveMembers();
   closePermModal();
   renderMembers();
-  showToast(`${m.ad} ${m.soyad} izinleri güncellendi`,'green');
+  showToast(`${m.ad} ${m.soyad} rol ve izinleri güncellendi`,'green');
 }
 
 /* ============ KAYIT ============ */
@@ -2549,7 +2578,7 @@ function startRegister(){
   const emailValid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   if(!emailValid){showToast('Geçerli bir e-posta girin','red');return;}
 
-  pendingMember={ad,soyad,username,email,tel,pass,role:selectedRole,
+  pendingMember={ad,soyad,username,email,tel,pass,role:'agent',
     emailVerified:false,
     permissions:{canViewPortfolio:false,canViewAppointments:true,canViewCustomers:true,canViewAllCustomers:false},
     tarih:new Date().toLocaleDateString('tr-TR')};
@@ -2639,6 +2668,17 @@ function completeRegister(){
   showToast('Hesap oluşturuldu! Yönetici onayı bekleniyor.','green');
 }
 
+// Sunucu üzerinden e-posta gönderir (/api/send-mail). Başarısız olursa false döner,
+// çağıran taraf eski mailto yöntemine geri düşer.
+async function sendServerMail(type,data){
+  try{
+    const r=await fetch('/api/send-mail',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,data})});
+    if(!r.ok)return false;
+    const j=await r.json();
+    return !!(j&&j.ok);
+  }catch(e){return false;}
+}
+
 function notifyAdmin(m){
   // Gerçek uygulamada backend e-posta gönderir
   // Demo: tarayıcı konsoluna log
@@ -2651,10 +2691,10 @@ function notifyAdmin(m){
   const notifs=JSON.parse(localStorage.getItem('crm_notifications')||'[]');
   notifs.push({type:'new_member',member:m,time:new Date().toISOString(),mailto:mailtoLink});
   localStorage.setItem('crm_notifications',JSON.stringify(notifs));
-  // Bildirim e-postasını otomatik olarak aç (varsayılan e-posta istemcisi)
-  setTimeout(()=>{
-    window.open(mailtoLink,'_blank');
-  },400);
+  // Önce sunucudan gönder; olmazsa varsayılan e-posta istemcisini aç (eski davranış)
+  sendServerMail('new_member',{ad:m.ad,soyad:m.soyad,username:m.username,email:m.email,role:m.role,tarih:m.tarih}).then(ok=>{
+    if(!ok)setTimeout(()=>{window.open(mailtoLink,'_blank');},400);
+  });
 }
 
 function goToPendingMembers(){
@@ -2700,6 +2740,7 @@ function updateAdminNotifUI(){
 function quickApproveMember(id){
   const m=members.find(x=>x.id===id);
   if(!m)return;
+  if(m.role==='admin' && m.id!==1 && !confirm(`${m.ad} ${m.soyad} Yönetici olarak başvurmuş.\n\nTamam = Yönetici yetkisi ver\nİptal = Broker olarak onayla`))m.role='agent';
   m.approved=true;
   saveMembers();
   updateAdminNotifUI();
@@ -2708,7 +2749,10 @@ function quickApproveMember(id){
   if(confirm(`${m.ad} ${m.soyad} kişisine onay e-postası göndermek ister misiniz?`)){
     const s=encodeURIComponent(`Emlak CRM - Hesabınız Onaylandı`);
     const b=encodeURIComponent(`Merhaba ${m.ad} ${m.soyad},\n\nEmlak CRM hesabınız onaylanmıştır. Artık sisteme giriş yapabilirsiniz.\n\nKullanıcı Adı: ${m.username}\n\nEmlak CRM`);
-    window.open(`mailto:${m.email}?subject=${s}&body=${b}`,'_blank');
+    sendServerMail('member_approved',{ad:m.ad,soyad:m.soyad,username:m.username,email:m.email}).then(ok=>{
+      if(ok)showToast('Onay e-postası gönderildi','green');
+      else window.open(`mailto:${m.email}?subject=${s}&body=${b}`,'_blank');
+    });
   }
 }
 
@@ -2731,6 +2775,22 @@ function updatePendingBadge(){
     else pb.classList.add('hidden');
   }
 }
+/* ============ HİBRİT AI GAYRİMENKUL DEĞERLEME ============ */
+let valuations=JSON.parse(localStorage.getItem('emlak_valuations_v1')||'[]');
+let comparables=JSON.parse(localStorage.getItem('emlak_comparables_v1')||'[]');
+function saveValuations(){localStorage.setItem('emlak_valuations_v1',JSON.stringify(valuations));}
+function saveComparables(){localStorage.setItem('emlak_comparables_v1',JSON.stringify(comparables));}
+function valEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function toggleValuationFields(){const t=document.getElementById('valType')?.value;document.getElementById('valKonutFields')?.classList.toggle('hidden',!['konut','isyeri'].includes(t));document.getElementById('valLandFields')?.classList.toggle('hidden',['konut','isyeri'].includes(t));}
+function populateValuationSelects(){const ps=document.getElementById('valPortfolio'),cs=document.getElementById('valCustomer');if(!ps||!cs)return;ps.innerHTML='<option value="">— Bağlantı yok —</option>'+portfolios.map(p=>`<option value="${p.id}">${valEsc(p.baslik||p.title||'Portföy #'+p.id)}</option>`).join('');cs.innerHTML='<option value="">— Bağlantı yok —</option>'+customers.map(c=>`<option value="${c.id}">${valEsc(c.ad||c.adSoyad||'Müşteri #'+c.id)}</option>`).join('');}
+function addComparable(){const title=document.getElementById('compTitle').value.trim(),location=document.getElementById('compLocation').value.trim(),type=document.getElementById('compType').value,area=Number(document.getElementById('compArea').value),price=Number(document.getElementById('compPrice').value),url=document.getElementById('compUrl').value.trim();if(!location||!area||!price){showToast('Emsal konumu, alanı ve fiyatı zorunludur','red');return;}comparables.unshift({id:Date.now(),title,location,type,area,price,url,date:new Date().toLocaleString('tr-TR')});saveComparables();renderComparables();['compTitle','compLocation','compArea','compPrice','compUrl'].forEach(id=>document.getElementById(id).value='');showToast('Emsal ilan kaydedildi','green');}
+function renderComparables(){const tb=document.getElementById('compsTable');if(!tb)return;if(!comparables.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:#aaa;padding:1.5rem">Henüz emsal ilan eklenmedi</td></tr>';return;}tb.innerHTML=comparables.map(c=>`<tr><td><span class="badge badge-blue">${valEsc(c.type)}</span></td><td>${valEsc(c.location)}<br><small>${valEsc(c.title||'')}</small></td><td>${Number(c.area).toLocaleString('tr-TR')} m²</td><td>${formatFiyatDisplay(c.price)}</td><td><strong>${formatFiyatDisplay(Math.round(c.price/c.area))}</strong></td><td>${c.url?`<a href="${valEsc(c.url)}" target="_blank">İlanı aç</a>`:'Manuel'}</td><td><button onclick="deleteComparable(${c.id})" style="color:#c00;padding:4px 8px"><i class="ti ti-trash"></i></button></td></tr>`).join('');}
+function deleteComparable(id){comparables=comparables.filter(c=>c.id!==id);saveComparables();renderComparables();showToast('Emsal silindi','red');}
+function getComparableStats(){const loc=(document.getElementById('valLocation').value||'').toLocaleLowerCase('tr-TR'),type=document.getElementById('valType').value;let rows=comparables.filter(c=>c.type===type&&(!loc||c.location.toLocaleLowerCase('tr-TR').includes(loc.split('/').slice(-1)[0].trim())));if(!rows.length)rows=comparables.filter(c=>c.type===type);const values=rows.map(c=>c.price/c.area).filter(Number.isFinite).sort((a,b)=>a-b);if(!values.length)return {rows:[],values,avg:0,median:0,min:0,max:0};const q1=values[Math.floor(values.length*.25)],q3=values[Math.min(values.length-1,Math.floor(values.length*.75))],clean=values.filter(v=>v>=q1*.7&&v<=q3*1.3),avg=clean.reduce((a,b)=>a+b,0)/clean.length,median=clean[Math.floor(clean.length/2)];return {rows,values:clean,avg,median,min:Math.min(...clean),max:Math.max(...clean)};}
+async function calculateValuation(){const type=document.getElementById('valType').value,area=Number(document.getElementById('valArea').value),stats=getComparableStats();let aiText='';try{const ar=await fetch('/api/valuation-ai.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,location:document.getElementById('valLocation').value,comparables:stats.rows.map(c=>({location:c.location,area:c.area,price:c.price})),median:stats.median,average:stats.avg})});const ad=await ar.json();aiText=ad.analysis||'';}catch(e){}let unit=stats.median||Number(document.getElementById('valUnitPrice').value);if(!area||!unit){showToast('Alan girin veya eşleşen emsal ekleyin','red');return;}let factor=1,factors=[];if(['konut','isyeri'].includes(type)){const age=Number(document.getElementById('valAge').value)||0;factor*=Math.max(.72,1-age*.012);if(age<=5)factors.push('yeni bina');if(['3+1','4+1','5+1'].includes(document.getElementById('valRooms').value)){factor*=1.05;factors.push('geniş konut');}}else{const z=Number(document.getElementById('valZoning').value)||1;factor*=z;if(z>1)factors.push('imar potansiyeli');const emsal=Number(document.getElementById('valEmsal').value)||0;if(emsal)factor*=1+Math.min(emsal*.05,.2);}const total=area*unit*factor,min=total*.9,max=total*1.1;document.getElementById('valUnitPrice').value=Math.round(unit);document.getElementById('valAnalysis').classList.remove('hidden');document.getElementById('valAnalysis').innerHTML=`<div class="section-title" style="color:#6C3483;border-color:#E8DAEF"><i class="ti ti-sparkles"></i> AI bölge analizi</div><div style="font-size:13px;color:#555;line-height:1.55">${stats.rows.length?`Bölge ve tür eşleşmesiyle <strong>${stats.rows.length} emsal</strong> bulundu. Aykırı değerler temizlenerek medyan m² fiyatı kullanıldı.`:'Eşleşen emsal bulunamadı; girilen m² fiyatı referans alındı.'} ${factors.length?`Taşınmaz özellikleri (${factors.join(', ')}) sonucu etkiledi.`:''}</div><div class="grid3" style="margin-top:12px"><div class="stat-card"><div class="stat-label">Emsal sayısı</div><div class="stat-val">${stats.rows.length}</div></div><div class="stat-card"><div class="stat-label">Ortalama m²</div><div class="stat-val" style="font-size:19px">${formatFiyatDisplay(Math.round(stats.avg||unit))}</div></div><div class="stat-card"><div class="stat-label">Medyan m²</div><div class="stat-val" style="font-size:19px">${formatFiyatDisplay(Math.round(stats.median||unit))}</div></div></div>${aiText?`<div style="margin-top:10px;font-size:12px;color:#555"><strong>AI yorumu:</strong> ${valEsc(aiText)}</div>`:''}`;document.getElementById('valResult').classList.remove('hidden');document.getElementById('valResult').innerHTML=`<div class="section-title" style="color:#1E6A2E;border-color:#A9DFBF"><i class="ti ti-report-money"></i> Tahmini değer sonucu</div><div style="font-size:28px;font-weight:800;color:#1E8449">${formatFiyatDisplay(Math.round(total))}</div><div style="font-size:13px;color:#666;margin-top:8px">Aralık: <strong>${formatFiyatDisplay(Math.round(min))} – ${formatFiyatDisplay(Math.round(max))}</strong> · Hesaplanan m²: <strong>${formatFiyatDisplay(Math.round(total/area))}</strong></div><p style="font-size:12px;color:#666;margin-top:12px">Bu sonuç emsal analizi ve taşınmaz özelliklerine göre yaklaşık hesaplanmıştır; resmi ekspertiz yerine geçmez.</p>`;valuations.unshift({id:Date.now(),date:new Date().toLocaleString('tr-TR'),type,location:document.getElementById('valLocation').value.trim(),area,total,min,max,unit,source:stats.rows.length?'emsal':'manuel'});saveValuations();showToast('AI destekli değerleme kaydedildi','green');}
+function renderValuations(){renderComparables();}
+function clearValuationForm(){['valLocation','valArea','valUnitPrice','valAge','valFloor','valEmsal','valParcel'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('valResult')?.classList.add('hidden');document.getElementById('valAnalysis')?.classList.add('hidden');}
+
 function showTab(name,el){
   document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -2749,6 +2809,7 @@ function showTab(name,el){
   if(name==='home')updateHomeStats();
   if(name==='settings'){renderLinksAdminTable();updateBackupInfo();updateBackupStats();}
   if(name==='talep')renderTalep();
+  if(name==='valuation'){populateValuationSelects();renderValuations();toggleValuationFields();}
 }
 
 
@@ -3196,14 +3257,20 @@ function addAppointment(){
   save();
   if(email)sendEmailReminder(appt);
   clearAppointmentForm();updateDashboard();checkReminders();updateHomeWidgets();
-  showToast(email?'Randevu eklendi — e-posta açılıyor...':'Randevu eklendi','green');
+  showToast(email?'Randevu eklendi — e-posta gönderiliyor...':'Randevu eklendi','green');
   showTab('appointments',document.querySelectorAll('.tab')[5]);
 }
 
 function sendEmailReminder(appt){
   const s=encodeURIComponent(`Randevu Hatırlatıcısı: ${appt.musteri} - ${appt.konu}`);
   const b=encodeURIComponent(`Merhaba,\n\nRandevunuz yaklaşıyor:\n\nMüşteri: ${appt.musteri}\nTarih: ${new Date(appt.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})}\nSaat: ${appt.saat}\nKonu: ${appt.konu}\n${appt.tel?'Telefon: '+appt.tel+'\n':''}${appt.not?'Not: '+appt.not+'\n':''}\nEmlak CRM`);
-  window.open(`mailto:${appt.email}?subject=${s}&body=${b}`,'_blank');
+  sendServerMail('appointment',{
+    email:appt.email,musteri:appt.musteri,konu:appt.konu,saat:appt.saat,tel:appt.tel||'',not:appt.not||'',
+    tarih:new Date(appt.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})
+  }).then(ok=>{
+    if(ok)showToast('Hatırlatma e-postası gönderildi','green');
+    else window.open(`mailto:${appt.email}?subject=${s}&body=${b}`,'_blank');
+  });
 }
 
 function clearAppointmentForm(){
@@ -3238,8 +3305,8 @@ function renderMembers(){
       <td>${m.emailVerified?'<span class="verified-chip"><i class="ti ti-check" style="font-size:11px"></i> Onaylı</span>':'<span class="unverified-chip"><i class="ti ti-x" style="font-size:11px"></i> Onaysız</span>'}</td>
       <td>${isPending?'<span class="unverified-chip"><i class="ti ti-clock" style="font-size:11px"></i> Bekliyor</span>':'<span class="verified-chip"><i class="ti ti-check" style="font-size:11px"></i> Aktif</span>'}</td>
       <td>
-        ${m.role!=='admin'?`<button onclick="openPermModal(${m.id})" style="font-size:12px;padding:4px 10px;background:#EBF5FB;border-color:#AED6F1;color:#1A5276">
-          <i class="ti ti-settings"></i> İzinler${permCount>0?` (${permCount})`:''}
+        ${m.id!==currentUser.id?`<button onclick="openPermModal(${m.id})" style="font-size:12px;padding:4px 10px;background:#EBF5FB;border-color:#AED6F1;color:#1A5276">
+          <i class="ti ti-settings"></i> Rol / İzinler${(m.role!=='admin'&&permCount>0)?` (${permCount})`:''}
         </button>`:'<span style="color:#aaa;font-size:12px">Tam Yetki</span>'}
       </td>
       <td style="font-size:12px;color:#aaa">${m.tarih}</td>
@@ -3262,6 +3329,7 @@ function renderMembers(){
 function approveMember(id){
   const m=members.find(m=>m.id===id);
   if(!m)return;
+  if(m.role==='admin' && m.id!==1 && !confirm(`${m.ad} ${m.soyad} Yönetici olarak başvurmuş.\n\nTamam = Yönetici yetkisi ver\nİptal = Broker olarak onayla`))m.role='agent';
   m.approved=true;
   saveMembers();
   renderMembers();
@@ -3272,7 +3340,10 @@ function approveMember(id){
   const b=encodeURIComponent(`Merhaba ${m.ad} ${m.soyad},\n\nEmlak CRM hesabınız onaylanmıştır. Artık sisteme giriş yapabilirsiniz.\n\nKullanıcı Adı: ${m.username}\n\nEmlak CRM`);
   setTimeout(()=>{
     if(confirm(`${m.ad} ${m.soyad} kişisine onay e-postası göndermek ister misiniz?`)){
-      window.open(`mailto:${m.email}?subject=${s}&body=${b}`,'_blank');
+      sendServerMail('member_approved',{ad:m.ad,soyad:m.soyad,username:m.username,email:m.email}).then(ok=>{
+        if(ok)showToast('Onay e-postası gönderildi','green');
+        else window.open(`mailto:${m.email}?subject=${s}&body=${b}`,'_blank');
+      });
     }
   },300);
 }
@@ -3300,7 +3371,6 @@ function deleteMember(id){
 let editingContractId = null;
 
 function showAddContractForm(){
-  const note=document.getElementById('contractTemplateNotice'); if(note) note.classList.remove('hidden');
   document.getElementById('editContractForm').classList.add('hidden');
   populateAdvisorSelects(); populateCustomerPartySelects(); populatePortfolioContractSelects(); bindContractSmartFields(); updateContractReminder(); updateContractCompletion(); updateContractFinanceSummary();
   editingContractId = null;
@@ -3508,7 +3578,7 @@ function renderContracts(){
     return;
   }
 
-  const turColors = {'Satış Sözleşmesi':'badge-green','Konut Kira Kontratı':'badge-blue','Ticari Kira Kontratı':'badge-teal','Kira Sözleşmesi':'badge-blue'};
+  const turColors = {'Satış Sözleşmesi':'badge-green','Kira Sözleşmesi':'badge-blue','Müşteri Takip Formu':'badge-purple'};
   const sonucColors = {'Tamamlandı':'badge-green','Devam Ediyor':'badge-amber','İptal / Vazgeçildi':'badge-red'};
   const krediColors = {'Onaylandı':'badge-green','Başvuru Yapıldı':'badge-amber','Reddedildi':'badge-red','Kullanılmayacak':'badge-gray'};
   const experColors = {'Evet':'badge-green','Evet — Olumlu':'badge-green','Evet — Olumsuz':'badge-red','Bekliyor':'badge-amber','Hayır':'badge-gray'};
@@ -3566,7 +3636,7 @@ function saveContractEdit(){
   if(editingContractId === null) return;
   const c = contracts.find(x => x.id === editingContractId);
   if(!c) return;
-  let tur = document.getElementById('ectTur').value; if(tur==='Kira Sözleşmesi') tur='Konut Kira Kontratı';
+  const tur = document.getElementById('ectTur').value;
   const musteri = document.getElementById('ectAliciAd').value.trim() || document.getElementById('ectSaticiAd').value.trim();
   if(!tur || !musteri){showToast('Sözleşme türü ve taraf bilgisi zorunlu','red');return;}
   if(tur==='Satış Sözleşmesi' && (!document.getElementById('ectAliciAd').value.trim() || !document.getElementById('ectSaticiAd').value.trim())){showToast('Satış sözleşmesinde alıcı ve satıcı zorunludur','red');return;}
@@ -3616,10 +3686,9 @@ function openContractDocument(id){
   const a=c.alici||{}, s=c.satici||{};
   const html=`<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>${escHtml(c.tur||'Sözleşme')} - Dursunoğlu</title><style>
   *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#1f2937;margin:0;background:#eee}.page{width:210mm;min-height:297mm;margin:12mm auto;background:#fff;padding:16mm 15mm;box-shadow:0 2px 15px #aaa}.head{border-bottom:3px solid #1A5276;padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between}.brand{font-size:20px;font-weight:800;color:#1A5276}.sub{font-size:11px;color:#6b7280}.title{text-align:center;font-size:18px;font-weight:800;margin:12px 0 18px;color:#1A5276}.section{margin:14px 0 8px;background:#EBF5FB;border-left:4px solid #1A5276;padding:8px;font-weight:800;color:#1A5276}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cf{border:1px solid #d9e2ec;padding:7px 9px;min-height:42px}.cf span{display:block;font-size:9px;color:#6b7280;margin-bottom:3px}.cf b{font-size:11px}.full{grid-column:1/-1}.note{font-size:11px;line-height:1.55}.sign{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:32px}.sig{height:100px;border:1px solid #ddd;padding:10px;font-size:11px}.footer{margin-top:22px;font-size:9px;color:#777;text-align:center}.printbar{position:fixed;top:12px;right:12px;display:flex;gap:6px}.printbar button{padding:9px 13px;border:0;border-radius:7px;background:#1A5276;color:white;cursor:pointer}@media print{body{background:#fff}.page{margin:0;box-shadow:none}.printbar{display:none}}
-  .print-test-banner{display:none}@media print{.print-test-banner{display:block;position:fixed;top:0;left:0;right:0;text-align:center;font-size:9px;color:#555;border-bottom:1px dashed #999;padding:2px}}
-  </style></head><body><script>function testPrint(){document.title="PDF Testi - " + new Date().toLocaleString("tr-TR");window.print();}</script><div class="print-test-banner">PDF/Yazdırma testi — ${new Date().toLocaleString('tr-TR')}</div><div class="printbar"><button onclick="window.print()">Yazdır / PDF</button><button onclick="testPrint()">PDF Testi</button><button onclick="window.close()">Kapat</button></div><div class="page">
+  </style></head><body><div class="printbar"><button onclick="window.print()">Yazdır / PDF</button><button onclick="window.close()">Kapat</button></div><div class="page">
   <div class="head"><div><div class="brand">DURSUNOĞLU İNŞAAT GAYRİMENKUL</div><div class="sub">Sözleşme ve İşlem Takip Belgesi</div></div><div class="sub">Tarih: ${escHtml(c.olusTarih||c.tarih||new Date().toLocaleDateString('tr-TR'))}</div></div>
-  <div class="title">${escHtml(c.tur==='Satış Sözleşmesi'?'GAYRİMENKUL SATIŞ SÖZLEŞMESİ':c.tur==='Ticari Kira Kontratı'?'TİCARİ KİRA KONTRATI':'KONUT KİRA KONTRATI')}</div>
+  <div class="title">${escHtml(c.tur||'SÖZLEŞME')}</div>
   <div class="section">1. ALICI BİLGİLERİ</div><div class="grid">${contractField('Ad Soyad',a.ad)}${contractField('TC / Vergi No',a.tc)}${contractField('Telefon',a.tel)}${contractField('E-posta',a.email)}${contractField('Adres',a.adres).replace('class="cf"','class="cf full"')}</div>
   <div class="section">2. SATICI BİLGİLERİ</div><div class="grid">${contractField('Ad Soyad',s.ad)}${contractField('TC / Vergi No',s.tc)}${contractField('Telefon',s.tel)}${contractField('E-posta',s.email)}${contractField('Adres',s.adres).replace('class="cf"','class="cf full"')}</div>
   <div class="section">3. GAYRİMENKUL VE MALİ BİLGİLER</div><div class="grid">${contractField('İlan / Mülk',c.ilan)}${contractField(c.tur==='Satış Sözleşmesi'?'Satış Bedeli':'Kira Bedeli',money(c.satisFiyat))}${contractField('Ofis Komisyonu',money(c.komisyon))}${contractField('Kapora',money(c.kaparo))}${contractField('Kapora Kimin Hesabında?',c.kaparoHesap)}${contractField('Tapu Durumu',c.tapuDurum)}${contractField('Tapu Konumu',c.tapuKonum||[c.tapuIl,c.tapuIlce,c.tapuMahalle].filter(Boolean).join(' / '))}${contractField('Ada / Parsel',c.adaParsel||[c.ada,c.parsel].filter(Boolean).join(' / '))}${contractField('Pafta',c.pafta||'')}${contractField('Bağımsız Bölüm No',c.bagimsizBolum||'')}${contractField('Tapu No',c.tapuNo||'')}${contractField('İskan Durumu',c.iskan)}</div>
@@ -3730,7 +3799,7 @@ function renderCTracking(){
   const tb = document.getElementById('ctrackingTable');
   if(!list.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;color:#aaa;padding:1.5rem">Takip kaydı bulunamadı</td></tr>';return;}
   const sonucColors={'Tamamlandı':'badge-green','Devam Ediyor':'badge-amber','İptal / Vazgeçildi':'badge-red'};
-  const turColors={'Satış Sözleşmesi':'badge-green','Konut Kira Kontratı':'badge-blue','Ticari Kira Kontratı':'badge-teal','Kira Sözleşmesi':'badge-blue','Müşteri Takip Formu':'badge-purple'};
+  const turColors={'Satış Sözleşmesi':'badge-green','Kira Sözleşmesi':'badge-blue','Müşteri Takip Formu':'badge-purple'};
   tb.innerHTML = list.map(c=>`<tr>
     <td style="font-weight:600">${c.musteri}</td>
     <td style="white-space:nowrap">${c.tel||'-'}</td>
@@ -4830,7 +4899,7 @@ const BACKUP_DB='dursunoglu_crm_backup', BACKUP_STORE='handles';
 function backupDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(BACKUP_DB,1);r.onupgradeneeded=()=>r.result.createObjectStore(BACKUP_STORE);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function saveBackupHandle(h){try{const db=await backupDB();const tx=db.transaction(BACKUP_STORE,'readwrite');tx.objectStore(BACKUP_STORE).put(h,'folder');return new Promise(res=>{tx.oncomplete=res;tx.onerror=res;});}catch(e){console.warn(e);}}
 async function loadBackupHandle(){try{const db=await backupDB();return await new Promise((resolve,reject)=>{const tx=db.transaction(BACKUP_STORE,'readonly');const r=tx.objectStore(BACKUP_STORE).get('folder');r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error);});}catch(e){return null;}}
-function buildBackupData(){const now=new Date();return {_meta:{version:'emlak_crm_v13',tarih:now.toLocaleString('tr-TR'),timestamp:now.getTime(),otomatik:true},members:JSON.parse(localStorage.getItem('crm_members_v2')||'[]'),portfolios:JSON.parse(localStorage.getItem('emlak_portfolios_v2')||'[]'),appointments:JSON.parse(localStorage.getItem('emlak_appointments_v2')||'[]'),customers:JSON.parse(localStorage.getItem('emlak_customers_v2')||'[]'),contracts:JSON.parse(localStorage.getItem('emlak_contracts_v1')||'[]'),talepkayitlari:JSON.parse(localStorage.getItem('emlak_talep_v1')||'[]'),advisors:JSON.parse(localStorage.getItem('emlak_advisors_v1')||'[]'),usefulLinks:JSON.parse(localStorage.getItem('crm_useful_links')||'null'),sysSettings:JSON.parse(localStorage.getItem('crm_sys_settings')||'{}'),systemLogo:localStorage.getItem('crm_system_logo')||null,notifications:JSON.parse(localStorage.getItem('crm_notifications')||'[]')};}
+function buildBackupData(){const now=new Date();return {_meta:{version:'emlak_crm_v13',tarih:now.toLocaleString('tr-TR'),timestamp:now.getTime(),otomatik:true},members:JSON.parse(localStorage.getItem('crm_members_v2')||'[]'),portfolios:JSON.parse(localStorage.getItem('emlak_portfolios_v2')||'[]'),appointments:JSON.parse(localStorage.getItem('emlak_appointments_v2')||'[]'),customers:JSON.parse(localStorage.getItem('emlak_customers_v2')||'[]'),contracts:JSON.parse(localStorage.getItem('emlak_contracts_v1')||'[]'),talepkayitlari:JSON.parse(localStorage.getItem('emlak_talep_v1')||'[]'),advisors:JSON.parse(localStorage.getItem('emlak_advisors_v1')||'[]'),usefulLinks:JSON.parse(localStorage.getItem('crm_useful_links')||'null'),sysSettings:JSON.parse(localStorage.getItem('crm_sys_settings')||'{}'),systemLogo:localStorage.getItem('crm_system_logo')||null,notifications:JSON.parse(localStorage.getItem('crm_notifications')||'[]'),valuations:JSON.parse(localStorage.getItem('emlak_valuations_v1')||'[]'),comparables:JSON.parse(localStorage.getItem('emlak_comparables_v1')||'[]')};}
 function autoBackupDownload(){const now=new Date(),blob=new Blob([JSON.stringify(buildBackupData(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a'),pad=n=>String(n).padStart(2,'0');a.href=url;a.download=`emlak_crm_otomatik_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);localStorage.setItem('crm_last_backup',now.toLocaleString('tr-TR'));updateBackupInfo();}
 async function chooseAutoBackupFolder(){if(!window.showDirectoryPicker){showToast('Otomatik klasör yedeği için güncel Chrome kullanın.','red');return;}try{backupHandle=await window.showDirectoryPicker({mode:'readwrite'});await saveBackupHandle(backupHandle);localStorage.setItem('crm_auto_backup_enabled','1');await autoBackupToFolder();updateAutoBackupStatus();showToast('Otomatik yedek klasörü seçildi ✓','green');}catch(e){if(e.name!=='AbortError')showToast('Yedek klasörü seçilemedi','red');}}
 async function autoBackupToFolder(){if(!backupHandle)return;try{const now=new Date(),pad=n=>String(n).padStart(2,'0'),data=JSON.stringify(buildBackupData(),null,2),latest=await backupHandle.getFileHandle('emlak_crm_otomatik_son_yedek.json',{create:true}),w=await latest.createWritable();await w.write(data);await w.close();const dayKey=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;if(localStorage.getItem('crm_auto_backup_day')!==dayKey){const archive=await backupHandle.getFileHandle(`emlak_crm_${dayKey}.json`,{create:true}),aw=await archive.createWritable();await aw.write(data);await aw.close();localStorage.setItem('crm_auto_backup_day',dayKey);}localStorage.setItem('crm_last_backup',now.toLocaleString('tr-TR'));updateBackupInfo();updateAutoBackupStatus();}catch(e){console.warn('Auto backup',e);updateAutoBackupStatus('Otomatik yedek için klasör izni tekrar istenebilir.');}}
