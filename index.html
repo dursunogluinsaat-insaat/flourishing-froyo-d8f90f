@@ -1138,7 +1138,7 @@ tr:hover td{background:#F4F9FC}
               <i class="ti ti-users"></i> Sözleşme Tarafları
               <span style="font-size:11px;font-weight:400;color:#888">Satış sözleşmesinde alıcı ve satıcı birlikte kaydedilir.</span>
             </div>
-            <div class="grid2">
+            <div class="grid2" id="ctPartyCards" style="display:none">
               <div style="background:#fff;border:1px solid #D4E6F1;border-radius:8px;padding:10px">
                 <div style="font-weight:700;color:#1A5276;margin-bottom:8px">ALICI BİLGİLERİ *</div>
                 <div class="field-row"><label>Ad Soyad *</label><input id="ctAliciAd" placeholder="Alıcı ad soyad"></div>
@@ -1158,9 +1158,10 @@ tr:hover td{background:#F4F9FC}
             </div>
             <div style="margin-top:10px;background:#fff;border:1px dashed #AED6F1;border-radius:8px;padding:10px">
               <div class="grid2">
-                <div><label>📋 Kayıtlı Müşteriden Alıcı Getir</label><select id="ctAliciSec" onchange="ctTarafGetir('alici')"><option value="">— Alıcı müşteriyi seçin —</option></select></div>
-                <div><label>📋 Kayıtlı Müşteriden Satıcı Getir</label><select id="ctSaticiSec" onchange="ctTarafGetir('satici')"><option value="">— Satıcı müşteriyi seçin —</option></select></div>
+                <div><label>📋 Alıcı * — Kayıtlı Müşteriden Seç</label><select id="ctAliciSec" onchange="ctTarafGetir('alici')"><option value="">— Alıcı müşteriyi seçin —</option></select><div id="ctAliciOzet" style="font-size:12px;margin-top:5px"></div></div>
+                <div><label>📋 Satıcı * — Kayıtlı Müşteriden Seç</label><select id="ctSaticiSec" onchange="ctTarafGetir('satici')"><option value="">— Satıcı müşteriyi seçin —</option></select><div id="ctSaticiOzet" style="font-size:12px;margin-top:5px"></div></div>
               </div>
+              <div style="margin-top:6px;text-align:right"><a href="javascript:void(0)" onclick="togglePartyCards('ct')" style="font-size:12px;color:#1A5276">✏️ Kayıtlı müşteri yoksa bilgileri elle gir</a></div>
             </div>
             <div style="margin-top:10px;background:#fff;border:1px dashed #A9DFBF;border-radius:8px;padding:10px">
               <div><label>Satışta Satışı Yapan Gayrimenkul Danışmanı *</label><select id="ctDanisman"><option value="">— Danışman seçin —</option></select></div>
@@ -1292,11 +1293,12 @@ tr:hover td{background:#F4F9FC}
       <div id="editContractForm" class="card hidden" style="margin-bottom:1rem;border-color:#F5C16C;background:#FFFDF7">
         <div class="section-title"><i class="ti ti-edit"></i> Sözleşme Düzenle</div>
         <div style="display:flex;flex-direction:column;gap:14px">
-          <div class="grid2">
+          <div class="grid2" id="ectPartyCards" style="display:none">
             <div style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:8px;padding:10px"><div style="font-weight:700;color:#1A5276;margin-bottom:8px">ALICI</div><div class="field-row"><label>Ad Soyad *</label><input id="ectAliciAd"></div><div class="field-row"><label>TC / Vergi No</label><input id="ectAliciTc"></div><div class="field-row"><label>Telefon</label><input id="ectAliciTel" oninput="formatTelefon(this)" maxlength="17"></div><div class="field-row"><label>E-posta</label><input id="ectAliciEmail"></div><div class="field-row"><label>Adres</label><textarea id="ectAliciAdres" rows="2"></textarea></div></div>
             <div style="background:#FFF8EF;border:1px solid #F5CBA7;border-radius:8px;padding:10px"><div style="font-weight:700;color:#784212;margin-bottom:8px">SATICI</div><div class="field-row"><label>Ad Soyad *</label><input id="ectSaticiAd"></div><div class="field-row"><label>TC / Vergi No</label><input id="ectSaticiTc"></div><div class="field-row"><label>Telefon</label><input id="ectSaticiTel" oninput="formatTelefon(this)" maxlength="17"></div><div class="field-row"><label>E-posta</label><input id="ectSaticiEmail"></div><div class="field-row"><label>Adres</label><textarea id="ectSaticiAdres" rows="2"></textarea></div></div>
           </div>
-          <div class="grid2"><div><label>Alıcıyı Kayıtlı Müşteriden Değiştir</label><select id="ectAliciSec" onchange="ectTarafGetir('alici')"><option value="">— Seçin —</option></select></div><div><label>Satıcıyı Kayıtlı Müşteriden Değiştir</label><select id="ectSaticiSec" onchange="ectTarafGetir('satici')"><option value="">— Seçin —</option></select></div></div>
+          <div class="grid2"><div><label>Alıcı * — Kayıtlı Müşteriden Değiştir</label><select id="ectAliciSec" onchange="ectTarafGetir('alici')"><option value="">— Seçin —</option></select><div id="ectAliciOzet" style="font-size:12px;margin-top:5px"></div></div><div><label>Satıcı * — Kayıtlı Müşteriden Değiştir</label><select id="ectSaticiSec" onchange="ectTarafGetir('satici')"><option value="">— Seçin —</option></select><div id="ectSaticiOzet" style="font-size:12px;margin-top:5px"></div></div></div>
+          <div style="text-align:right;margin-top:-6px"><a href="javascript:void(0)" onclick="togglePartyCards('ect')" style="font-size:12px;color:#1A5276">✏️ Kayıtlı müşteri yoksa bilgileri elle gir / düzenle</a></div>
           <div class="grid2"><div><label>Satışı Yapan Gayrimenkul Danışmanı</label><select id="ectDanisman"></select></div><div><label>Kapora Kimin Hesabında?</label><select id="ectKaparoHesap"><option value="">Seçin</option><option>Satıcıya Nakit</option><option>Satıcı Hesabına</option><option>Komisyoncuya Nakit</option><option>Komisyoncu Hesabına</option><option>Noter / Bloke Hesap</option></select></div></div>
           <div class="grid2">
             <div>
@@ -4183,6 +4185,64 @@ function updateHomeStats(){
   document.getElementById('homeStatKiralik').textContent=myPortfolios.filter(p=>p.durum==='Kiralık'||p.durum==='Devren Kiralık').length;
   document.getElementById('homeStatMusteri').textContent=myCustomers.length;
   if(isAdmin) updateAdminNotifUI();
+  try{renderHomeExtras();}catch(e){console.error('renderHomeExtras',e);}
+}
+
+/* Kod içinde 13 yerde çağrılıyordu ama tanımlı değildi (kayıttan sonraki adımları durduruyordu). */
+function updateHomeWidgets(){
+  try{updateHomeStats();}catch(e){console.error('updateHomeWidgets',e);}
+}
+function goToTalep(){
+  showTab('talep',document.getElementById('tabTalep'));
+}
+function renderHomeExtras(){
+  if(!currentUser)return;
+  const isAdmin=currentUser.role==='admin', uid=currentUser.id;
+  const mine=x=>isAdmin||x.ekleyenId===uid;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const put=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  const empty=(n,msg)=>`<tr><td colspan="${n}" style="color:#aaa;text-align:center;padding:1rem">${msg}</td></tr>`;
+  const now=new Date(), pad=n=>String(n).padStart(2,'0');
+  const todayISO=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  const monthISO=todayISO.slice(0,7);
+  const todayTR=now.toLocaleDateString('tr-TR');
+
+  const tA=appointments.filter(a=>mine(a)&&a.tarih===todayISO&&a.durum!=='İptal');
+  set('homeStatBugunRandevu',tA.length);
+  put('homeBugunRandevuTable',tA.length?tA.map(a=>`<tr><td style="white-space:nowrap">${escHtml(a.saat)}</td><td style="font-weight:600">${escHtml(a.musteri)}</td><td style="font-size:12px">${escHtml(a.konu)}</td></tr>`).join(''):empty(3,'Bugün randevu yok'));
+
+  const tT=talepkayitlari.filter(x=>mine(x)&&x.tarih===todayTR);
+  set('homeStatBugunTalep',tT.length);
+  const katLabel=k=>(typeof TALEP_KAT_LABELS!=='undefined'&&TALEP_KAT_LABELS[k])||k||'';
+  put('homeBugunTalepTable',tT.length?tT.map(x=>`<tr><td style="font-weight:600">${escHtml(x.ad)}</td><td style="font-size:12px">${escHtml(katLabel(x.kategori))}</td><td style="white-space:nowrap">${escHtml(x.tel)}</td></tr>`).join(''):empty(3,'Bugün talep yok'));
+
+  const fav=(currentUser.favoriler||[]).map(String);
+  const fp=portfolios.filter(x=>fav.includes(String(x.id)));
+  put('homeFavoriTable',fp.length?fp.map(x=>`<tr><td style="font-weight:600">${escHtml(x.baslik)}</td><td style="white-space:nowrap">${formatFiyatDisplay(x.fiyat)}</td><td style="font-size:12px">${escHtml(x.durum)}</td></tr>`).join(''):empty(3,'Favori ilan yok'));
+
+  const ga=customers.filter(c=>c.geriAra&&mine(c));
+  put('homeGeriAraTable',ga.length?ga.map(c=>`<tr><td style="font-weight:600">${escHtml(c.ad)}</td><td style="white-space:nowrap">${escHtml(c.tel||'')}</td><td><button onclick="toggleGeriAra(${c.id})" style="font-size:11px;padding:2px 8px">✓ Arandı</button></td></tr>`).join(''):empty(3,'Geri aranacak müşteri yok'));
+
+  const done=contracts.filter(c=>mine(c)&&c.sonuc==='Tamamlandı'&&String(c.bitisTarih||c.olusTarih||'').slice(0,7)===monthISO);
+  set('homeStatAySatis',done.filter(c=>c.tur==='Satış Sözleşmesi').length);
+  set('homeStatAyKiralama',done.filter(c=>c.tur==='Kira Sözleşmesi').length);
+  const ciro=done.reduce((n,c)=>n+(Number(String(c.komisyon||'').replace(/\D/g,''))||0),0);
+  set('homeStatCiro',ciro?formatFiyatDisplay(ciro):'₺0');
+
+  renderAIEslesmeHome();
+}
+function renderAIEslesmeHome(){
+  const box=document.getElementById('homeAIEslesmeList'); if(!box||!currentUser)return;
+  const isAdmin=currentUser.role==='admin';
+  const active=portfolios.filter(p=>['Satılık','Kiralık','Devren Satılık','Devren Kiralık','Kat Karşılığı'].includes(p.durum)&&(isAdmin||p.ekleyenId===currentUser.id));
+  const pairs=[];
+  active.forEach(p=>talepEslestir(p).forEach(m=>pairs.push({p,m})));
+  pairs.sort((a,b)=>b.m.puan-a.m.puan);
+  if(!pairs.length){box.innerHTML='<div style="color:#aaa;text-align:center;padding:1rem">Şu an eşleşme yok</div>';return;}
+  box.innerHTML=pairs.slice(0,8).map(({p,m})=>`<div style="background:#fff;border:1px solid #E8DAEF;border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+    <div><div style="font-weight:600;font-size:13px">${escHtml(p.baslik)} <span style="color:#888;font-weight:400">→</span> ${escHtml(m.talep.ad)}</div>
+    <div style="font-size:11px;color:#888">${escHtml(m.notlar.join(' · '))}</div></div>
+    <div style="text-align:right;font-size:12px"><b style="color:#6C3483">%${m.puan}</b> uyum · ${escHtml(m.talep.tel||'')}</div></div>`).join('');
 }
 
 function showToast(msg,type='blue'){
@@ -4943,5 +5003,19 @@ function updateBackupStats(){
 })();
 
 try{renderAdvisors();populateAdvisorSelects();populateCustomerPartySelects();bindContractSmartFields();updateContractFinanceSummary();updateAutoBackupStatus();}catch(e){}
-setInterval(()=>{try{updateContractFinanceSummary();}catch(e){}},1000);
+function refreshPartySummary(){
+  [['ct','Alici','Alıcı'],['ct','Satici','Satıcı'],['ect','Alici','Alıcı'],['ect','Satici','Satıcı']].forEach(([p,r,label])=>{
+    const box=document.getElementById(p+r+'Ozet'); if(!box)return;
+    const ad=((document.getElementById(p+r+'Ad')||{}).value||'').trim();
+    const tel=((document.getElementById(p+r+'Tel')||{}).value||'').trim();
+    const key=ad+'|'+tel; if(box.dataset.k===key)return; box.dataset.k=key;
+    box.innerHTML=ad?`<span style="color:#1E8449">✔ ${label}: <b>${escHtml(ad)}</b>${tel?' · '+escHtml(tel):''}</span>`:`<span style="color:#C0392B">${label} seçilmedi</span>`;
+  });
+}
+function togglePartyCards(prefix){
+  const el=document.getElementById(prefix+'PartyCards'); if(!el)return;
+  el.style.display=(el.style.display==='none')?'':'none';
+}
+try{refreshPartySummary();}catch(e){}
+setInterval(()=>{try{updateContractFinanceSummary();}catch(e){}try{refreshPartySummary();}catch(e){}},1000);
 </script>
