@@ -1087,163 +1087,105 @@ tr:hover td{background:#F4F9FC}
       </div>
     </div>
     <!-- SÖZLEŞMELER -->
-    <div id="tab-contracts" class="hidden">
+    import re
 
-      <!-- Sözleşme Ekle Formu -->
-      <div id="addContractForm" class="card hidden" style="margin-bottom:1rem;border-color:#AED6F1;background:#F4F9FC">
-        <div class="section-title"><i class="ti ti-file-plus"></i> Yeni Sözleşme / Müşteri Takip Formu</div>
-        <div style="display:flex;flex-direction:column;gap:14px">
+src = open('index.html', encoding='utf-8').read()
 
-          <!-- Sözleşme Tipi -->
-          <div class="grid2">
-            <div>
-              <label>Sözleşme Türü *</label>
-              <select id="ctTur">
-                <option value="">Seçin</option>
-                <option>Satış Sözleşmesi</option>
-                <option>Kira Sözleşmesi</option>
-                <option>Müşteri Takip Formu</option>
-              </select>
-            </div>
-            <div>
-              <label>Belge / Sözleşme Linki</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="url" id="ctLink" placeholder="Google Drive, Sheets linki..."/>
-                <button onclick="ctHizliLink()" style="white-space:nowrap;font-size:12px;padding:7px 10px;background:#EBF5FB;border-color:#AED6F1;color:#1A5276" title="Hazır şablonlar">
-                  <i class="ti ti-template"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+def js_unescape(s):
+    return s.replace('\\"', '"').replace('\\n', '\n').replace('\\/', '/')
 
-          <!-- Şablon Seç (gizli başlangıçta) -->
-          <div id="ctSablonPanel" class="hidden" style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:10px;padding:12px">
-            <div style="font-size:13px;font-weight:600;color:#1A5276;margin-bottom:10px"><i class="ti ti-template"></i> Hazır Şablon Linkleri</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <a href="https://docs.google.com/spreadsheets/d/1-mgA-rtB0f8V8b37m7tbU6NgOLemiUG5/edit?gid=1287251225#gid=1287251225" target="_blank"
-                style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #AED6F1;border-radius:8px;padding:10px 14px;text-decoration:none;color:#1A5276;font-size:13px;transition:all 0.15s"
-                onmouseover="this.style.background='#D4E6F1'" onmouseout="this.style.background='#fff'"
-                onclick="ctLinkSec('https://docs.google.com/spreadsheets/d/1-mgA-rtB0f8V8b37m7tbU6NgOLemiUG5/edit?gid=1287251225#gid=1287251225')">
-                <i class="ti ti-file-spreadsheet" style="font-size:20px;color:#1E8449"></i>
-                <div><div style="font-weight:600">Satış Sözleşmesi Şablonu</div><div style="font-size:11px;color:#888">Google Sheets — Hazır form</div></div>
-                <i class="ti ti-external-link" style="margin-left:auto;font-size:14px;opacity:0.5"></i>
-              </a>
-              <a href="https://docs.google.com/spreadsheets/d/1MjkLlZTnjh5aFcBbkVcJlRln7Z1YtCY46x4nFW72K8Q/edit?gid=1257886652#gid=1257886652" target="_blank"
-                style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #AED6F1;border-radius:8px;padding:10px 14px;text-decoration:none;color:#1A5276;font-size:13px;transition:all 0.15s"
-                onmouseover="this.style.background='#D4E6F1'" onmouseout="this.style.background='#fff'"
-                onclick="ctLinkSec('https://docs.google.com/spreadsheets/d/1MjkLlZTnjh5aFcBbkVcJlRln7Z1YtCY46x4nFW72K8Q/edit?gid=1257886652#gid=1257886652')">
-                <i class="ti ti-file-spreadsheet" style="font-size:20px;color:#1A5276"></i>
-                <div><div style="font-weight:600">Kira Sözleşmesi Şablonu</div><div style="font-size:11px;color:#888">Google Sheets — Hazır form</div></div>
-                <i class="ti ti-external-link" style="margin-left:auto;font-size:14px;opacity:0.5"></i>
-              </a>
-            </div>
-            <button onclick="document.getElementById('ctSablonPanel').classList.add('hidden')" style="margin-top:10px;font-size:12px;color:#888;background:none;border:none;padding:0">Kapat</button>
-          </div>
+def js_escape(s):
+    return s.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
 
-          <!-- SÖZLEŞME TARAFLARI -->
-          <div style="background:#EBF5FB;border:1px solid #AED6F1;border-radius:10px;padding:12px">
-            <div style="font-size:13px;font-weight:700;color:#1A5276;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-              <i class="ti ti-users"></i> Sözleşme Tarafları
-              <span style="font-size:11px;font-weight:400;color:#888">Satış sözleşmesinde alıcı ve satıcı birlikte kaydedilir.</span>
-            </div>
-            <div class="grid2">
-              <div style="background:#fff;border:1px solid #D4E6F1;border-radius:8px;padding:10px">
-                <div style="font-weight:700;color:#1A5276;margin-bottom:8px">ALICI BİLGİLERİ *</div>
-                <div class="field-row"><label>Ad Soyad *</label><input id="ctAliciAd" placeholder="Alıcı ad soyad"></div>
-                <div class="field-row"><label>TC / Vergi No</label><input id="ctAliciTc" placeholder="TC Kimlik / Vergi No"></div>
-                <div class="field-row"><label>Telefon</label><input id="ctAliciTel" oninput="formatTelefon(this)" maxlength="17" placeholder="05__ ___ __ __"></div>
-                <div class="field-row"><label>E-posta</label><input type="email" id="ctAliciEmail" placeholder="alici@email.com"></div>
-                <div class="field-row"><label>Adres</label><textarea id="ctAliciAdres" rows="2" placeholder="Alıcı adresi"></textarea></div>
-              </div>
-              <div style="background:#fff;border:1px solid #F5CBA7;border-radius:8px;padding:10px">
-                <div style="font-weight:700;color:#784212;margin-bottom:8px">SATICI BİLGİLERİ *</div>
-                <div class="field-row"><label>Ad Soyad *</label><input id="ctSaticiAd" placeholder="Satıcı ad soyad"></div>
-                <div class="field-row"><label>TC / Vergi No</label><input id="ctSaticiTc" placeholder="TC Kimlik / Vergi No"></div>
-                <div class="field-row"><label>Telefon</label><input id="ctSaticiTel" oninput="formatTelefon(this)" maxlength="17" placeholder="05__ ___ __ __"></div>
-                <div class="field-row"><label>E-posta</label><input type="email" id="ctSaticiEmail" placeholder="satici@email.com"></div>
-                <div class="field-row"><label>Adres</label><textarea id="ctSaticiAdres" rows="2" placeholder="Satıcı adresi"></textarea></div>
-              </div>
-            </div>
-            <div style="margin-top:10px;background:#fff;border:1px dashed #AED6F1;border-radius:8px;padding:10px">
-              <div class="grid2">
-                <div><label>📋 Kayıtlı Müşteriden Alıcı Getir</label><select id="ctAliciSec" onchange="ctTarafGetir('alici')"><option value="">— Alıcı müşteriyi seçin —</option></select></div>
-                <div><label>📋 Kayıtlı Müşteriden Satıcı Getir</label><select id="ctSaticiSec" onchange="ctTarafGetir('satici')"><option value="">— Satıcı müşteriyi seçin —</option></select></div>
-              </div>
-            </div>
-            <div style="margin-top:10px;background:#fff;border:1px dashed #A9DFBF;border-radius:8px;padding:10px">
-              <div><label>Satışta Satışı Yapan Gayrimenkul Danışmanı *</label><select id="ctDanisman"><option value="">— Danışman seçin —</option></select></div>
-            </div>
-            <div id="ctMissingReminder" class="hidden" style="margin-top:10px;background:#FFF4E5;border:1px solid #F5CBA7;border-radius:8px;padding:10px;font-size:12px;color:#784212"></div>
-            <div id="ctCompletion" style="margin-top:8px;background:#F8F9F9;border:1px solid #D5D8DC;border-radius:8px;padding:9px;font-size:12px"><div style="display:flex;justify-content:space-between"><span>Form tamamlanma</span><strong id="ctCompletionPct">0%</strong></div><div style="height:7px;background:#E5E7E9;border-radius:9px;margin-top:5px;overflow:hidden"><div id="ctCompletionBar" style="height:100%;width:0%;background:#1E8449;transition:width .2s"></div></div></div>
-          </div>
+start = src.index('const SOZ_MERKEZI_HTML="') + len('const SOZ_MERKEZI_HTML="')
+anchor = src.index('function loadSozMerkezi')
+end = src.rindex('";', start, anchor)
 
-          <!-- İlan & Mülk Bilgisi -->
-          <div style="background:#F4F9FC;border:1px solid #D4E6F1;border-radius:10px;padding:12px">
-            <div style="font-size:13px;font-weight:600;color:#1A5276;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-              <i class="ti ti-building"></i> İlan & Mülk Bilgisi
-            </div>
-            <div class="grid2">
-              <div><label>Portföyden Gayrimenkul Seç</label><select id="ctPortfoySec" onchange="ctPortfoyGetir()"><option value="">— Portföy seçin —</option></select><input type="hidden" id="ctIlan"/></div>
-              <div><label>Satış / Kira Bedeli (₺)</label><input type="text" id="ctSatisFiyat" placeholder="ör. 3.500.000" oninput="formatFiyat(this)"/></div>
-            </div>
-            <div class="grid2" style="margin-top:10px">
-              <div><label>Ofis Komisyonu (₺)</label><input type="text" id="ctKomisyon" placeholder="ör. 105.000" oninput="formatFiyat(this)"/></div>
-              <div><label>Kaparo Miktarı (₺)</label><input type="text" id="ctKaparo" placeholder="ör. 100.000" oninput="formatFiyat(this)"/></div>
-            </div>
-            <div class="grid3" style="margin-top:10px">
-              <div><label>Kapora Kimin Hesabında?</label><select id="ctKaparoHesap"><option value="">Seçin</option><option>Satıcıya Nakit</option><option>Satıcı Hesabına</option><option>Komisyoncuya Nakit</option><option>Komisyoncu Hesabına</option><option>Noter / Bloke Hesap</option></select></div>
-              <div><label>Tapu Durumu</label><select id="ctTapuDurum"><option value="">Seçin</option><option>Arsa Tapulu</option><option>Kat İrtifaklı</option><option>Kat Mülkiyetli</option><option>Hisseli Tapu</option><option>Tahsisli</option><option>Diğer</option></select></div>
-              <div><label>İskan Kime Ait?</label><select id="ctIskan"><option value="">Seçin</option><option>İskanlı - Satıcıya Ait</option><option>İskanlı - Alıcıya Ait</option><option>İskanlı - Ortak</option><option>İskansız</option><option>Başvuru Aşamasında</option></select></div>
-            </div>
-            <div class="grid3" style="margin-top:10px">
-              <div><label>Tapu İl</label><input id="ctTapuIl" placeholder="İl"/></div>
-              <div><label>Tapu İlçe</label><input id="ctTapuIlce" placeholder="İlçe"/></div>
-              <div><label>Mahalle / Köy</label><input id="ctTapuMahalle" placeholder="Mahalle / Köy"/></div>
-            </div>
-            <div class="grid3" style="margin-top:10px">
-              <div><label>Ada</label><input id="ctAda" placeholder="Ada No"/></div>
-              <div><label>Parsel</label><input id="ctParsel" placeholder="Parsel No"/></div>
-              <div><label>Pafta</label><input id="ctPafta" placeholder="Pafta"/></div>
-            </div>
-            <div class="grid2" style="margin-top:10px">
-              <div><label>Bağımsız Bölüm No</label><input id="ctBagimsiz" placeholder="BB No"/></div>
-              <div><label>Tapu No</label><input id="ctTapuNo" placeholder="Tapu No"/></div>
-            </div>
-          </div>
+inner = js_unescape(src[start:end])
 
-          <div id="ctFinanceSummary" style="background:#fff;border:1px solid #AED6F1;border-radius:10px;padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-            <div><div style="font-size:10px;color:#777">Satış / Kira Bedeli</div><strong id="ctSumSatis">0 ₺</strong></div>
-            <div><div style="font-size:10px;color:#777">Kapora</div><strong id="ctSumKaparo">0 ₺</strong></div>
-            <div><div style="font-size:10px;color:#777">Kalan Bakiye</div><strong id="ctSumKalan">0 ₺</strong></div>
-            <div><div style="font-size:10px;color:#777">Komisyon</div><strong id="ctSumKomisyon">0 ₺</strong></div>
-            <div><div style="font-size:10px;color:#777">Kredi</div><strong id="ctSumKredi">0 ₺</strong></div>
-            <div><div style="font-size:10px;color:#777">Kredi + Kapora</div><strong id="ctSumFinansman">0 ₺</strong></div>
-          </div>
+# --- 1) CSS: yan yana taraflar, logo başlığı, tek sayfa yazdırma ---
+css_anchor = '.sign div{min-height:75px;border-top:1px solid #777;padding-top:7px}'
+assert css_anchor in inner
+inner = inner.replace(css_anchor, css_anchor + '''
+.paper .pt th{background:#eef2f6;border-bottom:2px solid #94a3b8}.paper .pt td{vertical-align:top}
+.dochead{display:flex;align-items:center;gap:14px;border-bottom:2.5px solid var(--navy);padding-bottom:9px;margin-bottom:14px}
+.maddeler p{margin:4px 0;text-align:justify}
+@media print{.paper{padding:7mm 9mm;min-height:0}.paper h1{font-size:14px;margin:6px 0 10px}.paper .company{font-size:12px}.paper .meta{font-size:8px;margin-bottom:8px}.paper h4{font-size:10px;margin:10px 0 4px;padding-bottom:3px}.paper p{font-size:8.5px;line-height:1.35;margin:2px 0}.paper table{font-size:8px}.paper td{padding:3px}.paper .dochead{padding-bottom:5px;margin-bottom:8px}.sign{margin-top:18px;gap:12px}.sign div{min-height:42px}}''', 1)
 
-          <!-- Kredi Bilgileri -->
-          <div style="background:#EAF3DE;border:1px solid #A9DFBF;border-radius:10px;padding:12px">
-            <div style="font-size:13px;font-weight:600;color:#1E6A2E;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-              <i class="ti ti-coin"></i> Kredi Bilgileri
-            </div>
-            <div class="grid2">
-              <div><label>Kredi Miktarı (₺)</label><input type="text" id="ctKredi" placeholder="ör. 2.000.000" oninput="formatFiyat(this)"/></div>
-              <div><label>Kredi Bankası</label><input type="text" id="ctBanka" placeholder="ör. Ziraat Bankası"/></div>
-            </div>
-            <div class="grid2" style="margin-top:10px">
-              <div>
-                <label>Kredi Onay Durumu</label>
-                <select id="ctKrediDurum">
-                  <option value="">Seçin</option>
-                  <option>Başvuru Yapıldı</option>
-                  <option>Onaylandı</option>
-                  <option>Reddedildi</option>
-                  <option>Kullanılmayacak</option>
-                </select>
-              </div>
-              <div></div>
-            </div>
-          </div>
+# --- 2) genelMaddeler fonksiyonu ---
+GENEL_FN = '''function genelMaddeler(){
+ const sale=type==="sale";
+ return sale?[
+ "İşbu sözleşme, tarafların karşılıklı ve serbest iradeleriyle, 6098 sayılı Türk Borçlar Kanunu ile yürürlükteki ilgili mevzuat hükümlerine uygun olarak düzenlenmiştir.",
+ "Satışa konu gayrimenkul, üzerinde satıcı lehine tesis edilmiş ipotek, haciz, şerh veya herhangi bir takyidat bulunmaksızın alıcıya devredilecektir.",
+ "Tapu devri, taraflarca kararlaştırılan tarihte ilgili tapu müdürlüğünde gerçekleştirilecek olup tapu harç ve masrafları yürürlükteki mevzuata göre taraflarca karşılanacaktır.",
+ "Alıcı tarafından ödenen kapora, satış bedelinden mahsup edilecektir; kapora tutarı aşağıda yazılı bilgiler çerçevesinde ilgili kişi veya kurum hesabında tutulacaktır.",
+ "Alıcının kredi kullanması halinde kredi tutarı kredi kuruluşu tarafından satıcıya ödenecektir; kredi onayının çıkmaması halinde taraflarca durum ayrıca değerlendirilecektir.",
+ "Taraflardan birinin sözleşmeden cayması halinde, karşı taraf lehine aşağıda yazılı cayma bedeli fesih tazminatı olarak ödenecektir.",
+ "Emlak komisyoncusu, tapu devri öncesinde taşınmazın tapu kaydı ve imar durumunu kontrol ederek taraflara bilgi vermekle yükümlüdür.",
+ "İşbu sözleşmede yer almayan hususlarda Türk Borçlar Kanunu ve ilgili diğer mevzuat hükümleri uygulanır."
+ ]:[
+ "İşbu kira sözleşmesi, 6098 sayılı Türk Borçlar Kanunu'nun konut ve çatılı işyeri kiralarına ilişkin hükümlerine uygun olarak düzenlenmiştir.",
+ "Kiracı, kiralananı özenli bir malik gibi kullanmak ve amacına uygun şekilde işletmekle yükümlüdür.",
+ "Kira bedeli, her ay sözleşmede belirtilen günde kiraya verenin bildireceği hesaba ödenecektir.",
+ "Depozito, kira süresi sonunda kiracının doğmuş borçları mahsup edildikten sonra geri iade edilecektir.",
+ "Kiracının kiralananda izinsiz tadilat ve değişiklik yapması yasaktır.",
+ "Kiralananın tahliyesi gereken hallerde kiracı, mevzuatta öngörülen süre ve şekilde tahliye taahhüdünde bulunacaktır.",
+ "Kira artışı, 12 aylık ortalama TÜFE artış oranını aşamaz ve yasal sınırlamalara tabidir.",
+ "İşbu sözleşmede yer almayan hususlarda Türk Borçlar Kanunu hükümleri uygulanır."
+ ];
+}
+'''
+assert 'function yazi(n){' in inner
+inner = inner.replace('function yazi(n){', GENEL_FN + 'function yazi(n){', 1)
 
+# --- 3) Taraflar yan yana ---
+p_start = inner.index('const party=sale?')
+p_end = inner.index('const finance=', p_start)
+NEW_PARTY = '''const party=sale?`
+ <h4>TARAFLAR</h4><table class="pt"><tr><th style="width:50%">ALICI</th><th style="width:50%">SATICI</th></tr>
+ <tr><td>${E("buyerName")||"—"}<br>${E("buyerId")}<br>${E("buyerPhone")}<br>${E("buyerEmail")}</td><td>${E("sellerName")||"—"}<br>${E("sellerId")}<br>${E("sellerPhone")}<br>${E("sellerEmail")}</td></tr></table>
+ <table><tr><td style="width:32%">EMLAK KOMİSYONCUSU</td><td>${E("company")} — Yetki Belge No: ${E("authority")} — Tel: ${E("companyPhone")}</td></tr></table>`:`
+ <h4>TARAFLAR</h4><table class="pt"><tr><th style="width:50%">KİRAYA VEREN</th><th style="width:50%">KİRACI</th></tr>
+ <tr><td>${E("landlordName")||"—"}<br>${E("landlordId")}<br>${E("landlordPhone")}<br>${E("landlordEmail")}</td><td>${E("tenantName")||"—"}<br>${E("tenantId")}<br>${E("tenantPhone")}<br>${E("tenantEmail")}</td></tr></table>
+ <table><tr><td style="width:32%">EMLAK KOMİSYONCUSU</td><td>${E("company")} — Yetki Belge No: ${E("authority")} — Tel: ${E("companyPhone")}</td></tr></table>`;
+ '''
+inner = inner[:p_start] + NEW_PARTY + inner[p_end:]
+
+# --- 4) Logo + ünvan yan yana başlık ---
+l_start = inner.index('const logoHtml=logo?')
+l_end = inner.index('("paper")', l_start)
+NEW_LOGO = '''const logoHtml=logo?`<div class="dochead"><div style="flex:0 0 auto"><img alt="Logo" src="${esc(logo)}" style="width:${w}px;max-width:100%"></div><div><div class="company" style="text-align:left">${E("company")}</div></div></div>`:`<div class="company">${E("company")}</div>`;
+ '''
+inner = inner[:l_start] + NEW_LOGO + inner[l_end:]
+old_head = '${logoHtml}<div class="company">${E("company")}</div><div class="meta">'
+assert old_head in inner
+inner = inner.replace(old_head, '${logoHtml}<div class="meta">', 1)
+
+# --- 5) GENEL ŞARTLAR bölümü ---
+OZEL = '<h4>ÖZEL ŞARTLAR</h4>'
+assert inner.count(OZEL) == 1
+inner = inner.replace(OZEL,
+ '<h4>GENEL ŞARTLAR</h4><div class="maddeler">${genelMaddeler().map((x,i)=>`<p><b>Madde ${i+1} —</b> ${x}</p>`).join("")}</div>\n '
+ + OZEL, 1)
+
+# --- 6) Stopaj yazıyla ---
+old_stop = '<td>Stopaj</td><td>${tl(num("withholding"))}</td>'
+assert old_stop in inner
+inner = inner.replace(old_stop, '<td>Stopaj</td><td>${tw(num("withholding"))}</td>', 1)
+
+# --- 7) Kira özel şart seçenekleri ---
+GIDER = '<label><input type="checkbox" class="clause" data-text="Aidat, abonelik ve diğer giderlerin hangi tarafa ait olduğu sözleşmede ayrıca belirlenmiştir."> Giderler</label>'
+assert GIDER in inner
+inner = inner.replace(GIDER, GIDER + '''
+      <label><input type="checkbox" class="clause" data-text="Kiralanan mülkte hayvan beslenemez."> Hayvan yasağı</label>
+      <label><input type="checkbox" class="clause" data-text="Kira artışı, 12 aylık ortalama TÜFE artış oranını aşamaz ve yasal sınırlamalara tabidir."> Kira artışı (TÜFE)</label>
+      <label><input type="checkbox" class="clause" data-text="Kiracı, kiralananı tahliye ederken aldığı haliyle teslim etmekle yükümlüdür."> Teslim hali</label>
+      <label><input type="checkbox" class="clause" data-text="Eşyalı kiralananlarda eşya envanter listesi sözleşmeye ek olarak tutulacaktır."> Eşya envanteri</label>''', 1)
+
+out = src[:start] + js_escape(inner) + src[end:]
+open('index_duzeltilmis.html', 'w', encoding='utf-8').write(out)
+print('Tamamlandı: index_duzeltilmis.html oluşturuldu.')
           <!-- Ekspertiz -->
           <div style="background:#FAEEDA;border:1px solid #F5CBA7;border-radius:10px;padding:12px">
             <div style="font-size:13px;font-weight:600;color:#633806;margin-bottom:10px;display:flex;align-items:center;gap:6px">
