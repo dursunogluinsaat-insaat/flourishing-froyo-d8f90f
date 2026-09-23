@@ -134,9 +134,28 @@ tr:hover td{background:#F4F9FC}
 .sozlesme-doc .soz-imza div{text-align:center;font-size:12px}
 .sozlesme-doc .soz-imza .cizgi{border-top:1px solid #333;margin-top:40px;padding-top:6px}
 @media print{
-  body *{visibility:hidden}
-  #sozlesmePrintArea,#sozlesmePrintArea *{visibility:visible}
-  #sozlesmePrintArea{position:absolute;left:0;top:0;width:100%;padding:0}
+  body{
+    background:#fff!important;
+  }
+
+  body > *{
+    display:none!important;
+  }
+
+  #sozlesmePrintArea{
+    display:block!important;
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    width:100%!important;
+    padding:0!important;
+    margin:0!important;
+    visibility:visible!important;
+  }
+
+  #sozlesmePrintArea *{
+    visibility:visible!important;
+  }
 }
 </style>
 </head>
