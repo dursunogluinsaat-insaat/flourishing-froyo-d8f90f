@@ -1,458 +1,2692 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dursunoğlu Gayrimenkul | Sözleşmeler</title>
+
 <style>
-:root{--navy:#12304a;--blue:#1f6feb;--bg:#f3f6f9;--line:#dbe3ea;--text:#17212b;--muted:#687684;--white:#fff;--ok:#137333}
-*{box-sizing:border-box} body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,#102b42,#1d567d);color:white;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
-header h1{margin:0;font-size:22px} header small{opacity:.82}.actions{display:flex;gap:8px;flex-wrap:wrap}
-button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:#fff;color:var(--navy)}
-button.primary{background:#1f6feb;color:#fff} button.dark{background:#102b42;color:#fff} button.danger{background:#b42318;color:#fff}
-.app{display:grid;grid-template-columns:minmax(520px,1.1fr) minmax(420px,.9fr);gap:18px;max-width:1500px;margin:18px auto;padding:0 18px}
-.card{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 12px #12304a0d;margin-bottom:16px}
-h2{font-size:17px;margin:0 0 15px;color:var(--navy)} h3{font-size:14px;margin:18px 0 10px;color:var(--navy)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-label{display:block;font-size:12px;font-weight:700;color:#40515f;margin-bottom:5px}
-input,select,textarea{width:100%;border:1px solid #cfd9e2;border-radius:8px;padding:10px;background:#fff;font:inherit;font-size:14px}
-textarea{min-height:80px;resize:vertical}.full{grid-column:1/-1}.hidden{display:none!important}
-.typebar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.typebar button{border:1px solid var(--line);background:#f8fafc}.typebar button.active{background:var(--navy);color:#fff}
-.money{font-variant-numeric:tabular-nums}.amountWords{display:block;margin-top:4px;color:#667788;font-size:12px;font-style:italic}.fixedClauses{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px}.fixedClauses div{padding:6px 4px;border-bottom:1px solid #e7edf2}.fixedClauses div:last-child{border-bottom:0}.calc{background:#f6f9fc;border:1px dashed #cbd8e3;border-radius:10px;padding:12px}.calcrow{display:flex;justify-content:space-between;padding:5px 0}.calcrow.total{border-top:1px solid var(--line);margin-top:5px;padding-top:10px;font-size:16px;font-weight:800}
-.preview{position:sticky;top:14px;align-self:start}.paper{background:white;border:1px solid #cfd6dc;padding:22px 26px;min-height:720px;box-shadow:0 4px 20px #00000012}.paperHeader{display:flex;align-items:center;gap:12px;border-bottom:1px solid #cfd6dc;padding-bottom:8px;margin-bottom:8px}.paperLogo{width:58px;height:42px;object-fit:contain;display:none}.partyGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.partyBox{border:1px solid #cfd6dc;padding:6px;font-size:10px;min-height:58px}.partyBox b{display:block;color:var(--navy);margin-bottom:3px}
-.paper h1{text-align:center;font-size:18px;margin:4px 0 10px}.paper .company{text-align:left;font-size:13px;font-weight:800;color:var(--navy)}.paper .meta{text-align:center;font-size:11px;color:#65727d;margin-bottom:9px}.paper h4{font-size:12px;border-bottom:1px solid #999;padding-bottom:4px;margin:10px 0 5px}.paper p{font-size:12px;line-height:1.3;margin:4px 0}.paper table{width:100%;border-collapse:collapse;font-size:12px}.paper td{border:1px solid #cfd6dc;padding:4px}.paper td:first-child{width:30%;font-weight:700;background:#f7f8f9}.financeColumns{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}.financeColumns h4{margin-top:0}.infoGrid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #cfd6dc}.infoItem{display:grid;grid-template-columns:42% 58%;border-bottom:1px solid #cfd6dc}.infoItem:nth-child(odd){border-right:1px solid #cfd6dc}.infoItem:nth-last-child(-n+2){border-bottom:0}.infoItem b,.infoItem span{padding:4px;border-right:1px solid #cfd6dc}.infoItem b{background:#f7f8f9}.infoItem span{border-right:0}.infoItem.fullInfo{grid-column:1/-1;border-right:0}.infoItem.fullInfo b{width:21%}.sign{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;text-align:center;font-size:11px}.sign div{min-height:50px;border-top:1px solid #777;padding-top:5px}
-.pageFooter{display:none}
-.notice{font-size:12px;background:#fff8e6;border:1px solid #f0d58a;padding:10px;border-radius:8px;color:#6d5200;margin-bottom:12px}
-.status{font-size:12px;color:var(--ok);font-weight:700}
-footer{max-width:1500px;margin:0 auto 30px;padding:0 18px;color:var(--muted);font-size:12px}
-@media(max-width:1000px){.app{grid-template-columns:1fr}.preview{position:static}.paper{min-height:auto}}
-@media(max-width:650px){.grid,.grid.three{grid-template-columns:1fr}.typebar{grid-template-columns:1fr}.paper{padding:20px}}
-@page {
-  size: A4;
-  margin: 12mm 10mm 25mm;
+:root{
+  --navy:#12304a;
+  --blue:#1f6feb;
+  --bg:#f3f6f9;
+  --line:#dbe3ea;
+  --text:#17212b;
+  --muted:#687684;
+  --white:#fff;
+  --ok:#137333;
+  --danger:#b42318;
 }
 
-@media print {
+*{box-sizing:border-box}
 
-  body {
-    background: #fff !important;
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header{
+  background:linear-gradient(135deg,#102b42,#1d567d);
+  color:white;
+  padding:20px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+header h1{
+  margin:0;
+  font-size:22px;
+}
+
+header small{
+  opacity:.82;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer;
+  background:#fff;
+  color:var(--navy);
+}
+
+button:hover{
+  opacity:.92;
+}
+
+button.primary{
+  background:#1f6feb;
+  color:#fff;
+}
+
+button.dark{
+  background:#102b42;
+  color:#fff;
+}
+
+button.danger{
+  background:#b42318;
+  color:#fff;
+}
+
+.app{
+  display:grid;
+  grid-template-columns:minmax(520px,1.1fr) minmax(420px,.9fr);
+  gap:18px;
+  max-width:1500px;
+  margin:18px auto;
+  padding:0 18px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 3px 12px #12304a0d;
+  margin-bottom:16px;
+}
+
+h2{
+  font-size:17px;
+  margin:0 0 15px;
+  color:var(--navy);
+}
+
+h3{
+  font-size:14px;
+  margin:18px 0 10px;
+  color:var(--navy);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+}
+
+.grid.three{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#40515f;
+  margin-bottom:5px;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid #cfd9e2;
+  border-radius:8px;
+  padding:10px;
+  background:#fff;
+  font:inherit;
+  font-size:14px;
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.typebar{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.typebar button{
+  border:1px solid var(--line);
+  background:#f8fafc;
+}
+
+.typebar button.active{
+  background:var(--navy);
+  color:#fff;
+}
+
+.money{
+  font-variant-numeric:tabular-nums;
+}
+
+.amountWords{
+  display:block;
+  margin-top:4px;
+  color:#667788;
+  font-size:12px;
+  font-style:italic;
+}
+
+.fixedClauses{
+  background:#f8fafc;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px;
+}
+
+.fixedClauses div{
+  padding:6px 4px;
+  border-bottom:1px solid #e7edf2;
+}
+
+.fixedClauses div:last-child{
+  border-bottom:0;
+}
+
+.calc{
+  background:#f6f9fc;
+  border:1px dashed #cbd8e3;
+  border-radius:10px;
+  padding:12px;
+}
+
+.calcrow{
+  display:flex;
+  justify-content:space-between;
+  padding:5px 0;
+}
+
+.calcrow.total{
+  border-top:1px solid var(--line);
+  margin-top:5px;
+  padding-top:10px;
+  font-size:16px;
+  font-weight:800;
+}
+
+.preview{
+  position:sticky;
+  top:14px;
+  align-self:start;
+}
+
+.paper{
+  background:white;
+  border:1px solid #cfd6dc;
+  padding:18px 22px;
+  min-height:1100px;
+  box-shadow:0 4px 20px #00000012;
+}
+
+.paperHeader{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  border-bottom:1px solid #cfd6dc;
+  padding-bottom:8px;
+  margin-bottom:8px;
+}
+
+.paperLogo{
+  width:65px;
+  height:45px;
+  object-fit:contain;
+}
+
+.partyGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.partyBox{
+  border:1px solid #cfd6dc;
+  padding:7px;
+  font-size:10px;
+  min-height:58px;
+}
+
+.partyBox b{
+  display:block;
+  color:var(--navy);
+  margin-bottom:3px;
+}
+
+.paper h1{
+  text-align:center;
+  font-size:18px;
+  margin:5px 0 10px;
+}
+
+.paper .company{
+  text-align:center;
+  font-size:13px;
+  font-weight:800;
+  color:var(--navy);
+}
+
+.paper .meta{
+  text-align:center;
+  font-size:10px;
+  color:#65727d;
+  margin-bottom:8px;
+  line-height:1.4;
+}
+
+.paper h4{
+  font-size:12px;
+  border-bottom:1px solid #999;
+  padding-bottom:4px;
+  margin:9px 0 5px;
+}
+
+.paper p{
+  font-size:11px;
+  line-height:1.35;
+  margin:4px 0;
+  text-align:justify;
+}
+
+.paper table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:11px;
+}
+
+.paper td{
+  border:1px solid #cfd6dc;
+  padding:4px;
+}
+
+.paper td:first-child{
+  width:30%;
+  font-weight:700;
+  background:#f7f8f9;
+}
+
+.financeColumns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  align-items:start;
+}
+
+.financeColumns h4{
+  margin-top:0;
+}
+
+.infoGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border:1px solid #cfd6dc;
+}
+
+.infoItem{
+  display:grid;
+  grid-template-columns:42% 58%;
+  border-bottom:1px solid #cfd6dc;
+}
+
+.infoItem:nth-child(odd){
+  border-right:1px solid #cfd6dc;
+}
+
+.infoItem:nth-last-child(-n+2){
+  border-bottom:0;
+}
+
+.infoItem b,
+.infoItem span{
+  padding:4px;
+  border-right:1px solid #cfd6dc;
+}
+
+.infoItem b{
+  background:#f7f8f9;
+}
+
+.infoItem span{
+  border-right:0;
+}
+
+.infoItem.fullInfo{
+  grid-column:1/-1;
+  border-right:0;
+}
+
+.infoItem.fullInfo b{
+  width:21%;
+}
+
+.sign{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:18px;
+  text-align:center;
+  font-size:10px;
+}
+
+.sign div{
+  min-height:50px;
+  border-top:1px solid #777;
+  padding-top:5px;
+}
+
+.notice{
+  font-size:12px;
+  background:#fff8e6;
+  border:1px solid #f0d58a;
+  padding:10px;
+  border-radius:8px;
+  color:#6d5200;
+  margin-bottom:12px;
+}
+
+.status{
+  font-size:12px;
+  color:var(--ok);
+  font-weight:700;
+}
+
+footer{
+  max-width:1500px;
+  margin:0 auto 30px;
+  padding:0 18px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* Kayıt kutusu */
+
+.saveBox{
+  background:#eef5fb;
+  border:1px solid #cbddeb;
+  border-radius:10px;
+  padding:12px;
+  margin-top:12px;
+}
+
+.saveBoxButtons{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.savedList{
+  margin-top:12px;
+}
+
+.savedItem{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  border:1px solid #d6e0e8;
+  border-radius:8px;
+  padding:9px;
+  margin-top:7px;
+  background:#fff;
+}
+
+.savedItemName{
+  font-weight:700;
+  font-size:13px;
+}
+
+.savedItemDate{
+  font-size:11px;
+  color:#687684;
+}
+
+.savedItemButtons{
+  display:flex;
+  gap:5px;
+}
+
+.savedItemButtons button{
+  padding:6px 9px;
+  font-size:11px;
+}
+
+/* PRINT */
+
+@page{
+  size:A4;
+  margin:8mm 8mm 8mm 8mm;
+}
+
+@media print{
+
+  html,
+  body{
+    background:#fff!important;
+    margin:0!important;
+    padding:0!important;
   }
 
-  body > * {
-    display: none !important;
+  body > *{
+    display:none!important;
   }
 
-  #sozlesmePrintModal {
-    display: block !important;
-    position: static !important;
-    background: #fff !important;
-    width: 100% !important;
-    height: auto !important;
+  .app{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    max-width:none!important;
   }
 
-  #sozlesmePrintModal > .modal-box {
-    display: block !important;
-    max-width: none !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
+  .formside,
+  header,
+  footer{
+    display:none!important;
   }
 
-  #sozlesmePrintModal > .modal-box > div:first-child {
-    display: none !important;
+  .preview{
+    display:block!important;
+    position:static!important;
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
   }
 
-  #sozlesmePrintArea {
-    display: block !important;
-    position: static !important;
-    width: 100% !important;
-    max-height: none !important;
-    overflow: visible !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    visibility: visible !important;
+  .preview .card{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    box-shadow:none!important;
   }
 
-  #sozlesmePrintArea * {
-    visibility: visible !important;
+  .paper{
+    display:block!important;
+    width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+    box-shadow:none!important;
   }
 
-  .sozlesme-doc > h2,
-  .sozlesme-doc > .soz-alt {
-    text-align: center !important;
-    width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+  .paper p{
+    font-size:10.5pt!important;
+    line-height:1.25!important;
+    margin:3px 0!important;
+  }
+
+  .paper h1{
+    font-size:17pt!important;
+    margin:4px 0 8px!important;
+  }
+
+  .paper h4{
+    font-size:10.5pt!important;
+    margin:7px 0 4px!important;
+  }
+
+  .paper table,
+  .paper td{
+    font-size:9.5pt!important;
+  }
+
+  .paper .meta{
+    font-size:8.5pt!important;
+  }
+
+  .partyBox{
+    font-size:8.5pt!important;
+  }
+
+  .sign{
+    font-size:9pt!important;
+  }
+
+  .paperHeader{
+    margin-top:0!important;
+  }
+}
+
+@media(max-width:1000px){
+
+  .app{
+    grid-template-columns:1fr;
+  }
+
+  .preview{
+    position:static;
+  }
+}
+
+@media(max-width:650px){
+
+  .grid,
+  .grid.three{
+    grid-template-columns:1fr;
+  }
+
+  .typebar{
+    grid-template-columns:1fr;
+  }
+
+  .paper{
+    padding:15px;
+  }
+
+  .financeColumns{
+    grid-template-columns:1fr;
   }
 }
 </style>
 </head>
+
 <body>
+
 <header>
-  <div><h1>DURSUNOĞLU İNŞAAT GAYRİMENKUL</h1><small>Profesyonel Sözleşme Merkezi • Ofis Kullanımı</small></div>
+  <div>
+    <h1>DURSUNOĞLU İNŞAAT GAYRİMENKUL</h1>
+    <small>Profesyonel Sözleşme Merkezi • Ofis Kullanımı</small>
+  </div>
+
   <div class="actions">
     <button onclick="saveSettings()">Firma Bilgilerini Kaydet</button>
-    <button class="primary" onclick="window.print()">PDF / Yazdır</button>
+    <button class="primary" onclick="saveContract()">Sözleşmeyi Kaydet</button>
+    <button class="dark" onclick="window.print()">PDF / Yazdır</button>
   </div>
 </header>
 
 <div class="app">
+
 <section class="formside">
+
   <div class="card">
+
     <h2>1. Sözleşme Türü</h2>
+
     <div class="typebar">
-      <button id="saleBtn" class="active" onclick="setType('sale')">Gayrimenkul Satış</button>
-      <button id="resBtn" onclick="setType('residential')">Konut Kira</button>
-      <button id="comBtn" onclick="setType('commercial')">Ticari Kira</button>
+      <button id="saleBtn" class="active" onclick="setType('sale')">
+        Gayrimenkul Satış
+      </button>
+
+      <button id="resBtn" onclick="setType('residential')">
+        Konut Kira
+      </button>
+
+      <button id="comBtn" onclick="setType('commercial')">
+        Ticari Kira
+      </button>
     </div>
+
     <div class="grid">
-      <div><label>Sözleşme Tarihi</label><input id="date" type="date"></div>
-      <div><label>Sözleşme No</label><input id="contractNo" placeholder="Örn. 2026-001"></div>
+
+      <div>
+        <label>Sözleşme Tarihi</label>
+        <input id="date" type="date">
+      </div>
+
+      <div>
+        <label>Sözleşme No</label>
+        <input id="contractNo" placeholder="Örn. 2026-001">
+      </div>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>2. Gayrimenkul Bilgileri</h2>
+
     <div class="grid">
-      <div><label>Gayrimenkul Türü</label><select id="propertyType"><option>Daire</option><option>Villa</option><option>İşyeri</option><option>Arsa</option><option>Tarla</option><option>Bahçe</option><option>Diğer</option></select></div>
-      <div><label>Tapu Durumu</label><select id="deed"><option>Kat Mülkiyeti</option><option>Kat İrtifakı</option><option>Arsa</option><option>Tarla</option><option>Hisseli</option><option>Diğer</option></select></div>
-      <div><label>İl</label><select id="province" onchange="loadDistricts()"></select></div>
-      <div><label>İlçe</label><select id="district" onchange="loadNeighborhoods()"><option value="">Önce il seçiniz</option></select></div>
-      <div><label>Mahalle</label><select id="neighborhood"><option value="">Önce ilçe seçiniz</option></select></div>
-      <div><label>Cadde / Sokak</label><input id="street" placeholder="Cadde / sokak adı"></div>
-      <div><label>Kapı No</label><input id="doorNo"></div>
-      <div><label>Daire / Bağımsız Bölüm No</label><input id="unitNo"></div>
-      <div><label>Ada No</label><input id="blockNo"></div>
-      <div><label>Parsel No</label><input id="parcelNo"></div>
-      <div><label>Pafta No</label><input id="sheetNo"></div>
-      <div><label>Taşınmaz Niteliği</label><input id="qualification"></div>
+
+      <div>
+        <label>Gayrimenkul Türü</label>
+        <select id="propertyType">
+          <option>Daire</option>
+          <option>Villa</option>
+          <option>İşyeri</option>
+          <option>Arsa</option>
+          <option>Tarla</option>
+          <option>Bahçe</option>
+          <option>Diğer</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Tapu Durumu</label>
+        <select id="deed">
+          <option>Kat Mülkiyeti</option>
+          <option>Kat İrtifakı</option>
+          <option>Arsa</option>
+          <option>Tarla</option>
+          <option>Hisseli</option>
+          <option>Diğer</option>
+        </select>
+      </div>
+
+      <div>
+        <label>İl</label>
+        <select id="province" onchange="loadDistricts()"></select>
+      </div>
+
+      <div>
+        <label>İlçe</label>
+        <select id="district" onchange="loadNeighborhoods()">
+          <option value="">Önce il seçiniz</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Mahalle</label>
+
+        <!-- ARTIK MAHALLE ELLE YAZILABİLİR -->
+        <input
+          id="neighborhood"
+          list="neighborhoodList"
+          placeholder="Mahalle adını yazınız"
+        >
+
+        <datalist id="neighborhoodList"></datalist>
+      </div>
+
+      <div>
+        <label>Cadde / Sokak</label>
+        <input id="street" placeholder="Cadde / sokak adı">
+      </div>
+
+      <div>
+        <label>Kapı No</label>
+        <input id="doorNo">
+      </div>
+
+      <div>
+        <label>Daire / Bağımsız Bölüm No</label>
+        <input id="unitNo">
+      </div>
+
+      <div>
+        <label>Ada No</label>
+        <input id="blockNo">
+      </div>
+
+      <div>
+        <label>Parsel No</label>
+        <input id="parcelNo">
+      </div>
+
+      <div>
+        <label>Pafta No</label>
+        <input id="sheetNo">
+      </div>
+
+      <div>
+        <label>Taşınmaz Niteliği</label>
+        <input id="qualification">
+      </div>
+
     </div>
-    <div class="notice" style="margin-top:12px">Adres seçimi için il → ilçe → mahalle bağlantısı hazırdır. Sokak/cadde alanı serbest bırakılmıştır; böylece eksik veya yeni adreslerde veri kaybı olmaz.</div>
+
+    <div class="notice" style="margin-top:12px">
+      Mahalle alanına artık doğrudan istediğiniz mahalle adını yazabilirsiniz.
+      İlçe seçerseniz bilinen mahalleler öneri olarak gösterilir.
+    </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>3. Taraf Bilgileri</h2>
+
     <div id="saleParties">
-      <h3>ALICI</h3><div class="grid">
-        <div><label>Ad Soyad / Ünvan</label><input id="buyerName"></div><div><label>T.C. Kimlik No / Vergi No</label><input id="buyerId"></div>
-        <div><label>Telefon</label><input id="buyerPhone" type="tel" inputmode="tel" placeholder="05__ ___ __ __"></div><div><label>E-posta</label><input id="buyerEmail"></div>
-        <div class="full"><label>Adres</label><textarea id="buyerAddress"></textarea></div>
+
+      <h3>ALICI</h3>
+
+      <div class="grid">
+
+        <div>
+          <label>Ad Soyad / Ünvan</label>
+          <input id="buyerName">
+        </div>
+
+        <div>
+          <label>T.C. Kimlik No / Vergi No</label>
+          <input id="buyerId">
+        </div>
+
+        <div>
+          <label>Telefon</label>
+          <input id="buyerPhone" type="tel" inputmode="tel">
+        </div>
+
+        <div>
+          <label>E-posta</label>
+          <input id="buyerEmail">
+        </div>
+
+        <div class="full">
+          <label>Adres</label>
+          <textarea id="buyerAddress"></textarea>
+        </div>
+
       </div>
-      <h3>SATICI</h3><div class="grid">
-        <div><label>Ad Soyad / Ünvan</label><input id="sellerName"></div><div><label>T.C. Kimlik No / Vergi No</label><input id="sellerId"></div>
-        <div><label>Telefon</label><input id="sellerPhone" type="tel" inputmode="tel" placeholder="05__ ___ __ __"></div><div><label>E-posta</label><input id="sellerEmail"></div>
-        <div class="full"><label>Adres</label><textarea id="sellerAddress"></textarea></div>
+
+
+      <h3>SATICI</h3>
+
+      <div class="grid">
+
+        <div>
+          <label>Ad Soyad / Ünvan</label>
+          <input id="sellerName">
+        </div>
+
+        <div>
+          <label>T.C. Kimlik No / Vergi No</label>
+          <input id="sellerId">
+        </div>
+
+        <div>
+          <label>Telefon</label>
+          <input id="sellerPhone" type="tel" inputmode="tel">
+        </div>
+
+        <div>
+          <label>E-posta</label>
+          <input id="sellerEmail">
+        </div>
+
+        <div class="full">
+          <label>Adres</label>
+          <textarea id="sellerAddress"></textarea>
+        </div>
+
       </div>
+
     </div>
+
+
     <div id="rentalParties" class="hidden">
-      <h3>KİRAYA VEREN</h3><div class="grid">
-        <div><label>Ad Soyad / Ünvan</label><input id="landlordName"></div><div><label>T.C. / Vergi No</label><input id="landlordId"></div>
-        <div><label>Telefon</label><input id="landlordPhone" type="tel" inputmode="tel" placeholder="05__ ___ __ __"></div><div><label>E-posta</label><input id="landlordEmail"></div>
-        <div class="full"><label>Adres</label><textarea id="landlordAddress"></textarea></div>
+
+      <h3>KİRAYA VEREN</h3>
+
+      <div class="grid">
+
+        <div>
+          <label>Ad Soyad / Ünvan</label>
+          <input id="landlordName">
+        </div>
+
+        <div>
+          <label>T.C. / Vergi No</label>
+          <input id="landlordId">
+        </div>
+
+        <div>
+          <label>Telefon</label>
+          <input id="landlordPhone" type="tel" inputmode="tel">
+        </div>
+
+        <div>
+          <label>E-posta</label>
+          <input id="landlordEmail">
+        </div>
+
+        <div class="full">
+          <label>Adres</label>
+          <textarea id="landlordAddress"></textarea>
+        </div>
+
       </div>
-      <h3>KİRACI</h3><div class="grid">
-        <div><label>Ad Soyad / Ünvan</label><input id="tenantName"></div><div><label>T.C. / Vergi No</label><input id="tenantId"></div>
-        <div><label>Telefon</label><input id="tenantPhone" type="tel" inputmode="tel" placeholder="05__ ___ __ __"></div><div><label>E-posta</label><input id="tenantEmail"></div>
-        <div class="full"><label>Adres</label><textarea id="tenantAddress"></textarea></div>
+
+
+      <h3>KİRACI</h3>
+
+      <div class="grid">
+
+        <div>
+          <label>Ad Soyad / Ünvan</label>
+          <input id="tenantName">
+        </div>
+
+        <div>
+          <label>T.C. / Vergi No</label>
+          <input id="tenantId">
+        </div>
+
+        <div>
+          <label>Telefon</label>
+          <input id="tenantPhone" type="tel" inputmode="tel">
+        </div>
+
+        <div>
+          <label>E-posta</label>
+          <input id="tenantEmail">
+        </div>
+
+        <div class="full">
+          <label>Adres</label>
+          <textarea id="tenantAddress"></textarea>
+        </div>
+
       </div>
+
     </div>
+
   </div>
+
 
   <div class="card" id="saleFinance">
+
     <h2>4. Satış ve Ödeme Bilgileri</h2>
+
     <div class="grid">
-      <div><label>Satış Bedeli (TL)</label><input class="money" id="salePrice" type="number" min="0" step="0.01"><span class="amountWords" id="salePriceWords"></span></div>
-      <div><label>Kapora (TL)</label><input class="money" id="deposit" type="number" min="0" step="0.01"><span class="amountWords" id="depositWords"></span></div>
-      <div><label>Kapora Kimde?</label><select id="depositHolder"><option>Alıcı</option><option>Satıcı</option><option>Emlakçı</option><option>Banka</option><option>Diğer</option></select></div>
-      <div><label>Kredi Kullanılacak mı?</label><select id="creditUsed" onchange="toggleCredit()"><option>Hayır</option><option>Evet</option></select></div>
-      <div id="creditTypeWrap" class="hidden"><label>Kredi Kuruluşu</label><select id="creditType"><option>Banka</option><option>Finans Kuruluşu</option><option>Diğer</option></select></div>
-      <div id="creditAmountWrap" class="hidden"><label>Kredi Miktarı (TL)</label><input class="money" id="creditAmount" type="number" min="0" step="0.01"><span class="amountWords" id="creditAmountWords"></span></div>
-      <div><label>Nakit / Diğer Ödeme (TL)</label><input class="money" id="cashPayment" type="number" min="0" step="0.01"><span class="amountWords" id="cashPaymentWords"></span></div>
+
+      <div>
+        <label>Satış Bedeli (TL)</label>
+        <input class="money" id="salePrice" type="text">
+        <span class="amountWords" id="salePriceWords"></span>
+      </div>
+
+      <div>
+        <label>Kapora (TL)</label>
+        <input class="money" id="deposit" type="text">
+        <span class="amountWords" id="depositWords"></span>
+      </div>
+
+      <div>
+        <label>Kapora Kimde?</label>
+        <select id="depositHolder">
+          <option>Alıcı</option>
+          <option>Satıcı</option>
+          <option>Emlakçı</option>
+          <option>Banka</option>
+          <option>Diğer</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Kredi Kullanılacak mı?</label>
+        <select id="creditUsed" onchange="toggleCredit()">
+          <option>Hayır</option>
+          <option>Evet</option>
+        </select>
+      </div>
+
+      <div id="creditTypeWrap" class="hidden">
+        <label>Kredi Kuruluşu</label>
+        <select id="creditType">
+          <option>Banka</option>
+          <option>Finans Kuruluşu</option>
+          <option>Diğer</option>
+        </select>
+      </div>
+
+      <div id="creditAmountWrap" class="hidden">
+        <label>Kredi Miktarı (TL)</label>
+        <input class="money" id="creditAmount" type="text">
+        <span class="amountWords" id="creditAmountWords"></span>
+      </div>
+
+      <div>
+        <label>Nakit / Diğer Ödeme (TL)</label>
+        <input class="money" id="cashPayment" type="text">
+        <span class="amountWords" id="cashPaymentWords"></span>
+      </div>
+
     </div>
+
+
     <div class="calc" style="margin-top:14px">
-      <div class="calcrow"><span>Satış Bedeli</span><b id="cSale">0,00 TL</b></div>
-      <div class="calcrow"><span>Kapora</span><b id="cDep">0,00 TL</b></div>
-      <div class="calcrow"><span>Kredi</span><b id="cCredit">0,00 TL</b></div>
-      <div class="calcrow total"><span>Kalan Ödeme</span><b id="cRemain">0,00 TL</b></div>
+
+      <div class="calcrow">
+        <span>Satış Bedeli</span>
+        <b id="cSale">₺0,00</b>
+      </div>
+
+      <div class="calcrow">
+        <span>Kapora</span>
+        <b id="cDep">₺0,00</b>
+      </div>
+
+      <div class="calcrow">
+        <span>Kredi</span>
+        <b id="cCredit">₺0,00</b>
+      </div>
+
+      <div class="calcrow total">
+        <span>Kalan Ödeme</span>
+        <b id="cRemain">₺0,00</b>
+      </div>
+
       <div id="balanceStatus" class="status" style="margin-top:8px"></div>
+
     </div>
+
+
     <h3>Komisyon</h3>
+
     <div class="grid">
-      <div><label>Satıcı Komisyonu (TL)</label><input class="money" id="sellerCommission" type="number" min="0" step="0.01"><span class="amountWords" id="sellerCommissionWords"></span></div>
-      <div><label>Alıcı Komisyonu (TL)</label><input class="money" id="buyerCommission" type="number" min="0" step="0.01"><span class="amountWords" id="buyerCommissionWords"></span></div>
-      <div class="full"><label>KDV (%) — komisyon hesaplamasının altında uygulanır</label><input id="vat" type="number" min="0" step="0.01" value="20"></div>
-      <div><label>Cayma Tazminatı (TL)</label><input class="money" id="penalty" type="number" min="0" step="0.01"><span class="amountWords" id="penaltyWords"></span></div>
-      <div><label>Tapu Harçları</label><select id="titleFee"><option value="ALICI">ALICI</option><option value="SATICI">SATICI</option><option value="TARAFLAR ARASINDA PAYLAŞILACAK">TARAFLAR ARASINDA PAYLAŞILACAK</option></select></div>
-      <div><label>İskan Sorumlusu</label><input id="iskanParty" placeholder="Örn. SATICI"></div>
-      <div><label>Kredi Çıkmazsa</label><input id="creditNotApproved" value="Kapora iade edilir"></div>
-      <div><label>Satış Tamamlanma Süresi</label><input id="saleDeadline" value="10"> iş günü</div>
-      <div class="full"><label>Teslim / Boşaltma Şartı</label><input id="delivery" placeholder="Örn. Tapu devrinden sonra 3 ay içinde teslim"></div>
+
+      <div>
+        <label>Satıcı Komisyonu (TL)</label>
+        <input class="money" id="sellerCommission" type="text">
+      </div>
+
+      <div>
+        <label>Alıcı Komisyonu (TL)</label>
+        <input class="money" id="buyerCommission" type="text">
+      </div>
+
+      <div class="full">
+        <label>KDV (%)</label>
+        <input id="vat" type="number" value="20">
+      </div>
+
+      <div>
+        <label>Cayma Tazminatı (TL)</label>
+        <input class="money" id="penalty" type="text">
+      </div>
+
+      <div>
+        <label>Tapu Harçları</label>
+        <select id="titleFee">
+          <option>ALICI</option>
+          <option>SATICI</option>
+          <option>TARAFLAR ARASINDA PAYLAŞILACAK</option>
+        </select>
+      </div>
+
+      <div>
+        <label>İskan Sorumlusu</label>
+        <input id="iskanParty">
+      </div>
+
+      <div>
+        <label>Kredi Çıkmazsa</label>
+        <input id="creditNotApproved" value="Kapora iade edilir">
+      </div>
+
+      <div>
+        <label>Satış Tamamlanma Süresi</label>
+        <input id="saleDeadline" value="10">
+      </div>
+
+      <div class="full">
+        <label>Teslim / Boşaltma Şartı</label>
+        <input id="delivery">
+      </div>
+
     </div>
+
+
     <div class="calc" style="margin-top:12px">
-      <div class="calcrow"><span>Toplam Komisyon</span><b id="cComm">0,00 TL</b></div>
-      <div class="calcrow"><span>KDV</span><b id="cVat">0,00 TL</b></div>
-      <div class="calcrow total"><span>Komisyon + KDV</span><b id="cCommTotal">0,00 TL</b></div>
+
+      <div class="calcrow">
+        <span>Toplam Komisyon</span>
+        <b id="cComm">₺0,00</b>
+      </div>
+
+      <div class="calcrow">
+        <span>KDV</span>
+        <b id="cVat">₺0,00</b>
+      </div>
+
+      <div class="calcrow total">
+        <span>Komisyon + KDV</span>
+        <b id="cCommTotal">₺0,00</b>
+      </div>
+
     </div>
+
   </div>
+
 
   <div class="card hidden" id="rentalFinance">
+
     <h2>4. Kira Bilgileri</h2>
+
     <div class="grid">
-      <div><label>Aylık Kira (TL)</label><input class="money" id="rent" type="number" min="0" step="0.01"><span class="amountWords" id="rentWords"></span></div>
-      <div><label>Depozito (TL)</label><input class="money" id="rentDeposit" type="number" min="0" step="0.01"><span class="amountWords" id="rentDepositWords"></span></div>
-      <div><label>Kira Başlangıç Tarihi</label><input id="rentStart" type="date"></div>
-      <div><label>Kira Süresi (Ay)</label><input id="rentTerm" type="number" min="1" value="12"></div>
-      <div><label>Kira Ödeme Günü</label><input id="rentDay" type="number" min="1" max="31" value="1"></div>
-      <div><label>KDV (%)</label><input id="rentVat" type="number" min="0" step="0.01" value="20"></div>
-      <div><label>Stopaj (TL)</label><input class="money" id="withholding" type="number" min="0" step="0.01"><span class="amountWords" id="withholdingWords"></span></div>
-      <div><label>Aidat (TL)</label><input class="money" id="dues" type="number" min="0" step="0.01"><span class="amountWords" id="duesWords"></span></div>
-      <div class="full"><label>Artış / Özel Ödeme Şartı</label><input id="rentIncrease" placeholder="Örn. sözleşme hükümlerine göre"></div>
+
+      <div>
+        <label>Aylık Kira (TL)</label>
+        <input class="money" id="rent" type="text">
+      </div>
+
+      <div>
+        <label>Depozito (TL)</label>
+        <input class="money" id="rentDeposit" type="text">
+      </div>
+
+      <div>
+        <label>Kira Başlangıç Tarihi</label>
+        <input id="rentStart" type="date">
+      </div>
+
+      <div>
+        <label>Kira Süresi (Ay)</label>
+        <input id="rentTerm" type="number" value="12">
+      </div>
+
+      <div>
+        <label>Kira Ödeme Günü</label>
+        <input id="rentDay" type="number" min="1" max="31" value="1">
+      </div>
+
+      <div>
+        <label>KDV (%)</label>
+        <input id="rentVat" type="number" value="20">
+      </div>
+
+      <div>
+        <label>Stopaj (TL)</label>
+        <input class="money" id="withholding" type="text">
+      </div>
+
+      <div>
+        <label>Aidat (TL)</label>
+        <input class="money" id="dues" type="text">
+      </div>
+
+      <div class="full">
+        <label>Artış / Özel Ödeme Şartı</label>
+        <input id="rentIncrease">
+      </div>
+
     </div>
-    <div class="calc" style="margin-top:12px">
-      <div class="calcrow"><span>Aylık Kira</span><b id="rRent">0,00 TL</b></div>
-      <div class="calcrow"><span>Depozito</span><b id="rDep">0,00 TL</b></div>
-      <div class="calcrow total"><span>Sözleşme Süresi</span><b id="rTerm">12 Ay</b></div>
-    </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>5. Özel Şartlar</h2>
-    <div id="saleClauses">
-      <div class="notice">Satış sözleşmesindeki ana maddeler sabittir ve sözleşmede otomatik olarak yer alır. Tutar, isim, tarih ve ödeme bilgileri formdan otomatik doldurulur.</div>
-      <div class="fixedClauses">
-        <div><b>Madde 1 — Satış anlaşması</b></div>
-        <div><b>Madde 2 — Kapora</b></div>
-        <div><b>Madde 3 — Ödeme planı</b></div>
-        <div><b>Madde 4 — Konut kredisi</b></div>
-        <div><b>Madde 5 — Alıcının cayması</b></div>
-        <div><b>Madde 6 — Anlaşmazlık ve zarar</b></div>
-        <div><b>Madde 7 — Tarafların talepleri</b></div>
-        <div><b>Madde 8 — Alıcı komisyonu</b></div>
-        <div><b>Madde 9 — Satıcı komisyonu</b></div>
-        <div><b>Madde 10 — Tapu öncesi borçlar</b></div>
-        <div><b>Madde 11 — Tapu harçları</b></div>
-        <div><b>Madde 12 — Teslim</b></div>
-        <div><b>Madde 13 — Cayma tazminatı</b></div>
-        <div><b>Madde 14 — İskan</b></div>
-        <div><b>Madde 15 — Kredi çıkmaması</b></div>
-        <div><b>Madde 16 — Kaporanın mahsup edilmesi</b></div>
-        <div><b>Madde 17 — Satışın süresinde gerçekleşmemesi</b></div>
-      </div>
-      <label style="margin-top:12px">Ek Özel Şartlar</label><textarea id="extraTerms" placeholder="İhtiyaca göre ek madde yazabilirsiniz..."></textarea>
-    </div>
-    <div id="rentalClauses" class="hidden">
-      <div class="notice">Kira kontratı; konut veya ticari kira seçimine göre düzenlenir. Tutar, taraf, adres ve ödeme bilgileri otomatik doldurulur.</div>
-      <div class="fixedClauses">
-        <div><b>Madde 1 — Kullanım amacı ve teslim</b></div>
-        <div><b>Madde 2 — Kira bedeli ve ödeme günü</b></div>
-        <div><b>Madde 3 — Depozito ve yan giderler</b></div>
-        <div><b>Madde 4 — Kira artışı ve süre</b></div>
-        <div><b>Madde 5 — Bakım, onarım ve hasar</b></div>
-        <div><b>Madde 6 — Tahliye ve fesih</b></div>
-      </div>
-      <label style="margin-top:12px">Ek Özel Şartlar</label><textarea id="rentalExtraTerms" placeholder="Kira kontratına ek madde yazabilirsiniz..."></textarea>
-    </div>
+
+    <textarea
+      id="extraTerms"
+      style="min-height:150px"
+      placeholder="Buraya ek özel şartlarınızı yazabilirsiniz..."
+    ></textarea>
+
   </div>
+
 
   <div class="card" id="companyCard">
+
     <h2>6. Firma Bilgileri</h2>
+
     <div class="grid">
-      <div class="full"><label>Firma Ünvanı</label><input id="company" value="DURSUNOĞLU İNŞAAT ELK MLZ SAN VE TİC LTD ŞTİ"></div>
-      <div class="full"><label>Logo (isteğe bağlı — PNG/JPG/SVG)</label><input id="logoFile" type="file" accept="image/*"><button type="button" class="dark" onclick="clearLogo()">Logoyu Kaldır</button></div>
-      <div><label>Yetki Belge No</label><input id="authority" value="3400490"></div>
-      <div><label>Vergi Dairesi</label><input id="taxOffice" value="SULTANBEYLİ V.D"></div>
-      <div><label>Vergi No</label><input id="taxNo" value="318 052 38 22"></div>
-      <div><label>Telefon</label><input id="companyPhone" value="(216) 430-9249"></div>
-      <div><label>E-posta</label><input id="companyEmail" value="dursunogluinsaat@gmail.com.tr"></div>
-      <div class="full"><label>Ofis Adresi</label><textarea id="companyAddress">YENİDOĞAN MAH BAHÇELİ EVLER CAD 46-52 NO 1 AK SANCAKTEPE/İSTANBUL</textarea></div>
+
+      <div class="full">
+        <label>Firma Ünvanı</label>
+        <input id="company"
+        value="DURSUNOĞLU İNŞAAT ELK MLZ SAN VE TİC LTD ŞTİ">
+      </div>
+
+      <div class="full">
+        <label>Logo</label>
+        <input id="logoFile" type="file" accept="image/*">
+      </div>
+
+      <div>
+        <label>Yetki Belge No</label>
+        <input id="authority" value="3400490">
+      </div>
+
+      <div>
+        <label>Vergi Dairesi</label>
+        <input id="taxOffice" value="SULTANBEYLİ V.D">
+      </div>
+
+      <div>
+        <label>Vergi No</label>
+        <input id="taxNo" value="318 052 38 22">
+      </div>
+
+      <div>
+        <label>Telefon</label>
+        <input id="companyPhone" value="(216) 430-9249">
+      </div>
+
+      <div>
+        <label>E-posta</label>
+        <input id="companyEmail" value="dursunogluinsaat@gmail.com.tr">
+      </div>
+
+      <div class="full">
+        <label>Ofis Adresi</label>
+        <textarea id="companyAddress">YENİDOĞAN MAH BAHÇELİ EVLER CAD 46-52 NO 1 AK SANCAKTEPE/İSTANBUL</textarea>
+      </div>
+
     </div>
+
   </div>
+
+
   <div class="card">
+
     <h2>7. İmza ve Kira Ekleri</h2>
+
     <div class="grid">
-      <div><label>İmza Alanı</label><select id="signatureMode"><option value="blank">Boş imza alanı</option><option value="typed">Dijital imza metni</option><option value="image">İmza görseli</option></select></div>
-      <div><label>Dijital İmza Metni</label><input id="signatureText" placeholder="Ad Soyad / elektronik imza açıklaması"></div>
-      <div class="full"><label>İmza Görseli (PNG/JPG)</label><input id="signatureFile" type="file" accept="image/*"></div>
-      <div class="full"><label>Demirbaş Listesi (kira için her satıra bir kalem)</label><textarea id="inventory" placeholder="Ankastre ocak — 1 adet&#10;Klima — 1 adet&#10;Kombi — 1 adet"></textarea></div>
-      <div class="full"><label>Tahliye Taahhütnamesi Özel Notu</label><textarea id="evacuationNote" placeholder="Tahliye tarihi veya ek şart yazabilirsiniz..."></textarea></div>
+
+      <div>
+        <label>İmza Alanı</label>
+        <select id="signatureMode">
+          <option value="blank">Boş imza alanı</option>
+          <option value="typed">Dijital imza metni</option>
+          <option value="image">İmza görseli</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Dijital İmza Metni</label>
+        <input id="signatureText">
+      </div>
+
+      <div class="full">
+        <label>İmza Görseli</label>
+        <input id="signatureFile" type="file" accept="image/*">
+      </div>
+
+      <div class="full">
+        <label>Demirbaş Listesi</label>
+        <textarea id="inventory"></textarea>
+      </div>
+
+      <div class="full">
+        <label>Tahliye Taahhütnamesi Özel Notu</label>
+        <textarea id="evacuationNote"></textarea>
+      </div>
+
     </div>
-    <div class="notice">Dijital imza alanı, imza görseli veya metin yerleştirmek içindir; nitelikli elektronik imza yerine geçmeyebilir. Resmî kullanım öncesi hukuki uygunluğu kontrol ediniz.</div>
+
   </div>
+
+
+  <!-- KAYIT SİSTEMİ -->
+
+  <div class="card">
+
+    <h2>8. Sözleşme Kayıtları</h2>
+
+    <div class="saveBox">
+
+      <label>Kayıt adı</label>
+
+      <input
+        id="saveName"
+        placeholder="Örn. Ahmet Yılmaz - Daire Satış"
+      >
+
+      <div class="saveBoxButtons">
+
+        <button class="primary" onclick="saveContract()">
+          Sözleşmeyi Kaydet
+        </button>
+
+        <button onclick="newContract()">
+          Yeni Sözleşme
+        </button>
+
+      </div>
+
+      <div id="savedList" class="savedList"></div>
+
+    </div>
+
+  </div>
+
 </section>
+
 
 <section class="preview">
+
   <div class="card">
+
     <div class="paper" id="paper"></div>
+
   </div>
+
 </section>
+
 </div>
-<footer>Bu uygulama ofis içi sözleşme hazırlama ve belge düzenleme amacıyla tasarlanmıştır. Hukuki kullanım öncesinde sözleşme metinlerinin hukukçu tarafından kontrol edilmesi önerilir.</footer>
+
+
+<footer>
+  Bu uygulama ofis içi sözleşme hazırlama ve belge düzenleme amacıyla tasarlanmıştır.
+</footer>
+
 
 <script>
+
+/* =========================================================
+   VERİLER
+========================================================= */
+
 const districts={
-"İstanbul":["Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar","Bahçelievler","Bakırköy","Başakşehir","Bayrampaşa","Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece","Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan","Fatih","Gaziosmanpaşa","Güngören","Kadıköy","Kağıthane","Kartal","Küçükçekmece","Maltepe","Pendik","Sancaktepe","Sarıyer","Silivri","Şile","Şişli","Sultanbeyli","Sultangazi","Tuzla","Ümraniye","Üsküdar","Zeytinburnu"],
-"Ankara":["Altındağ","Çankaya","Etimesgut","Gölbaşı","Keçiören","Mamak","Pursaklar","Sincan","Yenimahalle"],
-"İzmir":["Aliağa","Balçova","Bayındır","Bayraklı","Bergama","Bornova","Buca","Çeşme","Çiğli","Dikili","Foça","Gaziemir","Güzelbahçe","Karabağlar","Karşıyaka","Kemalpaşa","Konak","Menemen","Narlıdere","Ödemiş","Seferihisar","Selçuk","Torbalı","Urla"],
-"Bursa":["Büyükorhan","Gemlik","Gürsu","İnegöl","İznik","Karacabey","Keles","Mudanya","Mustafakemalpaşa","Nilüfer","Orhaneli","Osmangazi","Orhangazi","Yenişehir","Yıldırım"],
-"Balıkesir":["Altıeylül","Ayvalık","Balya","Bandırma","Bigadiç","Burhaniye","Edremit","Erdek","Gömeç","Havran","İvrindi","Karesi","Kepsut","Manyas","Marmara","Savaştepe","Sındırgı","Susurluk"],
-"Çanakkale":["Ayvacık","Bayramiç","Biga","Bozcaada","Çan","Eceabat","Ezine","Gelibolu","Gökçeada","Lapseki","Merkez","Yenice"],
-"Kastamonu":["Abana","Ağlı","Araç","Azdavay","Bozkurt","Cide","Daday","Devrekani","Doğanyurt","Hanönü","İhsangazi","İnebolu","Küre","Merkez","Pınarbaşı","Seydiler","Şenpazar","Taşköprü","Tosya"]
+
+"İstanbul":[
+"Adalar","Arnavutköy","Ataşehir","Avcılar","Bağcılar",
+"Bahçelievler","Bakırköy","Başakşehir","Bayrampaşa",
+"Beşiktaş","Beykoz","Beylikdüzü","Beyoğlu","Büyükçekmece",
+"Çatalca","Çekmeköy","Esenler","Esenyurt","Eyüpsultan",
+"Fatih","Gaziosmanpaşa","Güngören","Kadıköy","Kağıthane",
+"Kartal","Küçükçekmece","Maltepe","Pendik","Sancaktepe",
+"Sarıyer","Silivri","Şile","Şişli","Sultanbeyli",
+"Sultangazi","Tuzla","Ümraniye","Üsküdar","Zeytinburnu"
+],
+
+"Ankara":[
+"Altındağ","Çankaya","Etimesgut","Gölbaşı",
+"Keçiören","Mamak","Pursaklar","Sincan","Yenimahalle"
+],
+
+"İzmir":[
+"Aliağa","Balçova","Bayındır","Bayraklı","Bergama",
+"Bornova","Buca","Çeşme","Çiğli","Dikili","Foça",
+"Gaziemir","Güzelbahçe","Karabağlar","Karşıyaka",
+"Kemalpaşa","Konak","Menemen","Narlıdere","Ödemiş",
+"Seferihisar","Selçuk","Torbalı","Urla"
+],
+
+"Bursa":[
+"Büyükorhan","Gemlik","Gürsu","İnegöl","İznik",
+"Karacabey","Keles","Mudanya","Mustafakemalpaşa",
+"Nilüfer","Orhaneli","Osmangazi","Orhangazi",
+"Yenişehir","Yıldırım"
+],
+
+"Balıkesir":[
+"Altıeylül","Ayvalık","Balya","Bandırma","Bigadiç",
+"Burhaniye","Edremit","Erdek","Gömeç","Havran",
+"İvrindi","Karesi","Kepsut","Manyas","Marmara",
+"Savaştepe","Sındırgı","Susurluk"
+],
+
+"Çanakkale":[
+"Ayvacık","Bayramiç","Biga","Bozcaada","Çan",
+"Eceabat","Ezine","Gelibolu","Gökçeada","Lapseki",
+"Merkez","Yenice"
+],
+
+"Kastamonu":[
+"Abana","Ağlı","Araç","Azdavay","Bozkurt","Cide",
+"Daday","Devrekani","Doğanyurt","Hanönü","İhsangazi",
+"İnebolu","Küre","Merkez","Pınarbaşı","Seydiler",
+"Şenpazar","Taşköprü","Tosya"
+]
+
 };
-const provinces=["Adana","Adıyaman","Afyonkarahisar","Ağrı","Aksaray","Amasya","Ankara","Antalya","Ardahan","Artvin","Aydın","Balıkesir","Bartın","Batman","Bayburt","Bilecik","Bingöl","Bitlis","Bolu","Burdur","Bursa","Çanakkale","Çankırı","Çorum","Denizli","Diyarbakır","Düzce","Edirne","Elazığ","Erzincan","Erzurum","Eskişehir","Gaziantep","Giresun","Gümüşhane","Hakkari","Hatay","Iğdır","Isparta","İstanbul","İzmir","Kahramanmaraş","Karabük","Karaman","Kars","Kastamonu","Kayseri","Kilis","Kırıkkale","Kırklareli","Kırşehir","Kocaeli","Konya","Kütahya","Malatya","Manisa","Mardin","Mersin","Muğla","Muş","Nevşehir","Niğde","Ordu","Osmaniye","Rize","Sakarya","Samsun","Siirt","Sinop","Sivas","Şanlıurfa","Şırnak","Tekirdağ","Tokat","Trabzon","Tunceli","Uşak","Van","Yalova","Yozgat","Zonguldak"];
-let type="sale", logoData="", signatureData="";
+
+const provinces=[
+"Adana","Adıyaman","Afyonkarahisar","Ağrı","Aksaray",
+"Amasya","Ankara","Antalya","Ardahan","Artvin","Aydın",
+"Balıkesir","Bartın","Batman","Bayburt","Bilecik","Bingöl",
+"Bitlis","Bolu","Burdur","Bursa","Çanakkale","Çankırı",
+"Çorum","Denizli","Diyarbakır","Düzce","Edirne","Elazığ",
+"Erzincan","Erzurum","Eskişehir","Gaziantep","Giresun",
+"Gümüşhane","Hakkari","Hatay","Iğdır","Isparta","İstanbul",
+"İzmir","Kahramanmaraş","Karabük","Karaman","Kars",
+"Kastamonu","Kayseri","Kilis","Kırıkkale","Kırklareli",
+"Kırşehir","Kocaeli","Konya","Kütahya","Malatya","Manisa",
+"Mardin","Mersin","Muğla","Muş","Nevşehir","Niğde","Ordu",
+"Osmaniye","Rize","Sakarya","Samsun","Siirt","Sinop","Sivas",
+"Şanlıurfa","Şırnak","Tekirdağ","Tokat","Trabzon","Tunceli",
+"Uşak","Van","Yalova","Yozgat","Zonguldak"
+];
+
+let type="sale";
+let logoData="";
+let signatureData="";
+
 const $=id=>document.getElementById(id);
-const val=id=>($(id)?.value||"").trim();
-const num=id=>{let s=val(id).replace(/₺/g,"").replace(/\s/g,"");if(s.includes(","))s=s.replace(/\./g,"").replace(",",".");return parseFloat(s)||0};
-const tl=n=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY",minimumFractionDigits:2}).format(n);
-const moneyInput=n=>new Intl.NumberFormat("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(n)||0);
-function formatPhoneInput(e){let d=e.target.value.replace(/\D/g,"").slice(0,11);if(d.startsWith("90"))d="0"+d.slice(2);if(d.length>0&&!d.startsWith("0"))d="0"+d;let x=d.slice(0,4);if(d.length>4)x+=" "+d.slice(4,7);if(d.length>7)x+=" "+d.slice(7,9);if(d.length>9)x+=" "+d.slice(9,11);e.target.value=x;render()}
+
+const val=id=>{
+  const el=$(id);
+  return el ? String(el.value||"").trim() : "";
+};
+
+const num=id=>{
+  let s=val(id)
+    .replace(/₺/g,"")
+    .replace(/\s/g,"");
+
+  if(s.includes(",")){
+    s=s.replace(/\./g,"").replace(",",".");
+  }
+
+  return parseFloat(s)||0;
+};
+
+const tl=n=>
+  new Intl.NumberFormat("tr-TR",{
+    style:"currency",
+    currency:"TRY",
+    minimumFractionDigits:2
+  }).format(Number(n)||0);
+
+const moneyInput=n=>
+  new Intl.NumberFormat("tr-TR",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  }).format(Number(n)||0);
+
+
+/* =========================================================
+   BAŞLAT
+========================================================= */
+
 function init(){
+
   $("date").value=new Date().toISOString().slice(0,10);
-  $("province").innerHTML='<option value="">İl seçiniz</option>'+provinces.map(x=>`<option>${x}</option>`).join("");
-  document.querySelectorAll("input,select,textarea").forEach(e=>e.addEventListener("input",render));
-  ["buyerPhone","sellerPhone","landlordPhone","tenantPhone"].forEach(id=>$(id).addEventListener("input",formatPhoneInput));
-  document.querySelectorAll("input.money").forEach(e=>{e.type="text";e.inputMode="decimal";e.addEventListener("blur",()=>{e.value=e.value?moneyInput(num(e.id)):"";render()})});
+
+  $("province").innerHTML=
+    '<option value="">İl seçiniz</option>'+
+    provinces.map(x=>`<option>${x}</option>`).join("");
+
+  document
+    .querySelectorAll("input,select,textarea")
+    .forEach(e=>{
+      e.addEventListener("input",render);
+      e.addEventListener("change",render);
+    });
+
+  document
+    .querySelectorAll("input.money")
+    .forEach(e=>{
+      e.addEventListener("blur",()=>{
+        if(e.value){
+          e.value=moneyInput(num(e.id));
+        }
+        render();
+      });
+    });
+
   $("logoFile").addEventListener("change",readLogo);
+
   $("signatureFile").addEventListener("change",readSignature);
-  loadSettings(); render();
+
+  loadSettings();
+
+  render();
+
+  renderSavedList();
 }
+
+
+/* =========================================================
+   ADRES
+========================================================= */
+
 function loadDistricts(){
-  const p=val("province"), list=districts[p]||[];
-  $("district").innerHTML='<option value="">İlçe seçiniz</option>'+list.map(x=>`<option>${x}</option>`).join("");
-  $("neighborhood").innerHTML='<option value="">Mahalle adı yaz / seç</option>';
+
+  const p=val("province");
+
+  const list=districts[p]||[];
+
+  $("district").innerHTML=
+    '<option value="">İlçe seçiniz</option>'+
+    list.map(x=>`<option>${x}</option>`).join("");
+
+  $("neighborhood").value="";
+
+  $("neighborhoodList").innerHTML="";
+
   render();
 }
+
+
 function loadNeighborhoods(){
+
   const d=val("district");
-  $("neighborhood").innerHTML='<option value="">Mahalle adını seçiniz</option>';
-  if(d==="Sancaktepe") ["Safa","Sancaktepe","Yenidoğan","Meclis","Abdurrahmangazi","Akpınar","Atatürk","Emek","Eyüp Sultan","Fatih","İnönü","Kemal Türkler","Merve","Osmangazi","Paşaköy","Sarıgazi"].forEach(x=>$("neighborhood").insertAdjacentHTML("beforeend",`<option>${x}</option>`));
-  else if(d==="Burhaniye") ["Bahadınlı","Kuyucak","Merkez","Pelitoğlu","Şarköy"].forEach(x=>$("neighborhood").insertAdjacentHTML("beforeend",`<option>${x}</option>`));
-  else $("neighborhood").insertAdjacentHTML("beforeend",`<option>Mahalle adını elle giriniz</option>`);
+
+  const list=$("neighborhoodList");
+
+  list.innerHTML="";
+
+  const neighborhoods={
+
+    "Sancaktepe":[
+      "Safa",
+      "Sancaktepe",
+      "Yenidoğan",
+      "Meclis",
+      "Abdurrahmangazi",
+      "Akpınar",
+      "Atatürk",
+      "Emek",
+      "Eyüp Sultan",
+      "Fatih",
+      "İnönü",
+      "Kemal Türkler",
+      "Merve",
+      "Osmangazi",
+      "Paşaköy",
+      "Sarıgazi"
+    ],
+
+    "Burhaniye":[
+      "Bahadınlı",
+      "Kuyucak",
+      "Merkez",
+      "Pelitoğlu",
+      "Şarköy"
+    ]
+
+  };
+
+  (neighborhoods[d]||[]).forEach(x=>{
+    const option=document.createElement("option");
+    option.value=x;
+    list.appendChild(option);
+  });
+
   render();
 }
+
+
+/* =========================================================
+   SÖZLEŞME TÜRÜ
+========================================================= */
+
 function setType(t){
- type=t;
- ["saleBtn","resBtn","comBtn"].forEach(id=>$(id).classList.remove("active"));
- $(t==="sale"?"saleBtn":t==="residential"?"resBtn":"comBtn").classList.add("active");
- $("saleParties").classList.toggle("hidden",t!=="sale"); $("rentalParties").classList.toggle("hidden",t==="sale");
- $("saleFinance").classList.toggle("hidden",t!=="sale"); $("rentalFinance").classList.toggle("hidden",t==="sale"); $("companyCard").classList.toggle("hidden",t!=="sale");
- $("saleClauses").classList.toggle("hidden",t!=="sale"); $("rentalClauses").classList.toggle("hidden",t==="sale");
- $("propertyType").value=t==="residential"?"Daire":t==="commercial"?"İşyeri":$("propertyType").value;
- render();
+
+  type=t;
+
+  ["saleBtn","resBtn","comBtn"]
+    .forEach(id=>$(id).classList.remove("active"));
+
+  $(t==="sale"
+    ?"saleBtn"
+    :t==="residential"
+      ?"resBtn"
+      :"comBtn"
+  ).classList.add("active");
+
+  $("saleParties")
+    .classList.toggle("hidden",t!=="sale");
+
+  $("rentalParties")
+    .classList.toggle("hidden",t==="sale");
+
+  $("saleFinance")
+    .classList.toggle("hidden",t!=="sale");
+
+  $("rentalFinance")
+    .classList.toggle("hidden",t==="sale");
+
+  $("companyCard")
+    .classList.toggle("hidden",t!=="sale");
+
+  render();
 }
+
+
+/* =========================================================
+   KREDİ
+========================================================= */
+
 function toggleCredit(){
- const yes=val("creditUsed")==="Evet";
- $("creditTypeWrap").classList.toggle("hidden",!yes); $("creditAmountWrap").classList.toggle("hidden",!yes); render();
+
+  const yes=val("creditUsed")==="Evet";
+
+  $("creditTypeWrap").classList.toggle("hidden",!yes);
+
+  $("creditAmountWrap").classList.toggle("hidden",!yes);
+
+  render();
 }
+
+
+/* =========================================================
+   FİRMA KAYDI
+========================================================= */
+
 function saveSettings(){
- const data={};
- ["company","authority","taxOffice","taxNo","companyPhone","companyEmail","companyAddress"].forEach(id=>data[id]=val(id));
- data.logo=logoData; localStorage.setItem("dursunogluFirma",JSON.stringify(data)); alert("Firma bilgileri ve logo kaydedildi. Bundan sonra bu bilgiler otomatik kullanılacaktır.");
+
+  const data={};
+
+  [
+    "company",
+    "authority",
+    "taxOffice",
+    "taxNo",
+    "companyPhone",
+    "companyEmail",
+    "companyAddress"
+  ].forEach(id=>{
+    data[id]=val(id);
+  });
+
+  data.logo=logoData;
+
+  localStorage.setItem(
+    "dursunogluFirma",
+    JSON.stringify(data)
+  );
+
+  alert("Firma bilgileri kaydedildi.");
 }
+
+
 function loadSettings(){
- try{const d=JSON.parse(localStorage.getItem("dursunogluFirma")||"{}");Object.entries(d).forEach(([k,v])=>{if(k==="logo") logoData=v; else if($(k)&&v)$(k).value=v})}catch(e){}
+
+  try{
+
+    const d=JSON.parse(
+      localStorage.getItem("dursunogluFirma")||"{}"
+    );
+
+    Object.entries(d).forEach(([k,v])=>{
+
+      if(k==="logo"){
+        logoData=v;
+      }
+      else if($(k) && v){
+        $(k).value=v;
+      }
+
+    });
+
+  }catch(e){}
+
 }
-function readLogo(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{logoData=r.result;render()};r.readAsDataURL(f)}
-function readSignature(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{signatureData=r.result;render()};r.readAsDataURL(f)}
-function clearLogo(){logoData="";$("logoFile").value="";localStorage.removeItem("dursunogluFirma");render()}
-function phone(v){
-  let x=String(v||"").replace(/\D/g,"");
-  if(x.startsWith("90") && x.length>10) x=x.slice(2);
-  if(x.startsWith("0")) x=x.slice(1);
-  return x;
+
+
+/* =========================================================
+   LOGO / İMZA
+========================================================= */
+
+function readLogo(e){
+
+  const f=e.target.files[0];
+
+  if(!f)return;
+
+  const r=new FileReader();
+
+  r.onload=()=>{
+    logoData=r.result;
+    render();
+  };
+
+  r.readAsDataURL(f);
 }
-const ones=["sıfır","bir","iki","üç","dört","beş","altı","yedi","sekiz","dokuz"];
-const tens=["","on","yirmi","otuz","kırk","elli","altmış","yetmiş","seksen","doksan"];
-const scales=["","bin","milyon","milyar","trilyon"];
+
+
+function readSignature(e){
+
+  const f=e.target.files[0];
+
+  if(!f)return;
+
+  const r=new FileReader();
+
+  r.onload=()=>{
+    signatureData=r.result;
+    render();
+  };
+
+  r.readAsDataURL(f);
+}
+
+
+/* =========================================================
+   PARA YAZI
+========================================================= */
+
+const ones=[
+  "sıfır","bir","iki","üç","dört",
+  "beş","altı","yedi","sekiz","dokuz"
+];
+
+const tens=[
+  "","on","yirmi","otuz","kırk",
+  "elli","altmış","yetmiş","seksen","doksan"
+];
+
+const scales=[
+  "","bin","milyon","milyar","trilyon"
+];
+
 function threeWords(n){
-  n=Math.floor(n); if(!n) return ""; let a=[]; const h=Math.floor(n/100), t=Math.floor((n%100)/10), o=n%10;
-  if(h) a.push((h===1?"yüz":ones[h]+" yüz")); if(t) a.push(tens[t]); if(o) a.push(ones[o]); return a.join(" ");
+
+  n=Math.floor(n);
+
+  if(!n)return "";
+
+  let a=[];
+
+  const h=Math.floor(n/100);
+
+  const t=Math.floor((n%100)/10);
+
+  const o=n%10;
+
+  if(h)
+    a.push(h===1?"yüz":ones[h]+" yüz");
+
+  if(t)
+    a.push(tens[t]);
+
+  if(o)
+    a.push(ones[o]);
+
+  return a.join(" ");
 }
+
+
 function moneyWords(n){
-  n=Math.round((Number(n)||0)*100)/100; if(n===0) return "sıfır Türk Lirası";
-  let l=Math.floor(n), k=Math.round((n-l)*100); let parts=[], i=0;
-  while(l>0){ let g=l%1000; if(g){ let w=threeWords(g); if(i===1 && g===1) w=""; parts.unshift((w? w+" ":"")+scales[i]); } l=Math.floor(l/1000); i++; }
-  let out=parts.join(" ")+" Türk Lirası"; if(k) out+=" "+(k<10?ones[k]:threeWords(k))+" Kuruş"; return out;
+
+  n=Math.round((Number(n)||0)*100)/100;
+
+  if(n===0)
+    return "sıfır Türk Lirası";
+
+  let l=Math.floor(n);
+
+  let k=Math.round((n-l)*100);
+
+  let parts=[];
+
+  let i=0;
+
+  while(l>0){
+
+    let g=l%1000;
+
+    if(g){
+
+      let w=threeWords(g);
+
+      if(i===1 && g===1)
+        w="";
+
+      parts.unshift(
+        (w?w+" ":"")+
+        scales[i]
+      );
+    }
+
+    l=Math.floor(l/1000);
+
+    i++;
+  }
+
+  let out=
+    parts.join(" ")+
+    " Türk Lirası";
+
+  if(k){
+
+    out+=" "+
+      (k<10
+        ?ones[k]
+        :threeWords(k)
+      )+
+      " Kuruş";
+  }
+
+  return out;
 }
-function moneyDisplay(id){ const n=num(id); const el=$(id+"Words"); if(el) el.textContent=n?`(${moneyWords(n)})`:""; }
+
+
+function moneyDisplay(id){
+
+  const n=num(id);
+
+  const el=$(id+"Words");
+
+  if(el)
+    el.textContent=
+      n?`(${moneyWords(n)})`:"";
+}
+
+
+/* =========================================================
+   SÖZLEŞME MADDELERİ
+========================================================= */
+
 function clauses(){
-  if(type!=="sale") return [
-   `${val("tenantName")||"KİRACI"}, taşınmazı özenle kullanacak; yalnızca ${type==="residential"?"konut":"ticari"} amacıyla kullanacak ve yazılı izin olmadan kullanım amacını değiştirmeyecektir.`,
-   `Kiracı, kiralananı kısmen veya tamamen üçüncü kişilere kiralayamaz, alt kiraya veremez, devredemez veya temlik edemez.`,
-   `Kiracı; kiraya verenin yazılı izni olmadan tadilat, değişiklik veya ek imalat yapamaz. Faydalı/lüks imalatlar için bedel talep edemez; sözleşme sonunda eski hale getirir veya kiraya verene bırakır.`,
-   `Kiracı, komşulara ve çevreye iyi niyet kuralları içinde davranacak; kat malikleri kurulunca bildirilen hususlara ve ortak alan kurallarına uyacaktır.`,
-   `Üçüncü kişilerin taşınmaz üzerinde hak iddia etmesi veya taşınmazda onarım/arıza bulunması halinde kiracı durumu derhal kiraya verene bildirecektir.`,
-   `Kiraya veren, kiracının bildirdiği gerekli onarımları teknik imkânlar elverdiği ölçüde makul süre içinde yaptıracaktır. Kiracı zorunlu onarımlara katlanacaktır.`,
-   `Mülkiyet hakkından doğan vergi ve yükümlülükler kiraya verene; kullanımdan doğan vergi, resim, harç, elektrik, su, doğalgaz ve benzeri giderler kiracıya aittir.`,
-   `Aylık kira bedeli ${tl(num("rent"))} olup her ayın ${val("rentDay")||"1"}. günü ödenir. Havale/EFT ödemesi aynı sürede kiraya verenin hesabına geçmiş olmalıdır; aksi halde kanuni temerrüt hükümleri uygulanır.`,
-   `Depozito tutarı ${tl(num("rentDeposit"))}'dir. Depozito, kira artışları nedeniyle fark oluşması halinde tarafların mutabakatıyla güncellenir; iade, borç ve hasar mahsupları dikkate alınarak yapılır.`,
-   `Kira başlangıcı ${val("rentStart")||"belirtilen tarih"}, kira süresi ${num("rentTerm")||"12"} aydır. Artış/özel ödeme şartı: ${val("rentIncrease")||"Yasal düzenlemelere göre"}. Aidat ${tl(num("dues"))}, stopaj ${tl(num("withholding"))}, KDV %${val("rentVat")||"0"} olarak uygulanır.`,
-   `Elektrik, su ve doğalgaz abonelikleri kiracı tarafından kendi adına alınacak; sözleşme sonunda kapatılarak borçsuzluk/ödeme belgeleri kiraya verene teslim edilecektir.`,
-   `Kiralanan ve demirbaşlar çalışır, sağlam ve kullanılmaya elverişli durumda teslim edilmiş kabul edilir. Olağan kullanım yıpranması kiracıya yüklenemez; kusurlu hasar ve eksik demirbaş bedeli kiracıya aittir.`,
-   `Kira ilişkisinin sona ermesi veya taşınmazın satış amacıyla gösterilmesi halinde kiracı, makul süre önceden haber verilmesi şartıyla taşınmazın görülmesine izin verecektir.`,
-   `Kiracı, geçerli tahliye tarihinde taşınmazı boş, temiz, anahtarları ve demirbaşları eksiksiz teslim edecektir. Tahliye taahhüdü ayrıca düzenlenmişse o belgenin hükümleri saklıdır.`,
-   `Bu sözleşmede hüküm bulunmayan hallerde 6098 sayılı Türk Borçlar Kanunu ve ilgili mevzuat uygulanır. Kiracının sözleşmede bildirdiği adres tebligat adresidir; adres değişikliği yazılı bildirilmedikçe bu adrese yapılan bildirim geçerlidir.`,
-   val("rentalExtraTerms")||""
-  ].filter(Boolean);
-  const buyer=val("buyerName")||"ALICI", seller=val("sellerName")||"SATICI", firm=val("company")||"EMLAK KOMİSYONCUSU";
-  const price=num("salePrice"), dep=num("deposit"), credit=val("creditUsed")==="Evet"?num("creditAmount"):0, cash=num("cashPayment");
-  const commB=num("buyerCommission"), commS=num("sellerCommission"), vatB=commB*num("vat")/100, vatS=commS*num("vat")/100;
-  const remain=Math.max(0,price-dep-credit), holder=val("depositHolder")||"belirtilen tarafta";
+
+  if(type!=="sale"){
+
+    return [
+
+      `${val("tenantName")||"KİRACI"}, taşınmazı özenle kullanacak ve yalnızca ${type==="residential"?"konut":"ticari"} amacıyla kullanacaktır.`,
+
+      `Kiracı, kiralananı yazılı izin olmadan üçüncü kişilere devredemez veya alt kiraya veremez.`,
+
+      `Kiracı, kiraya verenin yazılı izni olmadan tadilat ve değişiklik yapamaz.`,
+
+      `Kiracı, komşulara ve çevreye karşı gerekli özeni gösterecektir.`,
+
+      `Mülkiyet hakkından doğan yükümlülükler kiraya verene, kullanım giderleri kiracıya aittir.`,
+
+      `Aylık kira bedeli ${tl(num("rent"))} olup her ayın ${val("rentDay")||"1"}. günü ödenecektir.`,
+
+      `Depozito tutarı ${tl(num("rentDeposit"))}'dir.`,
+
+      `Kira başlangıcı ${val("rentStart")||"belirtilen tarih"}, kira süresi ${num("rentTerm")||12} aydır.`,
+
+      `Kira artış / özel ödeme şartı: ${val("rentIncrease")||"Yasal düzenlemelere göre"}.`,
+
+      `Elektrik, su, doğalgaz ve kullanım giderleri kiracı tarafından karşılanacaktır.`,
+
+      `Kiracı, taşınmazı sözleşme sonunda temiz ve eksiksiz teslim edecektir.`,
+
+      `Bu sözleşmede hüküm bulunmayan hallerde ilgili mevzuat uygulanır.`,
+
+      val("extraTerms")||""
+
+    ].filter(Boolean);
+  }
+
+
+  const buyer=val("buyerName")||"ALICI";
+
+  const seller=val("sellerName")||"SATICI";
+
+  const firm=
+    val("company")||
+    "EMLAK KOMİSYONCUSU";
+
+  const price=num("salePrice");
+
+  const dep=num("deposit");
+
+  const credit=
+    val("creditUsed")==="Evet"
+      ?num("creditAmount")
+      :0;
+
+  const cash=num("cashPayment");
+
+  const commB=num("buyerCommission");
+
+  const commS=num("sellerCommission");
+
+  const vatB=
+    commB*num("vat")/100;
+
+  const vatS=
+    commS*num("vat")/100;
+
+  const remain=
+    Math.max(
+      0,
+      price-dep-credit-cash
+    );
+
   return [
-   `${buyer} ile ${seller}, yukarıda bilgileri verilen gayrimenkulün ${tl(price)} (${moneyWords(price)}) bedelle satılması konusunda anlaşmışlardır.`,
-   `Gayrimenkul satış bedeline mahsuben ${buyer} tarafından ${tl(dep)} (${moneyWords(dep)}) kapora verilmiştir. Kaporanın bulunduğu taraf: ${holder}.`,
-   `Satış bedelinin ödeme planı; kapora ${tl(dep)} (${moneyWords(dep)}), kredi ${tl(credit)} (${moneyWords(credit)}) ve nakit/diğer ödeme ${tl(cash)} (${moneyWords(cash)}) şeklindedir. Ödeme kalemleri sonrası kalan tutar ${tl(remain)} (${moneyWords(remain)})'dir.`,
-   credit?`${buyer}, ${tl(credit)} (${moneyWords(credit)}) tutarında banka/finans kuruluşu kredisi kullanacaktır. Kredi kuruluşu: ${val("creditType")||"belirtilmemiştir"}.`:`${buyer} tarafından konut kredisi kullanılmayacaktır.`,
-   `${buyer}, sözleşme imzalandıktan sonra haklı bir sebep olmaksızın cayması halinde kaporanın iadesi ve sözleşmede belirlenen diğer sonuçları kabul eder.`,
-   `Anlaşmazlık halinde haksız olan taraf, sözleşmede kararlaştırılan tazminat ve doğan zarar, ziyan ile ilgili masraflardan sorumludur.`,
-   `Taraflar, sözleşmede düzenlenen hususlar dışında birbirlerinden ayrıca hak ve talepte bulunmayacaklarını kabul ederler.`,
-   `${buyer}, ${firm}'a alıcı hizmet bedeli olarak ${tl(commB)} (${moneyWords(commB)}) + KDV ${tl(vatB)} (${moneyWords(vatB)}) olmak üzere toplam ${tl(commB+vatB)} (${moneyWords(commB+vatB)}) ödemeyi kabul eder.`,
-   `${seller}, ${firm}'a satıcı hizmet bedeli olarak ${tl(commS)} (${moneyWords(commS)}) + KDV ${tl(vatS)} (${moneyWords(vatS)}) olmak üzere toplam ${tl(commS+vatS)} (${moneyWords(commS+vatS)}) ödemeyi kabul eder.`,
-   `Tapu devrinden önce taşınmaza ait vergi, elektrik, su, aidat ve benzeri borçlar ${seller}'a aittir.`,
-   `Tapu devri sırasında doğacak vergi ve harçların taraflar arasındaki paylaşımı: ${val("titleFee")||"ALICI"}.`,
-   `Taşınmazın teslimi tarafların anlaştığı şartlara göre yapılacaktır. Teslim/boşaltma şartı: ${val("delivery")||"Tarafların mutabakatına göre"}.`,
-   `Taraflardan biri sözleşmeden cayarsa emlak komisyoncusuna ${tl(num("penalty"))} (${moneyWords(num("penalty"))}) cayma tazminatı ödemeyi kabul eder.`,
-   `İskanla ilgili yükümlülüklerin sorumlusu: ${val("iskanParty")||"Tarafların anlaşmasına göre"}.`,
-   `Konut kredisi onaylanmazsa uygulanacak kapora şartı: ${val("creditNotApproved")||"Kapora iade edilir"}.`,
-   `${buyer} tarafından verilen ${tl(dep)} (${moneyWords(dep)}) kapora, satış bedeline mahsup edilecektir.`,
-   `Sözleşme tarihinden itibaren ${val("saleDeadline")||"10"} iş günü içinde satış gerçekleşmezse tarafların kararlaştırdığı kapora ve tazminat hükümleri uygulanacaktır.`
-  ].concat(val("extraTerms")?[val("extraTerms")]:[]);
+
+    `${buyer} ile ${seller}, yukarıda bilgileri verilen gayrimenkulün ${tl(price)} (${moneyWords(price)}) bedelle satılması konusunda anlaşmışlardır.`,
+
+    `Gayrimenkul satış bedeline mahsuben ${buyer} tarafından ${tl(dep)} (${moneyWords(dep)}) kapora verilmiştir. Kaporanın bulunduğu taraf: ${val("depositHolder")}.`,
+
+    `Satış bedelinin ödeme planı; kapora ${tl(dep)}, kredi ${tl(credit)} ve nakit/diğer ödeme ${tl(cash)} şeklindedir. Kalan ödeme ${tl(remain)}'dir.`,
+
+    credit
+      ? `${buyer}, ${tl(credit)} tutarında kredi kullanacaktır. Kredi kuruluşu: ${val("creditType")}.`
+      : `${buyer} tarafından kredi kullanılmayacaktır.`,
+
+    `${buyer}, sözleşme imzalandıktan sonra haklı bir sebep olmaksızın cayması halinde sözleşmede belirtilen sonuçları kabul eder.`,
+
+    `${buyer}, ${firm}'a alıcı hizmet bedeli olarak ${tl(commB)} + KDV ${tl(vatB)} olmak üzere toplam ${tl(commB+vatB)} ödeyecektir.`,
+
+    `${seller}, ${firm}'a satıcı hizmet bedeli olarak ${tl(commS)} + KDV ${tl(vatS)} olmak üzere toplam ${tl(commS+vatS)} ödeyecektir.`,
+
+    `Tapu devrinden önce taşınmaza ait borçlar ${seller}'a aittir.`,
+
+    `Tapu harçlarının taraflar arasındaki paylaşımı: ${val("titleFee")}.`,
+
+    `Teslim şartı: ${val("delivery")||"Tarafların mutabakatına göre"}.`,
+
+    `İskanla ilgili yükümlülüklerin sorumlusu: ${val("iskanParty")||"Tarafların anlaşmasına göre"}.`,
+
+    `Kredi onaylanmazsa uygulanacak şart: ${val("creditNotApproved")}.`,
+
+    `${buyer} tarafından verilen ${tl(dep)} kapora satış bedeline mahsup edilecektir.`,
+
+    `Satışın tamamlanma süresi ${val("saleDeadline")||"10"} iş günüdür.`
+
+  ].concat(
+    val("extraTerms")
+      ? [val("extraTerms")]
+      : []
+  );
 }
+
+
+/* =========================================================
+   ÖNİZLEME
+========================================================= */
+
 function render(){
- const sale=type==="sale", price=num("salePrice"), dep=num("deposit"), credit=val("creditUsed")==="Evet"?num("creditAmount"):0;
- const remain=Math.max(0,price-dep-credit);
- const comm=num("sellerCommission")+num("buyerCommission"), vat=comm*num("vat")/100;
- $("cSale").textContent=tl(price); $("cDep").textContent=tl(dep); $("cCredit").textContent=tl(credit); $("cRemain").textContent=tl(remain);
- $("cComm").textContent=tl(comm); $("cVat").textContent=tl(vat); $("cCommTotal").textContent=tl(comm+vat);
- $("balanceStatus").textContent=price>0 ? (dep+credit+num("cashPayment")===price ? "✓ Ödeme kalemleri satış bedeliyle eşleşiyor." : `Kontrol: ödeme kalemleri ${tl(dep+credit+num("cashPayment"))}; satış bedeli ${tl(price)}.`) : "";
- $("rRent").textContent=tl(num("rent")); $("rDep").textContent=tl(num("rentDeposit")); $("rTerm").textContent=(num("rentTerm")||0)+" Ay";
- const addr=[val("neighborhood"),val("street"),val("doorNo")?`No:${val("doorNo")}`:"",val("unitNo")?`Daire:${val("unitNo")}`:"",val("district"),val("province")].filter(Boolean).join(" ");
- const title=sale?"GAYRİMENKUL SATIŞ SÖZLEŞMESİ":type==="residential"?"KONUT KİRA SÖZLEŞMESİ":"TİCARİ KİRA SÖZLEŞMESİ";
- let party=sale?`<h4>TARAFLAR</h4><div class="partyGrid"><div class="partyBox"><b>ALICI</b>${val("buyerName")||"—"} · ${val("buyerId")||"—"}<br>${phone(val("buyerPhone"))||"—"}</div><div class="partyBox"><b>SATICI</b>${val("sellerName")||"—"} · ${val("sellerId")||"—"}<br>${phone(val("sellerPhone"))||"—"}</div></div>`:`<h4>TARAFLAR</h4><div class="partyGrid"><div class="partyBox"><b>KİRAYA VEREN</b>${val("landlordName")||"—"} · ${val("landlordId")||"—"}<br>${phone(val("landlordPhone"))||"—"}</div><div class="partyBox"><b>KİRACI</b>${val("tenantName")||"—"} · ${val("tenantId")||"—"}<br>${phone(val("tenantPhone"))||"—"}</div></div>`;
- let finance=sale?`
- <h4>GAYRİMENKUL VE ÖDEME</h4><div class="infoGrid"><div class="infoItem fullInfo"><b>Adres</b><span>${addr||"—"}</span></div><div class="infoItem"><b>Tapu Durumu</b><span>${val("deed")||"—"}</span></div><div class="infoItem"><b>Ada / Parsel</b><span>${val("blockNo")||"—"} / ${val("parcelNo")||"—"}</span></div></div><div class="financeColumns"><table>
- <tr><td>Satış Bedeli</td><td>${tl(price)}</td></tr><tr><td>Kapora</td><td>${tl(dep)} — ${val("depositHolder")}</td></tr>
- <tr><td>Kredi</td><td>${credit?tl(credit)+" — "+val("creditType"):"Kullanılmıyor"}</td></tr><tr><td>Kalan Ödeme</td><td><b>${tl(remain)}</b></td></tr></table><div><h4>EMLAK KOMİSYONU</h4><table><tr><td>Satıcı Komisyonu</td><td>${tl(num("sellerCommission"))}</td></tr><tr><td>Alıcı Komisyonu</td><td>${tl(num("buyerCommission"))}</td></tr><tr><td>KDV (%${val("vat")||"0"})</td><td>${tl(vat)}</td></tr><tr><td><b>Genel Toplam</b></td><td><b>${tl(comm+vat)}</b></td></tr></table></div></div>`:
- `<h4>KİRA VE ÖDEME BİLGİLERİ</h4><table><tr><td>Adres</td><td>${addr||"—"}</td></tr><tr><td>Aylık Kira</td><td>${tl(num("rent"))}</td></tr><tr><td>Depozito</td><td>${tl(num("rentDeposit"))}</td></tr><tr><td>Başlangıç</td><td>${val("rentStart")||"—"}</td></tr><tr><td>Süre</td><td>${num("rentTerm")} ay</td></tr><tr><td>Ödeme Günü</td><td>Her ay ${val("rentDay")||"—"}</td></tr><tr><td>Stopaj</td><td>${tl(num("withholding"))}</td></tr><tr><td>KDV</td><td>%${val("rentVat")||"0"}</td></tr></table>`;
- ["salePrice","deposit","creditAmount","cashPayment","sellerCommission","buyerCommission","rent","rentDeposit","withholding","dues","penalty"].forEach(moneyDisplay);
- const cls=clauses();
- $("paper").innerHTML=`
- ${sale?`<div class="paperHeader"><img class="paperLogo" style="display:block" src="${logoData||"../assets/dursunoglu_logo.png"}" alt="Dursunoğlu logosu"><div><div class="company">${val("company")}</div><div class="meta">Yetki Belge No: ${val("authority")} • ${phone(val("companyPhone"))} • ${val("companyEmail")}<br>${val("companyAddress")}</div></div></div>`:""}
- <h1>${title}</h1><div class="meta">Sözleşme Tarihi: ${val("date")||"—"} • Sözleşme No: ${val("contractNo")||"—"}</div>
- ${party}
- <h4>GAYRİMENKUL BİLGİLERİ</h4><div class="infoGrid"><div class="infoItem"><b>Tür</b><span>${val("propertyType")||"—"}</span></div><div class="infoItem"><b>İl / İlçe / Mahalle</b><span>${[val("province"),val("district"),val("neighborhood")].filter(Boolean).join(" / ")||"—"}</span></div><div class="infoItem"><b>Cadde / Sokak</b><span>${val("street")||"—"}</span></div><div class="infoItem"><b>Kapı / Bağımsız Bölüm</b><span>${val("doorNo")||"—"} / ${val("unitNo")||"—"}</span></div></div>
- ${finance}
- <h4>ÖZEL ŞARTLAR</h4>${cls.length?cls.map((x,i)=>`<p><b>${i+1}.</b> ${x}</p>`).join(""):"<p>Tarafların ek özel şartı bulunmamaktadır.</p>"}
- <div class="sign"><div>ALICI / KİRACI<br>${val("signatureMode")==="image"&&signatureData?`<img src="${signatureData}" style="max-width:80px;max-height:28px">`:val("signatureMode")==="typed"?`<br><b>${val("signatureText")||"Elektronik imza"}</b>`:"<br><br>İMZA"}</div><div>EMLAK KOMİSYONCUSU<br><br>KAŞE / İMZA</div><div>SATICI / KİRAYA VEREN<br><br>İMZA</div></div>
- ${!sale&&val("evacuationNote")?`<h4>TAHLİYE TAAHHÜTNAMESİ</h4><p>Kiracı, taşınmazı ${val("evacuationNote")} tarihinde veya burada belirtilen şartlara uygun şekilde boşaltıp teslim etmeyi kabul eder. Bu bölümün kira sözleşmesinden ayrı bir belge olarak imzalanması gerekebilir.</p>`:""}
- ${!sale&&val("inventory")?`<h4>DEMİRBAŞ LİSTESİ</h4><table>${val("inventory").split(/\n+/).map((x,i)=>`<tr><td>${i+1}</td><td>${x}</td></tr>`).join("")}</table>`:""}
- <div class="pageFooter"><div class="footerCols"><div><b>KİRALAYAN / KİRAYA VEREN</b>${val("landlordName")||"—"}<br>${val("landlordId")||""}<br>İmza: __________________</div><div><b>KİRACI</b>${val("tenantName")||"—"}<br>${val("tenantId")||""}<br>İmza: __________________</div><div><b>KAŞE / İMZA</b>${val("company")||"—"}<br><br>__________________</div></div></div>`;
+
+  const sale=type==="sale";
+
+  const price=num("salePrice");
+
+  const dep=num("deposit");
+
+  const credit=
+    val("creditUsed")==="Evet"
+      ?num("creditAmount")
+      :0;
+
+  const cash=num("cashPayment");
+
+  const remain=
+    Math.max(
+      0,
+      price-dep-credit-cash
+    );
+
+  const comm=
+    num("sellerCommission")+
+    num("buyerCommission");
+
+  const vat=
+    comm*num("vat")/100;
+
+
+  $("cSale").textContent=tl(price);
+
+  $("cDep").textContent=tl(dep);
+
+  $("cCredit").textContent=tl(credit);
+
+  $("cRemain").textContent=tl(remain);
+
+  $("cComm").textContent=tl(comm);
+
+  $("cVat").textContent=tl(vat);
+
+  $("cCommTotal").textContent=
+    tl(comm+vat);
+
+
+  $("balanceStatus").textContent=
+    price>0
+      ?(
+        dep+credit+cash===price
+          ?"✓ Ödeme kalemleri satış bedeliyle eşleşiyor."
+          :"Kontrol: ödeme toplamı "+tl(dep+credit+cash)+
+           " / satış bedeli "+tl(price)
+       )
+      :"";
+
+
+  [
+    "salePrice",
+    "deposit",
+    "creditAmount",
+    "cashPayment",
+    "sellerCommission",
+    "buyerCommission",
+    "rent",
+    "rentDeposit",
+    "withholding",
+    "dues",
+    "penalty"
+  ].forEach(moneyDisplay);
+
+
+  const addr=[
+    val("neighborhood"),
+    val("street"),
+    val("doorNo")?`No:${val("doorNo")}`:"",
+    val("unitNo")?`Daire:${val("unitNo")}`:"",
+    val("district"),
+    val("province")
+  ]
+  .filter(Boolean)
+  .join(" ");
+
+
+  const title=
+    sale
+      ?"GAYRİMENKUL SATIŞ SÖZLEŞMESİ"
+      :type==="residential"
+        ?"KONUT KİRA SÖZLEŞMESİ"
+        :"TİCARİ KİRA SÖZLEŞMESİ";
+
+
+  let party=sale
+
+    ?`
+      <h4>TARAFLAR</h4>
+
+      <div class="partyGrid">
+
+        <div class="partyBox">
+          <b>ALICI</b>
+          ${val("buyerName")||"—"} ·
+          ${val("buyerId")||"—"}
+          <br>
+          ${val("buyerPhone")||"—"}
+        </div>
+
+        <div class="partyBox">
+          <b>SATICI</b>
+          ${val("sellerName")||"—"} ·
+          ${val("sellerId")||"—"}
+          <br>
+          ${val("sellerPhone")||"—"}
+        </div>
+
+      </div>
+    `
+
+    :`
+      <h4>TARAFLAR</h4>
+
+      <div class="partyGrid">
+
+        <div class="partyBox">
+          <b>KİRAYA VEREN</b>
+          ${val("landlordName")||"—"} ·
+          ${val("landlordId")||"—"}
+          <br>
+          ${val("landlordPhone")||"—"}
+        </div>
+
+        <div class="partyBox">
+          <b>KİRACI</b>
+          ${val("tenantName")||"—"} ·
+          ${val("tenantId")||"—"}
+          <br>
+          ${val("tenantPhone")||"—"}
+        </div>
+
+      </div>
+    `;
+
+
+  let finance=sale
+
+    ?`
+
+      <h4>GAYRİMENKUL VE ÖDEME</h4>
+
+      <div class="infoGrid">
+
+        <div class="infoItem fullInfo">
+          <b>Adres</b>
+          <span>${addr||"—"}</span>
+        </div>
+
+        <div class="infoItem">
+          <b>Tapu Durumu</b>
+          <span>${val("deed")||"—"}</span>
+        </div>
+
+        <div class="infoItem">
+          <b>Ada / Parsel</b>
+          <span>
+            ${val("blockNo")||"—"} /
+            ${val("parcelNo")||"—"}
+          </span>
+        </div>
+
+      </div>
+
+
+      <div class="financeColumns">
+
+        <table>
+
+          <tr>
+            <td>Satış Bedeli</td>
+            <td>${tl(price)}</td>
+          </tr>
+
+          <tr>
+            <td>Kapora</td>
+            <td>${tl(dep)}</td>
+          </tr>
+
+          <tr>
+            <td>Kredi</td>
+            <td>${credit?tl(credit):"Kullanılmıyor"}</td>
+          </tr>
+
+          <tr>
+            <td>Nakit / Diğer</td>
+            <td>${tl(cash)}</td>
+          </tr>
+
+          <tr>
+            <td>Kalan Ödeme</td>
+            <td><b>${tl(remain)}</b></td>
+          </tr>
+
+        </table>
+
+
+        <div>
+
+          <h4>EMLAK KOMİSYONU</h4>
+
+          <table>
+
+            <tr>
+              <td>Satıcı Komisyonu</td>
+              <td>${tl(num("sellerCommission"))}</td>
+            </tr>
+
+            <tr>
+              <td>Alıcı Komisyonu</td>
+              <td>${tl(num("buyerCommission"))}</td>
+            </tr>
+
+            <tr>
+              <td>KDV</td>
+              <td>${tl(vat)}</td>
+            </tr>
+
+            <tr>
+              <td><b>Genel Toplam</b></td>
+              <td><b>${tl(comm+vat)}</b></td>
+            </tr>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    `
+
+    :`
+
+      <h4>KİRA VE ÖDEME BİLGİLERİ</h4>
+
+      <table>
+
+        <tr>
+          <td>Adres</td>
+          <td>${addr||"—"}</td>
+        </tr>
+
+        <tr>
+          <td>Aylık Kira</td>
+          <td>${tl(num("rent"))}</td>
+        </tr>
+
+        <tr>
+          <td>Depozito</td>
+          <td>${tl(num("rentDeposit"))}</td>
+        </tr>
+
+        <tr>
+          <td>Başlangıç</td>
+          <td>${val("rentStart")||"—"}</td>
+        </tr>
+
+        <tr>
+          <td>Süre</td>
+          <td>${num("rentTerm")||12} ay</td>
+        </tr>
+
+        <tr>
+          <td>Ödeme Günü</td>
+          <td>Her ay ${val("rentDay")||"1"}</td>
+        </tr>
+
+      </table>
+
+    `;
+
+
+  const cls=clauses();
+
+
+  const logo=
+    logoData ||
+    "";
+
+
+  $("paper").innerHTML=`
+
+    <div class="paperHeader">
+
+      ${
+        logo
+        ?`
+          <img
+            class="paperLogo"
+            src="${logo}"
+            alt="Dursunoğlu logosu"
+          >
+        `
+        :""
+      }
+
+      <div>
+
+        <div class="company">
+          ${val("company")}
+        </div>
+
+        <div class="meta">
+
+          Yetki Belge No:
+          ${val("authority")}
+
+          • ${val("companyPhone")}
+
+          • ${val("companyEmail")}
+
+          <br>
+
+          ${val("companyAddress")}
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <h1>${title}</h1>
+
+    <div class="meta">
+
+      Sözleşme Tarihi:
+      ${val("date")||"—"}
+
+      •
+
+      Sözleşme No:
+      ${val("contractNo")||"—"}
+
+    </div>
+
+
+    ${party}
+
+
+    <h4>GAYRİMENKUL BİLGİLERİ</h4>
+
+    <div class="infoGrid">
+
+      <div class="infoItem">
+        <b>Tür</b>
+        <span>${val("propertyType")||"—"}</span>
+      </div>
+
+      <div class="infoItem">
+        <b>İl / İlçe / Mahalle</b>
+        <span>
+          ${
+            [
+              val("province"),
+              val("district"),
+              val("neighborhood")
+            ]
+            .filter(Boolean)
+            .join(" / ")
+            ||"—"
+          }
+        </span>
+      </div>
+
+      <div class="infoItem">
+        <b>Cadde / Sokak</b>
+        <span>${val("street")||"—"}</span>
+      </div>
+
+      <div class="infoItem">
+        <b>Kapı / Bağımsız Bölüm</b>
+        <span>
+          ${val("doorNo")||"—"} /
+          ${val("unitNo")||"—"}
+        </span>
+      </div>
+
+    </div>
+
+
+    ${finance}
+
+
+    <h4>ÖZEL ŞARTLAR</h4>
+
+    ${
+      cls.length
+
+      ?cls.map(
+        (x,i)=>
+        `<p><b>${i+1}.</b> ${x}</p>`
+       ).join("")
+
+      :""
+    }
+
+
+    <div class="sign">
+
+      <div>
+        ${
+          sale
+          ?"ALICI"
+          :"KİRACI"
+        }
+
+        <br><br>
+
+        ${
+          val("signatureMode")==="image" &&
+          signatureData
+
+          ?`
+            <img
+              src="${signatureData}"
+              style="max-width:80px;max-height:30px"
+            >
+          `
+
+          :val("signatureMode")==="typed"
+
+            ?`
+              <b>
+                ${val("signatureText")||"Elektronik imza"}
+              </b>
+            `
+
+            :"İMZA"
+        }
+
+      </div>
+
+
+      <div>
+        EMLAK KOMİSYONCUSU
+        <br><br>
+        KAŞE / İMZA
+      </div>
+
+
+      <div>
+        ${
+          sale
+          ?"SATICI"
+          :"KİRAYA VEREN"
+        }
+
+        <br><br>
+
+        İMZA
+
+      </div>
+
+    </div>
+
+  `;
+
 }
-init(); setType('sale');
+
+
+/* =========================================================
+   SÖZLEŞMEYİ KAYDET
+========================================================= */
+
+function getFormData(){
+
+  const data={
+    type:type,
+    logoData:logoData,
+    signatureData:signatureData
+  };
+
+  document
+    .querySelectorAll("input,select,textarea")
+    .forEach(el=>{
+
+      if(
+        el.id &&
+        el.id!=="logoFile" &&
+        el.id!=="signatureFile"
+      ){
+
+        data[el.id]=el.value;
+      }
+
+    });
+
+  return data;
+}
+
+
+function saveContract(){
+
+  let name=val("saveName");
+
+  if(!name){
+
+    name=
+      val("buyerName") ||
+      val("tenantName") ||
+      "Yeni Sözleşme";
+
+  }
+
+
+  const data=getFormData();
+
+  const records=
+    JSON.parse(
+      localStorage.getItem("dursunogluSozlesmeler")||"[]"
+    );
+
+
+  const record={
+
+    id:Date.now(),
+
+    name:name,
+
+    date:new Date().toLocaleString("tr-TR"),
+
+    data:data
+
+  };
+
+
+  records.push(record);
+
+
+  localStorage.setItem(
+    "dursunogluSozlesmeler",
+    JSON.stringify(records)
+  );
+
+
+  renderSavedList();
+
+  alert("Sözleşme başarıyla kaydedildi.");
+
+}
+
+
+/* =========================================================
+   KAYITLARI GÖSTER
+========================================================= */
+
+function renderSavedList(){
+
+  const box=$("savedList");
+
+  if(!box)return;
+
+
+  const records=
+    JSON.parse(
+      localStorage.getItem("dursunogluSozlesmeler")||"[]"
+    );
+
+
+  if(!records.length){
+
+    box.innerHTML=
+      '<div style="font-size:12px;color:#687684;margin-top:10px">Henüz kayıtlı sözleşme yok.</div>';
+
+    return;
+  }
+
+
+  box.innerHTML=
+    records
+      .slice()
+      .reverse()
+      .map(r=>`
+
+        <div class="savedItem">
+
+          <div>
+
+            <div class="savedItemName">
+              ${escapeHtml(r.name)}
+            </div>
+
+            <div class="savedItemDate">
+              ${r.date}
+            </div>
+
+          </div>
+
+          <div class="savedItemButtons">
+
+            <button
+              class="primary"
+              onclick="loadContract(${r.id})"
+            >
+              Yükle
+            </button>
+
+            <button
+              class="danger"
+              onclick="deleteContract(${r.id})"
+            >
+              Sil
+            </button>
+
+          </div>
+
+        </div>
+
+      `)
+      .join("");
+}
+
+
+/* =========================================================
+   KAYIT YÜKLE
+========================================================= */
+
+function loadContract(id){
+
+  const records=
+    JSON.parse(
+      localStorage.getItem("dursunogluSozlesmeler")||"[]"
+    );
+
+
+  const record=
+    records.find(x=>x.id===id);
+
+
+  if(!record)return;
+
+
+  const data=record.data;
+
+
+  if(data.type)
+    type=data.type;
+
+
+  logoData=
+    data.logoData||"";
+
+
+  signatureData=
+    data.signatureData||"";
+
+
+  Object.entries(data).forEach(([key,value])=>{
+
+    if(
+      key==="type" ||
+      key==="logoData" ||
+      key==="signatureData"
+    )return;
+
+
+    const el=$(key);
+
+    if(el)
+      el.value=value;
+
+  });
+
+
+  setType(type);
+
+  render();
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  alert("Sözleşme yüklendi.");
+
+}
+
+
+/* =========================================================
+   KAYIT SİL
+========================================================= */
+
+function deleteContract(id){
+
+  if(!confirm("Bu sözleşme kaydını silmek istediğinize emin misiniz?"))
+    return;
+
+
+  let records=
+    JSON.parse(
+      localStorage.getItem("dursunogluSozlesmeler")||"[]"
+    );
+
+
+  records=
+    records.filter(x=>x.id!==id);
+
+
+  localStorage.setItem(
+    "dursunogluSozlesmeler",
+    JSON.stringify(records)
+  );
+
+
+  renderSavedList();
+
+}
+
+
+/* =========================================================
+   YENİ SÖZLEŞME
+========================================================= */
+
+function newContract(){
+
+  if(
+    !confirm(
+      "Yeni sözleşme açılacak. Mevcut formdaki bilgiler temizlenecek. Devam edilsin mi?"
+    )
+  )return;
+
+
+  document
+    .querySelectorAll("input,textarea")
+    .forEach(el=>{
+
+      if(
+        el.type!=="file" &&
+        ![
+          "company",
+          "authority",
+          "taxOffice",
+          "taxNo",
+          "companyPhone",
+          "companyEmail",
+          "companyAddress"
+        ].includes(el.id)
+      ){
+
+        el.value="";
+      }
+
+    });
+
+
+  $("date").value=
+    new Date().toISOString().slice(0,10);
+
+  $("rentTerm").value="12";
+
+  $("rentDay").value="1";
+
+  $("vat").value="20";
+
+  $("rentVat").value="20";
+
+  $("creditUsed").value="Hayır";
+
+  $("province").value="";
+
+  $("district").innerHTML=
+    '<option value="">Önce il seçiniz</option>';
+
+  $("neighborhood").value="";
+
+  $("neighborhoodList").innerHTML="";
+
+  setType("sale");
+
+  render();
+
+}
+
+
+/* =========================================================
+   GÜVENLİ METİN
+========================================================= */
+
+function escapeHtml(text){
+
+  return String(text||"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================================
+   ÇALIŞTIR
+========================================================= */
+
+init();
+
+setType("sale");
+
 </script>
+
 </body>
 </html>
