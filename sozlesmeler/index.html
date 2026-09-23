@@ -29,8 +29,44 @@ textarea{min-height:80px;resize:vertical}.full{grid-column:1/-1}.hidden{display:
 footer{max-width:1500px;margin:0 auto 30px;padding:0 18px;color:var(--muted);font-size:12px}
 @media(max-width:1000px){.app{grid-template-columns:1fr}.preview{position:static}.paper{min-height:auto}}
 @media(max-width:650px){.grid,.grid.three{grid-template-columns:1fr}.typebar{grid-template-columns:1fr}.paper{padding:20px}}
-@page{size:A4;margin:12mm 10mm 25mm}@media print{body{background:white}header,.formside,footer{display:none!important}.app{display:block;margin:0;padding:0}.preview{display:block}.paper{box-shadow:none;border:0;padding:0;min-height:0;height:auto;overflow:visible}.preview .card{border:0;box-shadow:none;padding:0}.paper p{font-size:11px}.paper table,.infoGrid{font-size:11px}.infoItem b,.infoItem span{padding:3px}.pageFooter{display:block;position:fixed;bottom:-19mm;left:0;right:0;border-top:1px solid #777;padding-top:4px;font-size:10px;background:white}.pageFooter .footerCols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}.pageFooter .footerCols div{min-height:20mm}.pageFooter .footerCols b{display:block}}
-</style>
+@page{size:A4;margin:12mm 10mm 25mm}@media print{
+  header,
+  footer,
+  .formside,
+  .preview > .card > :not(.paper){
+    display:none!important;
+  }
+
+  body{
+    background:#fff!important;
+  }
+
+  .app{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  .preview{
+    display:block!important;
+    position:static!important;
+  }
+
+  .preview > .card{
+    border:0!important;
+    box-shadow:none!important;
+    padding:0!important;
+    margin:0!important;
+  }
+
+  .paper{
+    display:block!important;
+    border:0!important;
+    box-shadow:none!important;
+    padding:0!important;
+    margin:0!important;
+  }
+}</style>
 </head>
 <body>
 <header>
