@@ -29,44 +29,10 @@ textarea{min-height:80px;resize:vertical}.full{grid-column:1/-1}.hidden{display:
 footer{max-width:1500px;margin:0 auto 30px;padding:0 18px;color:var(--muted);font-size:12px}
 @media(max-width:1000px){.app{grid-template-columns:1fr}.preview{position:static}.paper{min-height:auto}}
 @media(max-width:650px){.grid,.grid.three{grid-template-columns:1fr}.typebar{grid-template-columns:1fr}.paper{padding:20px}}
-@page{size:A4;margin:12mm 10mm 25mm}@media print{
-  header,
-  footer,
-  .formside,
-  .preview > .card > :not(.paper){
-    display:none!important;
-  }
+@page{size:A4;margin:12mm 10mm 25mm}@media print { body { background: #fff !important; } body > * { display: none !important; } #sozlesmePrintModal { display: block !important; position: static !important; background: #fff !important; width: 100% !important; height: auto !important; } #sozlesmePrintModal > .modal-box { display: block !important; max-width: none !important; width: 100% !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border: none !important; } /* "Canlı Sözleşme Önizleme" ve Yazdır/Kapat kısmını gizle */ #sozlesmePrintModal > .modal-box > div:first-child { display: none !important; } /* Sadece sözleşme içeriği görünsün */ #sozlesmePrintArea { display: block !important; position: static !important; width: 100% !important; max-height: none !important; overflow: visible !important; padding: 0 !important; margin: 0 !important; visibility: visible !important; } #sozlesmePrintArea * { visibility: visible !important; } }
+  
 
-  body{
-    background:#fff!important;
-  }
-
-  .app{
-    display:block!important;
-    margin:0!important;
-    padding:0!important;
-  }
-
-  .preview{
-    display:block!important;
-    position:static!important;
-  }
-
-  .preview > .card{
-    border:0!important;
-    box-shadow:none!important;
-    padding:0!important;
-    margin:0!important;
-  }
-
-  .paper{
-    display:block!important;
-    border:0!important;
-    box-shadow:none!important;
-    padding:0!important;
-    margin:0!important;
-  }
-}</style>
+</style>
 </head>
 <body>
 <header>
