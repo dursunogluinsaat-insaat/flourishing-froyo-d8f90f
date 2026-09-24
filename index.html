@@ -314,17 +314,11 @@ tr:hover td{background:#F4F9FC}
       </div>
 
       <div>
-        <div style="font-size:13px;font-weight:700;color:#1A5276;margin-bottom:8px" id="sfBedelBaslik"
-<div style="display: flex; gap: 15px; margin-top: 10px; margin-bottom: 10px; align-items: stretch; width: 100%;">
-  <div style="flex: 1; background: #F8FBFD; border: 1px solid #D4E6F1; border-radius: 8px; padding: 10px;">
->Bedel Bilgileri</div>
+        <div style="font-size:13px;font-weight:700;color:#1A5276;margin-bottom:8px" id="sfBedelBaslik">Bedel Bilgileri</div>
         <div class="grid2" style="margin-bottom:8px">
           <div><label id="sfBedelLabel">Satış Bedeli (₺) *</label><input type="text" id="sfBedel" oninput="formatFiyat(this)"></div>
           <div><label id="sfKaparoLabel">Kaparo (₺)</label><input type="text" id="sfKaparo" oninput="formatFiyat(this)"></div>
         </div>
-            </div>
-  <div style="flex: 1; background: #F8FBFD; border: 1px solid #D4E6F1; border-radius: 8px; padding: 10px;">
-
         <!-- SATIŞ ALANLARI (Dursunoğlu şablonu — Madde 1-17) -->
         <div class="sf-satis-only grid2" style="margin-bottom:8px">
           <div><label>Kapora Nereye Alındı</label><input type="text" id="sfKaparoYeri" value="BANKA HESABINA" placeholder="ör. BANKA HESABINA / ELDEN"></div>
@@ -344,11 +338,7 @@ tr:hover td{background:#F4F9FC}
             </div>
           </div>
         </div>
-         </div>
-</div>
-  </div>
-</div>
- <div class="sf-satis-only"><label>Madde 14 — İskân Harcını Kim Ödeyecek?</label>
+        <div class="sf-satis-only"><label>Madde 14 — İskân Harcını Kim Ödeyecek?</label>
           <select id="sfIskanOdeyen"><option>Seçiniz</option><option>Müteahhit Firma</option><option>Alıcı</option><option>Satıcı</option><option>Emlak Komisyoncusu</option></select>
         </div>
         <!-- KİRA ALANLARI -->
@@ -374,6 +364,7 @@ tr:hover td{background:#F4F9FC}
       </div>
 
     </div>
+    <div style="display:flex;gap:8px;margin-top:1.25rem">
       <button class="primary" onclick="createSozlesmeBelge()" style="flex:1"><i class="ti ti-file-check"></i> Sözleşmeyi Oluştur</button>
       <button onclick="closeSozlesmeForm()">İptal</button>
     </div>
@@ -383,6 +374,9 @@ tr:hover td{background:#F4F9FC}
 <!-- SÖZLEŞME YAZDIRMA / ÖNİZLEME MODALI -->
 <div id="sozlesmePrintModal" class="modal-overlay hidden">
   <div class="modal-box" style="max-width:800px;padding:0">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-bottom:1px solid #eee">
+      <div style="font-weight:700;color:#1A5276"><i class="ti ti-file-text"></i> Sözleşme Önizleme</div>
+      <div style="display:flex;gap:8px">
         <button class="primary" onclick="window.print()"><i class="ti ti-printer"></i> Yazdır / PDF İndir</button>
         <button onclick="document.getElementById('sozlesmePrintModal').classList.add('hidden')">Kapat</button>
       </div>
