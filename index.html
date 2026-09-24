@@ -68,6 +68,12 @@ tr:hover td{background:#F4F9FC}
 .verified-chip{display:inline-flex;align-items:center;gap:4px;background:#EAF3DE;color:#1E6A2E;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:500}
 .unverified-chip{display:inline-flex;align-items:center;gap:4px;background:#FAEEDA;color:#633806;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:500}
 .tab-link{background:none;border:none;color:#1A5276;cursor:pointer;font-size:13px;padding:0;text-decoration:underline}
+  @media print {
+    #sozlesmePrintArea, #sozlesmePrintArea table, #sozlesmePrintArea td, #sozlesmePrintArea p, #sozlesmePrintArea ol, #sozlesmePrintArea li {
+        font-size: 15px !important;
+        line-height: 1.65 !important;
+        color: #000000 !important;
+
 .section-title{font-size:16px;font-weight:700;color:#1A5276;margin-bottom:14px;display:flex;align-items:center;gap:8px;border-bottom:2px solid #D4E6F1;padding-bottom:8px}
 /* HOME PAGE */
 .home-hero{background:linear-gradient(135deg,#1A3A5C,#1A5276);color:#fff;border-radius:16px;padding:2.5rem;margin-bottom:1.5rem;text-align:center}
@@ -246,7 +252,7 @@ tr:hover td{background:#F4F9FC}
   <div class="modal-box" style="max-width:720px">
     <div class="modal-title" id="sfModalTitle"><i class="ti ti-file-certificate"></i> Sözleşme Oluştur</div>
     <input type="hidden" id="sfTur" value="satis">
-    <div style="background:#FEF9E7;border:1px solid #F5C16C;border-radius:8px;padding:10px 12px;font-size:12px;color:#633806;margin-bottom:14px">
+    <div style="background:#FEF9E7;border:1px solid #F5C16C;border-radius:8px;padding:10px font-size:15px;color:#633806;margin-bottom:14px">
       <i class="ti ti-alert-triangle"></i> Bu belge, taraflar arasındaki anlaşmayı özetleyen bir sözleşme taslağıdır. Tapu devri resmi işlemleri Tapu Müdürlüğü'nde yapılır; özel durumlar için bir hukuk danışmanına başvurmanız önerilir.
     </div>
     <div style="display:flex;flex-direction:column;gap:16px;max-height:65vh;overflow-y:auto;padding-right:4px">
