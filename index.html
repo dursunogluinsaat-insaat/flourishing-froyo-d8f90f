@@ -314,11 +314,17 @@ tr:hover td{background:#F4F9FC}
       </div>
 
       <div>
-        <div style="font-size:13px;font-weight:700;color:#1A5276;margin-bottom:8px" id="sfBedelBaslik">Bedel Bilgileri</div>
+        <div style="font-size:13px;font-weight:700;color:#1A5276;margin-bottom:8px" id="sfBedelBaslik"
+<div style="display: flex; gap: 15px; margin-top: 10px; margin-bottom: 10px; align-items: stretch; width: 100%;">
+  <div style="flex: 1; background: #F8FBFD; border: 1px solid #D4E6F1; border-radius: 8px; padding: 10px;">
+>Bedel Bilgileri</div>
         <div class="grid2" style="margin-bottom:8px">
           <div><label id="sfBedelLabel">Satış Bedeli (₺) *</label><input type="text" id="sfBedel" oninput="formatFiyat(this)"></div>
           <div><label id="sfKaparoLabel">Kaparo (₺)</label><input type="text" id="sfKaparo" oninput="formatFiyat(this)"></div>
         </div>
+            </div>
+  <div style="flex: 1; background: #F8FBFD; border: 1px solid #D4E6F1; border-radius: 8px; padding: 10px;">
+
         <!-- SATIŞ ALANLARI (Dursunoğlu şablonu — Madde 1-17) -->
         <div class="sf-satis-only grid2" style="margin-bottom:8px">
           <div><label>Kapora Nereye Alındı</label><input type="text" id="sfKaparoYeri" value="BANKA HESABINA" placeholder="ör. BANKA HESABINA / ELDEN"></div>
@@ -338,7 +344,11 @@ tr:hover td{background:#F4F9FC}
             </div>
           </div>
         </div>
-        <div class="sf-satis-only"><label>Madde 14 — İskân Harcını Kim Ödeyecek?</label>
+         </div>
+</div>
+  </div>
+</div>
+ <div class="sf-satis-only"><label>Madde 14 — İskân Harcını Kim Ödeyecek?</label>
           <select id="sfIskanOdeyen"><option>Seçiniz</option><option>Müteahhit Firma</option><option>Alıcı</option><option>Satıcı</option><option>Emlak Komisyoncusu</option></select>
         </div>
         <!-- KİRA ALANLARI -->
