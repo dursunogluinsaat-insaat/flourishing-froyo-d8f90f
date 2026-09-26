@@ -3332,7 +3332,25 @@ function ctMusteriTemizle(){
   document.getElementById('ctMusteri').value = '';
   document.getElementById('ctTel').value = '';
 }
+// --- FIREBASE ENTEGRASYONU ---
+import { initializeApp } from "https://gstatic.com";
+import { getFirestore } from "https://gstatic.com";
+import { getAuth } from "https://gstatic.com";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyD4C9Br4MVa7TwDgmz3FO-YCyM0_Mpv200",
+  authDomain: "://firebaseapp.com",
+  projectId: "dursunogluemlak-crm",
+  storageBucket: "dursunogluemlak-crm.firebasestorage.app",
+  messagingSenderId: "712393824176",
+  appId: "1:712393824176:web:be4bc776fe04422f52a875"
+};
+
+const app = initializeApp(firebaseConfig);
+window.fsDb = getFirestore(app);
+window.fsAuth = getAuth(app);
+// -----------------------------
+  
 function addContract(){
   const tur = document.getElementById('ctTur').value;
   const musteri = document.getElementById('ctMusteri').value.trim();
