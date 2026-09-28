@@ -4042,23 +4042,30 @@ function gosterSatisSozlesmesi(d){
     <tr><td style="width:50%"><strong>Vergi Dairesi/No:</strong> ${esc(d.firmaVergi)||'-'}</td><td><strong>Yetki Belge No:</strong> ${esc(d.firmaYetkiBelge)||'-'}</td></tr>
     <tr><td><strong>Telefon:</strong> ${esc(d.firmaTel)||'-'}</td><td><strong>E-posta:</strong> ${esc(d.firmaEposta)||'-'}</td></tr>
     <tr><td colspan="3"><strong>Adresi:</strong> ${esc(d.firmaAdres)||'-'}</td></tr>
-  </table>`;
+   html+='</table>';
+  
+ html+='<p style="margin-top:12px;font-size:12.5px">Alıcı ile satıcı yukarıda belirtilen gayrimenkulün aşağıda belirlenen koşullarda satılması için anlaşmışlardır.</p>';
+  html+='<h3>SÖZLEŞME MADDELERİ</h3>';
 
-  html+=`<p style="margin-top:12px;font-size:12.5px">Alıcı ile satıcı yukarıda belirtilen gayrimenkulün aşağıda belirlenen koşullarda satılması için anlaşmışlardır.</p>`;
+  // Genel Şartlar Maddelerini Basma
+  html+='<h4>GENEL ŞARTLAR</h4><div class="maddeler">' + genelMaddeler().map((x,i)=>`<p><b>Madde ${i+1} —</b> ${x}</p>`).join("") + '</div>';
 
-  html+=`<h3>SÖZLEŞME MADDELERİ</h3>`;
-  SATIS_MADDE_NO.forEach(no=>{ html+=maddeHtml(no); });
+  if (typeof SATIS_MADDE_NO !== 'undefined' && Array.isArray(SATIS_MADDE_NO)) {
+    SATIS_MADDE_NO.forEach(no => { if (typeof maddeHtml === 'function') html += maddeHtml(no); });
+  }
 
-  if(d.ozelSartlar){
+  if(d && d.ozelSartlar){
     html+=`<div style="margin-top:10px"><strong>ÖNEMLİ NOTLAR:</strong> ${esc(d.ozelSartlar)}</div>`;
   }
 
-  html+=`<div class="soz-imza" style="grid-template-columns:1fr 1fr 1fr">
-    <div>ALICI<div class="cizgi">${esc(d.t2Ad)}<br><span style="font-size:11px;color:#555">T.C/V.D: ${esc(d.t2Tc)||'-'}</span></div></div>
-    <div>EMLAK KOMİSYONCUSU<div class="cizgi">${esc(d.firmaUnvan)||''}</div></div>
-    <div>SATICI<div class="cizgi">${esc(d.t1Ad)}<br><span style="font-size:11px;color:#555">T.C/V.D: ${esc(d.t1Tc)||'-'}</span></div></div>
-  </div>`;
-  html+=`</div>`;
+  if(d){
+    html+=`<div class="soz-imza" style="display:grid;grid-template-columns:1fr 1fr 1fr">
+      <div>ALICI<div class="cizgi">${esc(d.t2Ad||"")}</div><br><span style="font-size:11px;color:#555">T.C./V.N: ${esc(d.t2Tc)||"—"}</span></div>
+      <div>EMLAK KOMİSYONCUSU<div class="cizgi">${esc(d.firmaUnvan)||"—"}</div></div>
+      <div>SATICI<div class="cizgi">${esc(d.t1Ad||"")}</div><br><span style="font-size:11px;color:#555">T.C./V.N: ${esc(d.t1Tc)||"—"}</span></div>
+    </div>`;
+  }
+  html+='</div>';
 
   document.getElementById('sozlesmePrintArea').innerHTML=html;
   document.getElementById('sozlesmePrintModal').classList.remove('hidden');
