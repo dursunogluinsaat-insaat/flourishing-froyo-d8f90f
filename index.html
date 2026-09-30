@@ -5818,6 +5818,152 @@ function updateBackupStats(){
   window.firebaseDosyalariYukle = dosyalariYukle;
   window.firebasePortfoyKaydet = portfoyKaydet;
   window.firebasePortfoyleriGetir = portfoyleriGetir;
+// =========================================================================
+// 🏢 HER FİRMAYA ÖZEL DİNAMİK SÖZLEŞME VE BASKI MOTORU (ÇOKLU FİRMA DESTEĞİ)
+// =========================================================================
+window.createSozlesmeBelge = function() {
+    try {
+        // 1. Sisteme giriş yapmış olan aktif firmanın / kullanıcının bilgilerini çekiyoruz
+        const aktifKullanici = JSON.parse(localStorage.getItem("aktifKullanici") || "{}");
+        const firmaUnvani = aktifKullanici.firmaAdi || aktifKullanici.adSoyad || "DURSUNOĞLU İNŞAAT & GAYRİMENKUL";
+        const firmaAdresi = aktifKullanici.adres || "Güvenli Sözleşme & Kontrat Merkezi";
+        
+        // Form alanlarından seçilen türleri alıyoruz
+        const sTuru = document.getElementById("sTur") ? document.getElementById("sTur").value : "satis";
+        const kAmaci = document.getElementById("sfKullanimAmaci") ? document.getElementById("sfKullanimAmaci").value : "Mesken";
+        
+        // Formdaki tarafların ve mülkün bilgilerini çekiyoruz
+        const saticiAd = document.getElementById("sfT1Ad") ? document.getElementById("sfT1Ad").value : "";
+        const saticiTc = document.getElementById("sfT1Tc") ? document.getElementById("sfT1Tc").value : "";
+        const aliciAd = document.getElementById("sfT2Ad") ? document.getElementById("sfT2Ad").value : "";
+        const aliciTc = document.getElementById("sfT2Tc") ? document.getElementById("sfT2Tc").value : "";
+        const mTelefon = document.getElementById("sfT1Tel") ? document.getElementById("sfT1Tel").value : "";
+        const mAdres = document.getElementById("sfT1Adr") ? document.getElementById("sfT1Adr").value : "";
+        const sTarih = document.getElementById("sfTarih") ? document.getElementById("sfTarih").value : new Date().toLocaleDateString('tr-TR');
+        const oSartlar = document.getElementById("sfOzelSartlar") ? document.getElementById("sfOzelSartlar").value : "";
+        const dBasi = document.getElementById("sfDemirbaslar") ? document.getElementById("sfDemirbaslar").value : "Mevcut demirbaşlar eksiksiz teslim edilmiştir.";
+        const eKomisyon = document.getElementById("sfKomisyon") ? document.getElementById("sfKomisyon").value : "";
+        const oGunu = document.getElementById("sfOdemeGunu") ? document.getElementById("sfOdemeGunu").value : "Her ayın 5. günü";
+
+        let sBaslik = "GAYRİMENKUL SATIŞ SÖZLEŞMESİ";
+        let taraf1Etiket = "SATICININ / MÜLK SAHİBİNİN";
+        let taraf2Etiket = "ALICININ / MÜŞTERİNİN";
+        let maddelerHtml = "";
+
+        // Seçilen sözleşmeye göre yasal maddeleri tamamen ayırıyoruz
+        if (sTuru === "kira") {
+            if (kAmaci === "Isyeri") {
+                sBaslik = "TİCARİ İŞ YERİ KİRA SÖZLEŞMESİ";
+                taraf1Etiket = "KİRAYA VERENİN (MÜLK SAHİBİ)";
+                taraf2Etiket = "KİRACININ (İŞ YERİ YETKİLİSİ)";
+                maddelerHtml = `
+                    <ol>
+                        <li><b>Kiralama Amacı:</b> Kiralanan taşınmaz yalnızca ticari iş yeri/dükkan amacıyla kullanılacaktır.</li>
+                        <li><b>Stopaj ve Vergiler:</b> Kira bedeline ilişkin doğacak her türlü stopaj, vergi ve yasal kesintiler kiracıya aittir.</li>
+                        <li><b>Alt Kiralama Yetkisi:</b> Kiracı, mülk sahibinin yazılı izni olmadan taşınmazı kısmen veya tamamen alt kiraya veremez, devredemez.</li>
+                        <li><b>Tadilat ve Onarım:</b> İş yerinde yapılacak kurumsal tadilat ve dekorasyonlar mülk sahibinin onayına tabidir. Tahliye halinde mülke zarar vermeyen kalıcı tadilatlar bedelsiz bırakılır.</li>
+                        <li><b>Ödeme Düzeni:</b> Kira bedeli ${oGunu} içinde mülk sahibinin banka hesabına net olarak ödenir.</li>
+                    </ol>
+                `;
+            } else {
+                sBaslik = "KONUT KİRA SÖZLEŞMESİ (MESKEN)";
+                taraf1Etiket = "KİRAYA VERENİN (MÜLK SAHİBİ)";
+                taraf2Etiket = "KİRACININ (AİLE / SAKİN)";
+                maddelerHtml = `
+                    <ol>
+                        <li><b>Kira Amacı:</b> Kiralanan taşınmaz sadece mesken (konut) olarak aile ikametine tahsis edilmiştir.</li>
+                        <li><b>Kira Artış Oranı:</b> Yeni dönem kira artışları, yasal sınırı aşmayacak şekilde bir önceki yılın TÜFE 12 aylık ortalamasına göre belirlenir.</li>
+                        <li><b>Demirbaş ve Bakım:</b> Kiracı, kombi, ankastre ve diğer demirbaşları çalışır durumda teslim almış olup, özenle kullanmakla yükümlüdür.</li>
+                        <li><b>Ortak Giderler ve Aidat:</b> Taşınmaza ait bina aidatı, çevre temizlik vergisi ve kullanım giderleri (elektrik, su, doğalgaz) kiracıya aittir.</li>
+                        <li><b>Ödeme Zamanı:</b> Aylık kira bedeli ${oGunu} geciktirilmeksizin banka kanalıyla ödenir.</li>
+                    </ol>
+                `;
+            }
+        } else {
+            maddelerHtml = `
+                <ol>
+                    <li><b>Sözleşmenin Konusu:</b> İşbu sözleşme, satıcının zilyetliğinde bulunan taşınmazın alıcıya satışı ve tapu devir şartlarını düzenler.</li>
+                    <li><b>Kapora ve Cayma Şartı:</b> Alıcı tarafından verilen kapora, toplam satış bedelinden düşülür. Alıcı alımdan sebepsiz cayarsa kapora iade edilmez; satıcı cayarsa kaporanın iki katını öder.</li>
+                    <li><b>Tapu Devri ve Harçlar:</b> Tapu devir harçları ve yasal masraflar yasal mevzuat uyarınca taraflarca aksi kararlaştırılmadıkça yarı yarıya ödenir.</li>
+                    <li><b>Hizmet Bedeli:</b> Gayrimenkul danışmanlığı hizmet bedeli (${eKomisyon}), taraflarca yasal oranlar dahilinde emlak ofisine ödenir.</li>
+                </ol>
+            `;
+        }
+
+        // Baskı Önizleme Tasarımı (Giriş yapan firmanın unvanı dinamik basılıyor)
+        const printContent = `
+            <html>
+            <head>
+                <title>${sBaslik}</title>
+                <style>
+                    body { font-family: sans-serif; padding: 30px; line-height: 1.5; color: #1a1a1a; }
+                    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1A5276; padding-bottom: 10px; }
+                    .header h1 { font-size: 20px; color: #1A5276; margin: 0; font-weight: 700; text-transform: uppercase; }
+                    .header p { font-size: 11px; color: #555; margin: 5px 0 0 0; letter-spacing: 1px; }
+                    .info-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+                    .info-box { border: 1px solid #ccc; padding: 12px; border-radius: 6px; background: #fafafa; }
+                    .info-box h3 { font-size: 13px; margin: 0 0 8px 0; color: #1A5276; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+                    .info-box p { font-size: 12px; margin: 4px 0; }
+                    .maddeler { margin-bottom: 25px; font-size: 13px; }
+                    .maddeler ol { padding-left: 20px; }
+                    .maddeler li { margin-bottom: 8px; }
+                    .ozel-sart { border: 1px dashed #A32D2D; padding: 10px; background: #FFF9F9; font-size: 12px; border-radius: 6px; margin-bottom: 25px; }
+                    .signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center; margin-top: 40px; font-size: 12px; }
+                    .sig-line { margin-top: 50px; border-top: 1px solid #000; padding-top: 5px; font-weight: bold; }
+                    @media print {
+                        .no-print, #sozlesmeSecildi, .modal-title, button, .modal-box > div:first-child { display: none !important; }
+                        body { padding: 0; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>${firmaUnvani}</h1>
+                    <p>${firmaAdresi}</p>
+                </div>
+                <h2 style="text-align:center; font-size:15px; margin-bottom:20px; color:#1A5276; text-transform:uppercase;">${sBaslik}</h2>
+                
+                <div class="info-section">
+                    <div class="info-box">
+                        <h3>1. TARAF: ${taraf1Etiket}</h3>
+                        <p><b>Adı Soyadı / Unvan:</b> ${saticiAd}</p>
+                        <p><b>T.C. / Vergi No:</b> ${saticiTc}</p>
+                        <p><b>İletişim Tel:</b> ${mTelefon}</p>
+                        <p><b>Yasal İkametgah:</b> ${mAdres}</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>2. TARAF: ${taraf2Etiket}</h3>
+                        <p><b>Adı Soyadı / Unvan:</b> ${aliciAd}</p>
+                        <p><b>T.C. / Vergi No:</b> ${aliciTc}</p>
+                        <p><b>Sözleşme Tarihi:</b> ${sTarih}</p>
+                    </div>
+                </div>
+
+                <div class="maddeler">
+                    <h3 style="font-size:13px; color:#1A5276; margin-bottom:10px;">SÖZLEŞME GENEL HÜKÜMLERİ</h3>
+                    ${maddelerHtml}
+                </div>
+
+                ${sTuru === "kira" ? `
+                <div class="maddeler" style="margin-top:15px;">
+                    <h3 style="font-size:13px; color:#1A5276; margin-bottom:5px;">TESLİM EDİLEN DEMİRBAŞLAR</h3>
+                    <p style="font-size:12px; background:#f9f9f9; padding:8px; border:1px solid #eee; border-radius:4px;">${dBasi}</p>
+                </div>
+                ` : ''}
+
+                ${oSartlar ? `
+                <div class="ozel-sart">
+                    <b>TARAFLARCA KARARLAŞTIRILAN ÖZEL ŞARTLAR:</b><br>${oSartlar.replace(/\\n/g, '<br>')}
+                </div>
+                ` : ''}
+
+                <div class="signatures">
+                    <div>
+                        <p>1. Taraf / Teslim Eden</p>
+                        <div class="sig-line">${saticiAd || "İmza"}</div>
+                    </div>
+                    <div>
+
 </script>
 </body>
 </html>
