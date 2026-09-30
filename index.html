@@ -2935,18 +2935,63 @@ function updateAdminNotifUI(){
   }
 }
 
-function quickApproveMember(id){
-  const m=members.find(x=>x.id===id);
-  if(!m)return;
-  m.approved=true;
-  saveMembers();
-  updateAdminNotifUI();
-  updatePendingBadge();
-  showToast(`${m.ad} ${m.soyad} onaylandı`,'green');
-  if(confirm(`${m.ad} ${m.soyad} kişisine onay e-postası gönderilsin mi?`)){
-    sendCRMEmail({to:m.email,subject:'Dursunoğlu Emlak CRM - Hesabınız Onaylandı',name:`${m.ad} ${m.soyad}`,message:`Merhaba ${m.ad} ${m.soyad},\n\nDursunoğlu Emlak CRM hesabınız onaylanmıştır. Artık sisteme giriş yapabilirsiniz.\n\nKullanıcı Adınız: ${m.username}\n\nDursunoğlu Emlak CRM`})
-      .then(()=>showToast('Onay e-postası gönderildi.','green'))
-      .catch(error=>{console.error(error);showToast(error.message||'Onay e-postası gönderilemedi.','red');});
+async function quickApproveMember(id){
+  const m = members.find(x => x.id === id);
+  if (!m) return;
+
+  try {
+    const ready = await window.fsAuthReady;
+    if (!ready || !window.fsDb) {
+      throw new Error('Firebase bağlantısı kurulamadı.');
+    }
+
+    const { doc, updateDoc } = await import(
+      'https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js'
+    );
+
+    // Üyeliğin kaydedildiği koleksiyona göre bulutu güncelle.
+    if (m.kullaniciDocId) {
+      await updateDoc(
+        doc(window.fsDb, 'kullanicilar', m.kullaniciDocId),
+        { onayDurumu: true }
+      );
+    } else if (m.uid) {
+      await updateDoc(
+        doc(window.fsDb, 'users', m.uid),
+        { approved: true }
+      );
+    } else {
+      throw new Error('Üyenin Firebase belge kimliği bulunamadı.');
+    }
+
+    // Bulut güncellemesi başarılı olduktan sonra yerel listeyi güncelle.
+    m.approved = true;
+    saveMembers();
+    updateAdminNotifUI();
+    updatePendingBadge();
+
+    showToast(`${m.ad} ${m.soyad} onaylandı ve buluta kaydedildi.`, 'green');
+
+    if (confirm(`${m.ad} ${m.soyad} kişisine onay e-postası göndermek ister misiniz?`)) {
+      const s = encodeURIComponent('Emlak CRM - Hesabınız Onaylandı');
+      const b = encodeURIComponent(
+        `Merhaba ${m.ad} ${m.soyad},\n\n` +
+        'Emlak CRM hesabınız onaylanmıştır. Artık sisteme giriş yapabilirsiniz.\n\n' +
+        `Kullanıcı Adı: ${m.username}\n\nEmlak CRM`
+      );
+
+      window.open(
+        `mailto:${m.email}?subject=${s}&body=${b}`,
+        '_blank'
+      );
+    }
+
+  } catch (error) {
+    console.error('Üye onaylama hatası:', error);
+    showToast(
+      'Onay Firebase’e kaydedilemedi: ' + error.message,
+      'red'
+    );
   }
 }
 
