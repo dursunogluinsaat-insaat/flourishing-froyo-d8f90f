@@ -1855,14 +1855,71 @@ tr:hover td{background:#F4F9FC}
         <button class="primary" onclick="saveSozlesmeFirmaBilgi()"><i class="ti ti-device-floppy"></i> Firma Bilgilerini Kaydet</button>
       </div>
 
-      <!-- SATIŞ SÖZLEŞMESİ MADDE METİNLERİ -->
-      <div class="card" style="margin-top:1.25rem;border-color:#AED6F1">
-        <div class="section-title" style="color:#1A5276;border-color:#AED6F1"><i class="ti ti-file-text"></i> Satış Sözleşmesi Madde Metinleri</div>
-        <p style="font-size:13px;color:#666;margin-bottom:1rem">Firmanızın kullandığı sözleşme metnindeki sabit madde ifadeleri. Tutar/oran gibi değişken kısımlar her sözleşmede otomatik doldurulur; metnin kendisini burada düzenleyebilirsiniz.</p>
-        <div id="satisMaddeAlanlari"></div>
-        <button class="primary" style="margin-top:8px" onclick="saveSatisMaddeMetinleri()"><i class="ti ti-device-floppy"></i> Madde Metinlerini Kaydet</button>
-        <button style="margin-top:8px;margin-left:8px" onclick="resetSatisMaddeMetinleri()"><i class="ti ti-refresh"></i> Varsayılana Döndür</button>
-      </div>
+      <!-- DİNAMİK SÖZLEŞME VE MADDE METİNLERİ YÖNETİM ALANI -->
+<div class="card" style="margin-top:1.25rem; border-color:#AED6F1;">
+    <div class="section-title" style="color:#1A5276; border-color:#AED6F1;">
+        <i class="ti ti-file-text"></i> <span id="dinamikSozlesmeBaslik">Gayrimenkul Satış Sözleşmesi Metinleri</span>
+    </div>
+    <p style="font-size:13px; color:#666; margin-bottom:1rem;">
+        Firmanızın kullandığı sözleşme metindeki sabit maddelerdir. Tutar, oran veya isim gibi değişken kısımlar her sözleşmede formdan otomatik doldurulur.
+    </p>
+    
+    <script>
+        // Form üzerindeki buton veya seçim değiştikçe bu fonksiyon otomatik çalışır
+        function sozlesmeTuruDinamikTetikle() {
+            const sTurSecici = document.getElementById("sTur");
+            const kAmaciSecici = document.getElementById("sfKullanimAmaci");
+            const baslik = document.getElementById("dinamikSozlesmeBaslik");
+            const btnKaydet = document.getElementById("btnSozlesmeKaydet");
+            
+            if (!baslik) return;
+            
+            const turVal = sTurSecici ? sTurSecici.value : "satis";
+            
+            if (turVal === "kira" || turVal === "Konut Kira" || turVal === "Ticari Kira") {
+                const kAmaci = kAmaciSecici ? kAmaciSecici.value : "Mesken";
+                if (kAmaci === "Isyeri" || turVal === "Ticari Kira") {
+                    baslik.innerText = "Ticari İş Yeri Kira Sözleşmesi Metinleri";
+                    if(btnKaydet) btnKaydet.setAttribute("onclick", "saveSozlesmeMetni('ticari')");
+                } else {
+                    baslik.innerText = "Konut Kira Sözleşmesi (Mesken) Metinleri";
+                    if(btnKaydet) btnKaydet.setAttribute("onclick", "saveSozlesmeMetni('konut')");
+                }
+            } else {
+                baslik.innerText = "Gayrimenkul Satış Sözleşmesi Metinleri";
+                if(btnKaydet) btnKaydet.setAttribute("onclick", "saveSozlesmeMetni('satis')");
+            }
+            
+            // Alt kısımdaki ana sözleşme motorumuzu tetikliyoruz
+            if (typeof window.createSozlesmeBelge === "function") {
+                window.createSozlesmeBelge();
+            }
+        }
+
+        // Buton tıklamalarını ve form geçişlerini dinleyen mekanizma
+        document.addEventListener("DOMContentLoaded", () => {
+            // Sitenizdeki buton gruplarını veya select alanlarını yakalıyoruz
+            const formElementleri = document.querySelectorAll("#sTur, #sfKullanimAmaci, input[name='sTur']");
+            formElementleri.forEach(el => {
+                el.addEventListener("change", sozlesmeTuruDinamikTetikle);
+                el.addEventListener("click", sozlesmeTuruDinamikTetikle);
+            });
+            
+            // Sayfa yüklendiğinde ilk önizlemeyi oluştur
+            setTimeout(sozlesmeTuruDinamikTetikle, 1200);
+        });
+    </script>
+
+    <div id="sozlesmeDinamikMetinAlani"></div>
+    
+    <button class="primary" id="btnSozlesmeKaydet" style="margin-top:8px;" onclick="saveSozlesmeMetni('satis')">
+        <i class="ti ti-device-floppy"></i> Sözleşme Metinlerini Kaydet
+    </button>
+    <button style="margin-top:8px; margin-left:8px;" class="secondary" onclick="location.reload()">
+        <i class="ti ti-refresh"></i> Varsayılana Dön / Yenile
+    </button>
+</div>
+
 
       <!-- VERİ YEDEKLEMEamE & GERİ YÜKLEME -->
       <div class="card" style="border-color:#A9DFBF">
