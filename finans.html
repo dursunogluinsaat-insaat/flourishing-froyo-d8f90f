@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dursunoğlu Finans Merkezi</title>
+<style>
+:root{--navy:#12243a;--blue:#2457a7;--bg:#f4f7fb;--ink:#182230;--muted:#64748b;--line:#e3e9f1;--green:#18794e;--red:#b42318;--gold:#9a6700}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.45 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;background:var(--blue);color:white;font-weight:650}button.secondary{background:#e8eef7;color:var(--navy)}button.danger{background:#fff0ef;color:var(--red)}button:disabled{opacity:.5;cursor:not-allowed}
+header{background:var(--navy);color:white;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header h1{font-size:20px;margin:0}header p{margin:3px 0 0;color:#c5d2e3;font-size:12px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:12px;background:#fff;color:var(--navy);display:grid;place-items:center;font-weight:900;font-size:18px}
+main{max-width:1250px;margin:24px auto;padding:0 18px 50px}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}.toolbar .spacer{flex:1}.pill{display:inline-flex;align-items:center;border-radius:99px;padding:5px 9px;background:#e8eef7;color:#25446d;font-size:12px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 3px 12px #102a4306}.metric .label{color:var(--muted);font-size:12px}.metric .value{font-size:25px;font-weight:800;margin:7px 0 3px;letter-spacing:-.5px}.metric .hint{font-size:12px;color:var(--muted)}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 14px}.tabs button{background:transparent;color:var(--muted);border:1px solid transparent}.tabs button.active{background:white;color:var(--navy);border-color:var(--line);box-shadow:0 2px 8px #102a4308}
+.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0 12px}.section-head h2{font-size:18px;margin:0}.muted{color:var(--muted)}.small{font-size:12px}.two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:750}td.num,th.num{text-align:right;white-space:nowrap}.table-wrap{overflow:auto}.empty{padding:28px;text-align:center;color:var(--muted)}
+label{display:block;font-size:12px;font-weight:700;color:#42526a;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid #d7e0eb;border-radius:9px;padding:10px 11px;background:white;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:#6c96d8;box-shadow:0 0 0 3px #2457a71a}.field{margin-bottom:13px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.full{grid-column:1/-1}.checkrow{display:flex;align-items:center;gap:8px;margin:7px 0 13px}.checkrow input{width:auto}.checkrow label{margin:0}
+.notice{padding:12px 14px;border-radius:11px;background:#fff6df;color:#7a5100;border:1px solid #f4e1ac;font-size:12px;margin-bottom:14px}.success{background:#eaf7ef;color:#17603f;border-color:#c5e8d1}.error{background:#fff0ef;color:#9f2119;border-color:#ffd2cf}
+.hidden{display:none!important}.login-wrap{max-width:430px;margin:8vh auto;padding:0 16px}.login-card{background:white;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 12px 40px #102a4310}.login-card h2{margin:0 0 6px}.login-card p{color:var(--muted);font-size:13px;margin:0 0 20px}.footer-note{font-size:11px;color:var(--muted);margin-top:22px;text-align:center}.modal-backdrop{position:fixed;inset:0;background:#0b1727a6;display:grid;place-items:center;padding:16px;z-index:5}.modal{background:white;border-radius:16px;padding:22px;width:min(680px,100%);max-height:92vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h2{margin:0;font-size:18px}.bar{height:9px;background:#edf1f6;border-radius:99px;overflow:hidden;display:flex}.bar span{display:block;height:100%}.branch-row{display:flex;justify-content:space-between;gap:10px;margin:12px 0 7px}.status{font-size:11px;border-radius:99px;padding:4px 7px;background:#edf5ff;color:#2457a7;white-space:nowrap}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
+@media(max-width:520px){header{padding:15px}.grid{grid-template-columns:1fr 1fr;gap:8px}.metric .value{font-size:19px}.card{padding:13px}main{padding:0 10px 35px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}th,td{padding:9px 7px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">D</div><div><h1>Dursunoğlu Finans Merkezi</h1><p>İstanbul · Edremit | Gelir, gider ve ortak kasa yönetimi</p></div></div>
+  <div id="userbar" class="hidden"><span id="who" class="small"></span> <button id="logout" class="secondary">Çıkış</button></div>
+</header>
+<div id="login" class="login-wrap">
+  <div class="login-card">
+    <h2>Finans hesabına giriş</h2><p>Yetkili hesabınızla giriş yapın. Bu uygulama ayrı finans veritabanı için hazırlanmıştır.</p>
+    <div id="loginmsg" class="notice hidden"></div>
+    <form id="loginform"><div class="field"><label>E-posta</label><input id="email" type="email" required autocomplete="username" placeholder="ad@firma.com"></div><div class="field"><label>Şifre</label><input id="password" type="password" required autocomplete="current-password" placeholder="Şifreniz"></div><button style="width:100%">Giriş yap</button></form>
+    <div class="footer-note">Hesaplar Firebase Authentication üzerinden yönetilir.</div>
+  </div>
+</div>
+<main id="app" class="hidden">
+  <div id="configwarning" class="notice hidden"></div>
+  <div class="toolbar">
+    <span class="pill" id="rolepill">Yetkili</span>
+    <select id="period" style="width:auto;min-width:145px"><option value="month">Bu ay</option><option value="year">Bu yıl</option><option value="all">Tüm dönem</option></select>
+    <select id="branchfilter" style="width:auto;min-width:145px"><option value="all">İki şube</option><option value="İstanbul">İstanbul</option><option value="Edremit">Edremit</option></select>
+    <span class="spacer"></span><button id="addbtn">+ Yeni kayıt</button><button id="exportbtn" class="secondary">Excel/CSV aktar</button>
+  </div>
+  <div class="grid">
+    <div class="card metric"><div class="label">Toplam gelir</div><div id="m-income" class="value green">₺0,00</div><div class="hint">Kayıtlı gelirler</div></div>
+    <div class="card metric"><div class="label">Toplam gider</div><div id="m-expense" class="value red">₺0,00</div><div class="hint">Kayıtlı giderler</div></div>
+    <div class="card metric"><div class="label">Gelir − gider</div><div id="m-net" class="value blue">₺0,00</div><div class="hint">Faaliyet sonucu; vergi beyanı değildir</div></div>
+    <div class="card metric"><div class="label">Ödenmemiş tutar</div><div id="m-unpaid" class="value">₺0,00</div><div class="hint">Açık borç / tahsilat kaydı</div></div>
+  </div>
+  <div class="tabs"><button class="active" data-tab="dashboard">Genel bakış</button><button data-tab="transactions">Gelir-gider kayıtları</button><button data-tab="branches">Şube karşılaştırması</button><button data-tab="settings">Kategoriler ve paylaşım</button></div>
+  <section id="tab-dashboard">
+    <div class="two-col">
+      <div class="card"><div class="section-head"><h2>Şube bazlı dağılım</h2><span class="muted small">Paylaştırılmış tutarlar</span></div>
+        <div class="branch-row"><strong>İstanbul</strong><strong id="ist-net">₺0,00</strong></div><div class="bar"><span id="ist-bar" style="width:50%;background:#2457a7"></span></div>
+        <div class="branch-row"><strong>Edremit</strong><strong id="edr-net">₺0,00</strong></div><div class="bar"><span id="edr-bar" style="width:50%;background:#2d9b72"></span></div>
+        <p class="muted small">Ortak kayıtlar, seçilen paylaşım oranına göre şubelere dağıtılır. Şirket toplamında her kayıt yalnızca bir kez sayılır.</p>
+      </div>
+      <div class="card"><div class="section-head"><h2>Bu dönem özeti</h2></div><div id="summarycats" class="muted">Henüz kayıt yok.</div></div>
+    </div>
+    <div class="section-head"><h2>Son işlemler</h2><button class="secondary" data-goto="transactions">Tüm kayıtlar</button></div>
+    <div class="card table-wrap"><table><thead><tr><th>Tarih</th><th>Tür / kategori</th><th>Şube</th><th>Açıklama</th><th class="num">Tutar</th><th>Durum</th></tr></thead><tbody id="recentrows"></tbody></table></div>
+  </section>
+  <section id="tab-transactions" class="hidden">
+    <div class="section-head"><h2>Gelir-gider kayıtları</h2><button id="addbtn2">+ Yeni kayıt</button></div>
+    <div class="card table-wrap"><table><thead><tr><th>Tarih</th><th>Tür</th><th>Kategori</th><th>Şube</th><th>Açıklama / ödeyen</th><th class="num">Tutar</th><th>Durum</th><th></th></tr></thead><tbody id="allrows"></tbody></table></div>
+  </section>
+  <section id="tab-branches" class="hidden">
+    <div class="section-head"><h2>Şube karşılaştırması</h2><span class="muted small">Paylaştırılmış gelir ve giderler</span></div>
+    <div class="card table-wrap"><table><thead><tr><th>Şube</th><th class="num">Gelir payı</th><th class="num">Gider payı</th><th class="num">Net sonuç</th><th class="num">Gider payı %</th></tr></thead><tbody id="branchrows"></tbody></table></div>
+    <div class="notice" style="margin-top:14px">Şube sonuçları, kayıtların paylaşım oranlarına göre hesaplanır. Ortaklar/şubeler arası para transferlerini gider veya gelir olarak değil, iç transfer olarak kaydetmek için ileriki sürümde ayrı transfer modülü eklenebilir.</div>
+  </section>
+  <section id="tab-settings" class="hidden">
+    <div class="two-col">
+      <div class="card"><h2 style="font-size:17px;margin-top:0">Gider kategorileri</h2><p class="muted small">Başlangıç kategorileri aşağıda tanımlıdır. Yeni kategori ekleyebilirsin.</p><div class="field"><label>Yeni kategori adı</label><input id="newcat" placeholder="Örn. Araç bakım"></div><div class="field"><label>Kategori türü</label><select id="newcattype"><option value="expense">Gider</option><option value="income">Gelir</option></select></div><button id="addcat">Kategori ekle</button><div id="catlist" style="margin-top:14px"></div></div>
+      <div class="card"><h2 style="font-size:17px;margin-top:0">Paylaşım varsayılanları</h2><p class="muted small">Yeni ortak giderler için varsayılan oran. Her kayıt sırasında değiştirilebilir.</p><div class="field"><label>İstanbul payı (%)</label><input id="defaultshare" type="number" min="0" max="100" value="50"></div><button id="saveshare">Varsayılanı kaydet</button><p id="sharemsg" class="muted small"></p><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><h3 style="font-size:14px">Kullanıcı yetkileri</h3><p class="muted small">Yetkili kullanıcılar Firebase Authentication'da oluşturulur. Her kullanıcının şube ve rol tanımı Firebase Console'da <code>finance_users</code> koleksiyonuna eklenir. Kurulum dosyasındaki README'ye bakın.</p></div>
+    </div>
+  </section>
+</main>
+<div id="modalroot"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, setDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+/* AYRI FİNANS FIREBASE PROJENİZİN BİLGİLERİNİ BURAYA GİRİN. */
+const firebaseConfig = {
+  apiKey: "BURAYA_API_KEY",
+  authDomain: "BURAYA-PROJE.firebaseapp.com",
+  projectId: "BURAYA-PROJE_ID",
+  storageBucket: "BURAYA-PROJE.firebasestorage.app",
+  messagingSenderId: "BURAYA_SENDER_ID",
+  appId: "BURAYA_APP_ID"
+};
+const CATEGORIES = {
+  expense:["Maaş","Danışman primleri","Muhasebe giderleri","Vergi ve SGK","Sahibinden.com","Hepsiemlak","Diğer ilan siteleri","Şube kirası","Elektrik / su / doğalgaz","İnternet / telefon","Mutfak","Temizlik","Reklam / pazarlama","Araç / yakıt / ulaşım","Ofis / kırtasiye","Banka / POS masrafı","Bakım / onarım","Sigorta","Muhtelif gider"],
+  income:["Satış komisyonu","Kiralama komisyonu","Danışmanlık geliri","Diğer gelir"]
+};
+const $ = id => document.getElementById(id);
+const money = n => new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY"}).format(Number(n)||0);
+const dateNow = () => new Date().toISOString().slice(0,10);
+let app,auth,db,user=null,profile=null,records=[],cats=structuredClone(CATEGORIES),defaultShare=50,activeTab="dashboard";
+const configured = !firebaseConfig.apiKey.startsWith("BURAYA") && !firebaseConfig.projectId.startsWith("BURAYA");
+function msg(el,text,type="notice"){el.textContent=text;el.className="notice "+(type==="error"?"error":type==="success"?"success":"");el.classList.remove("hidden")}
+function hide(el){el.classList.add("hidden")}
+function dateInPeriod(d){const v=$("period").value,dt=new Date((d||"2000-01-01")+"T12:00:00"),now=new Date();if(v==="all")return true;if(v==="year")return dt.getFullYear()===now.getFullYear();return dt.getFullYear()===now.getFullYear()&&dt.getMonth()===now.getMonth()}
+function branchPass(r){const b=$("branchfilter").value;return b==="all"||r.branch===b||r.branch==="Ortak"}
+function filtered(){return records.filter(r=>dateInPeriod(r.date)&&branchPass(r))}
+function allocation(r,branch){
+  const share=Number(r.istanbulShare ?? defaultShare);
+  if(r.branch==="Ortak") return branch==="İstanbul" ? share/100 : 1-share/100;
+  if(r.branch===branch) return 1;
+  return 0;
+}
+function calc(list,branch,type){return list.filter(r=>r.type===type).reduce((s,r)=>s+(Number(r.amount)||0)*allocation(r,branch),0)}
+function render(){
+ const list=filtered();
+ const selectedBranch=$("branchfilter").value;
+ const amountInView=r=>selectedBranch==="all"?Number(r.amount||0):Number(r.amount||0)*allocation(r,selectedBranch);
+ const income=list.filter(r=>r.type==="income").reduce((s,r)=>s+amountInView(r),0),expense=list.filter(r=>r.type==="expense").reduce((s,r)=>s+amountInView(r),0),unpaid=list.filter(r=>r.status!=="Ödendi").reduce((s,r)=>s+amountInView(r),0);
+ $("m-income").textContent=money(income);$("m-expense").textContent=money(expense);$("m-net").textContent=money(income-expense);$("m-net").className="value "+(income-expense>=0?"blue":"red");$("m-unpaid").textContent=money(unpaid);
+ const iNet=calc(list,"İstanbul","income")-calc(list,"İstanbul","expense"),eNet=calc(list,"Edremit","income")-calc(list,"Edremit","expense");
+ $("ist-net").textContent=money(iNet);$("edr-net").textContent=money(eNet);const abs=Math.abs(iNet)+Math.abs(eNet)||1;$("ist-bar").style.width=(Math.abs(iNet)/abs*100)+"%";$("edr-bar").style.width=(Math.abs(eNet)/abs*100)+"%";
+ const exps={};list.filter(r=>r.type==="expense").forEach(r=>exps[r.category]=(exps[r.category]||0)+Number(r.amount||0));const top=Object.entries(exps).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ $("summarycats").innerHTML=top.length?top.map(([k,v])=>`<div class="branch-row"><span>${esc(k)}</span><strong>${money(v)}</strong></div>`).join(""):'Henüz gider kaydı yok.';
+ const sorted=[...list].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,6);$("recentrows").innerHTML=sorted.map(rowRecent).join("")||'<tr><td colspan="6" class="empty">Henüz kayıt eklenmedi.</td></tr>';
+ $("allrows").innerHTML=[...list].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(rowAll).join("")||'<tr><td colspan="8" class="empty">Henüz kayıt eklenmedi.</td></tr>';
+ const branches=["İstanbul","Edremit"];const totalExpense=list.filter(r=>r.type==="expense").reduce((s,r)=>s+Number(r.amount||0),0);
+ $("branchrows").innerHTML=branches.map(b=>{const inc=calc(list,b,"income"),exp=calc(list,b,"expense");return `<tr><td><strong>${b}</strong></td><td class="num green">${money(inc)}</td><td class="num red">${money(exp)}</td><td class="num"><strong>${money(inc-exp)}</strong></td><td class="num">${totalExpense?(exp/totalExpense*100).toFixed(1):"0.0"}%</td></tr>`}).join("");
+ renderCats();
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function displayAmount(r){const b=$("branchfilter").value;return b==="all"?Number(r.amount||0):Number(r.amount||0)*allocation(r,b)}
+function rowRecent(r){return `<tr><td>${esc(r.date||"—")}</td><td>${r.type==="income"?'<span class="green">Gelir</span>':'<span class="red">Gider</span>'}<br><span class="muted small">${esc(r.category)}</span></td><td>${esc(r.branch)}</td><td>${esc(r.description||"—")}</td><td class="num"><strong>${money(displayAmount(r))}</strong></td><td>${esc(r.status||"—")}</td></tr>`}
+function rowAll(r){return `<tr><td>${esc(r.date||"—")}</td><td>${r.type==="income"?'<span class="green">Gelir</span>':'<span class="red">Gider</span>'}</td><td>${esc(r.category)}</td><td>${esc(r.branch)}</td><td>${esc(r.description||"—")}<br><span class="muted small">Kaydı giren: ${esc(r.createdByEmail||"—")} · Ödeyen: ${esc(r.paidBy||"—")}</span></td><td class="num"><strong>${money(displayAmount(r))}</strong></td><td>${esc(r.status||"—")}</td><td><button class="danger smallbtn" data-del="${r.id}" ${profile?.role!=="admin"&&(r.branch==="Ortak"||r.branch!==profile?.branch||r.createdBy!==user?.uid)?"disabled":""}>Sil</button></td></tr>`}
+function renderCats(){$("catlist").innerHTML=Object.entries(cats).map(([type,arr])=>`<div style="margin:10px 0"><strong>${type==="expense"?"Gider":"Gelir"}</strong><div class="muted small">${arr.map(esc).join(" · ")}</div></div>`).join("")}
+async function loadRecords(){
+ let snaps;
+ if(profile?.role==="admin"){
+   snaps=[await getDocs(collection(db,"finance_transactions"))];
+ } else {
+   // Firestore kuralları sorgu sonuçlarını sonradan filtrelemez; yetkili
+   // kullanıcı için kendi şubesi ve ortak kayıtlar ayrı sorgulanır.
+   snaps=await Promise.all([
+     getDocs(query(collection(db,"finance_transactions"),where("branch","==",profile.branch))),
+     getDocs(query(collection(db,"finance_transactions"),where("branch","==","Ortak")))
+   ]);
+ }
+ const byId=new Map();
+ snaps.forEach(snap=>snap.docs.forEach(d=>byId.set(d.id,{id:d.id,...d.data()})));
+ records=[...byId.values()];render()
+}
+async function loadCats(){try{const s=await getDoc(doc(db,"finance_settings","categories"));if(s.exists()&&s.data().categories)cats=s.data().categories;const sh=await getDoc(doc(db,"finance_settings","defaults"));if(sh.exists())defaultShare=Number(sh.data().istanbulShare??50);$("defaultshare").value=defaultShare}catch(e){console.warn(e)}}
+async function startUser(u){
+ user=u;
+ try{
+  const ps=await getDoc(doc(db,"finance_users",u.uid));
+  if(!ps.exists()){await signOut(auth);$("loginmsg").textContent="Bu kullanıcı için finans yetkisi tanımlanmamış. Yönetici README'deki adımlarla finance_users belgesi oluşturmalı.";$("loginmsg").className="notice error";$("loginmsg").classList.remove("hidden");return}
+  profile=ps.data();
+  if(!["admin","branch"].includes(profile.role)){await signOut(auth);throw new Error("Kullanıcı rolü geçersiz.")}
+  $("login").classList.add("hidden");$("app").classList.remove("hidden");$("userbar").classList.remove("hidden");$("who").textContent=(profile.name||u.email)+" · "+(profile.role==="admin"?"Ana yönetici":profile.branch+" yetkilisi");$("rolepill").textContent=profile.role==="admin"?"Ana yönetici":profile.branch+" yetkilisi";
+  if(profile.role!=="admin"){$("branchfilter").value=profile.branch;$("branchfilter").disabled=true}
+  await loadCats();await loadRecords();
+ }catch(e){console.error(e);$("loginmsg").textContent=e.message||"Hesap bilgileri okunamadı.";$("loginmsg").className="notice error";$("loginmsg").classList.remove("hidden")}
+}
+function showModal(record=null){
+ const isEdit=!!record;
+ const allowedBranch=profile?.role==="admin"?["İstanbul","Edremit","Ortak"]:[profile?.branch];
+ const categories=cats;
+ $("modalroot").innerHTML=`<div class="modal-backdrop" id="backdrop"><div class="modal"><div class="modal-head"><h2>${isEdit?"Kaydı düzenle":"Yeni gelir / gider kaydı"}</h2><button id="closemodal" class="secondary">Kapat</button></div>
+ <form id="recordform"><div class="form-grid">
+ <div class="field"><label>Kayıt türü</label><select id="rtype"><option value="expense">Gider</option><option value="income">Gelir</option></select></div>
+ <div class="field"><label>Tarih</label><input id="rdate" type="date" required value="${esc(record?.date||dateNow())}"></div>
+ <div class="field"><label>Kategori</label><select id="rcat"></select></div>
+ <div class="field"><label>Tutar (TL)</label><input id="ramount" type="number" min="0.01" step="0.01" required value="${esc(record?.amount||"")}" placeholder="0,00"></div>
+ <div class="field"><label>Hangi şubenin kaydı?</label><select id="rbranch">${allowedBranch.map(b=>`<option ${record?.branch===b?"selected":""}>${b}</option>`).join("")}</select></div>
+ <div class="field"><label>Ödeme / tahsilat durumu</label><select id="rstatus"><option>Ödendi</option><option ${record?.status==="Bekliyor"?"selected":""}>Bekliyor</option><option ${record?.status==="Kısmi ödendi"?"selected":""}>Kısmi ödendi</option></select></div>
+ <div class="field"><label>Ödemeyi yapan / tahsil eden</label><input id="rpaidby" value="${esc(record?.paidBy||profile?.name||user?.email||"")}" placeholder="Ad soyad"></div>
+ <div class="field"><label>Kasa / banka / kart</label><select id="raccount"><option>Nakit kasa</option><option>Banka hesabı</option><option>Kredi kartı</option><option>POS</option><option>Diğer</option></select></div>
+ <div class="field full"><label>Açıklama</label><input id="rdesc" required value="${esc(record?.description||"")}" placeholder="Örn. Sahibinden ilan paketi, danışman komisyonu..."></div>
+ <div class="field"><label>Fatura / belge no (isteğe bağlı)</label><input id="rinvoice" value="${esc(record?.invoiceNo||"")}" placeholder="Belge numarası"></div>
+ <div class="field"><label>İşlemle ilgili kişi / danışman</label><input id="rperson" value="${esc(record?.person||"")}" placeholder="Danışman veya tedarikçi"></div>
+ <div class="field full" id="sharefield"><div class="checkrow"><input type="checkbox" id="rshared" ${record?.branch==="Ortak"?"checked":""}><label for="rshared">Bu kayıt iki şubeyi ilgilendiren ortak kayıt</label></div><label>İstanbul'un payı (%)</label><input id="rshare" type="number" min="0" max="100" value="${esc(record?.istanbulShare??defaultShare)}"><div class="muted small">Edremit payı otomatik olarak kalan yüzde olur.</div></div>
+ </div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px"><button type="button" id="cancelmodal" class="secondary">Vazgeç</button><button type="submit">Kaydet</button></div></form></div></div>`;
+ const fillCats=()=>{const type=$("rtype").value;$("rcat").innerHTML=(categories[type]||[]).map(c=>`<option ${record?.category===c?"selected":""}>${esc(c)}</option>`).join("")};
+ $("rtype").value=record?.type||"expense";fillCats();$("rtype").addEventListener("change",fillCats);if(record?.account)$("raccount").value=record.account;
+ if(profile?.role!=="admin"){$("rbranch").disabled=true;$("rshared").disabled=true;$("rshare").disabled=true;$("sharefield").style.opacity=".7"}
+ const close=()=>{$("modalroot").innerHTML=""};$("closemodal").onclick=close;$("cancelmodal").onclick=close;$("backdrop").addEventListener("click",e=>{if(e.target.id==="backdrop")close()});
+ $("recordform").addEventListener("submit",async e=>{e.preventDefault();const shared=profile?.role==="admin"&&$("rshared").checked;const branch=shared?"Ortak":$("rbranch").value;
+  const data={type:$("rtype").value,date:$("rdate").value,category:$("rcat").value,amount:Number($("ramount").value),branch,status:$("rstatus").value,paidBy:$("rpaidby").value.trim(),account:$("raccount").value,description:$("rdesc").value.trim(),invoiceNo:$("rinvoice").value.trim(),person:$("rperson").value.trim(),istanbulShare:shared?Number($("rshare").value):defaultShare,createdBy:user.uid,createdByEmail:user.email,updatedAt:serverTimestamp()};
+  if(!shared&&branch==="Ortak"){alert("Ortak kayıt seçimini kontrol edin.");return}
+  try{if(isEdit){await updateDoc(doc(db,"finance_transactions",record.id),data)}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"finance_transactions"),data)}close();await loadRecords()}catch(err){alert("Kayıt kaydedilemedi: "+err.message)}
+ });
+}
+async function deleteRecord(id){if(!confirm("Bu kaydı silmek istediğine emin misin?"))return;try{await deleteDoc(doc(db,"finance_transactions",id));await loadRecords()}catch(e){alert("Silinemedi: "+e.message)}}
+function exportCSV(){const list=filtered(),headers=["Tarih","Tür","Kategori","Şube","Açıklama","Tutar TL","Durum","Ödeyen/Tahsil eden","Hesap","Belge No","İlgili kişi","İstanbul payı %","Kaydı giren"];const rows=list.map(r=>[r.date,r.type==="income"?"Gelir":"Gider",r.category,r.branch,r.description,r.amount,r.status,r.paidBy,r.account,r.invoiceNo,r.person,r.istanbulShare,r.createdByEmail]);const csv=[headers,...rows].map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\r\n");const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="dursunoglu-finans-"+dateNow()+".csv";a.click();URL.revokeObjectURL(a.href)}
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{activeTab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));["dashboard","transactions","branches","settings"].forEach(t=>$("tab-"+t).classList.toggle("hidden",t!==activeTab))}));
+document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>document.querySelector(`[data-tab="${b.dataset.goto}"]`).click()));
+$("addbtn").onclick=$("addbtn2").onclick=()=>showModal();$("exportbtn").onclick=exportCSV;$("period").onchange=render;$("branchfilter").onchange=render;
+$("allrows").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(b)deleteRecord(b.dataset.del)});
+$("addcat").onclick=async()=>{const name=$("newcat").value.trim(),type=$("newcattype").value;if(!name)return;if(!cats[type].includes(name))cats[type].push(name);try{await setDoc(doc(db,"finance_settings","categories"),{categories:cats,updatedAt:serverTimestamp()});$("newcat").value="";renderCats()}catch(e){alert("Kategori kaydedilemedi: "+e.message)}};
+$("saveshare").onclick=async()=>{const n=Number($("defaultshare").value);if(n<0||n>100||!Number.isFinite(n)){alert("0 ile 100 arasında oran girin.");return}try{defaultShare=n;await setDoc(doc(db,"finance_settings","defaults"),{istanbulShare:n,updatedAt:serverTimestamp()});$("sharemsg").textContent="Varsayılan paylaşım oranı kaydedildi."}catch(e){alert("Kaydedilemedi: "+e.message)}};
+$("loginform").addEventListener("submit",async e=>{e.preventDefault();if(!configured){msg($("loginmsg"),"Önce index.html içindeki firebaseConfig alanına ayrı finans projenizin Firebase bilgilerini girin. Kurulum adımları README dosyasında.", "error");return}try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}catch(err){msg($("loginmsg"),"Giriş yapılamadı. E-posta/şifreyi ve Firebase Authentication ayarlarını kontrol edin. ("+err.code+")","error")}});
+$("logout").onclick=()=>signOut(auth);
+if(!configured){$("configwarning").textContent="Kurulum gerekli: Firebase proje bilgileri henüz eklenmedi. Önce README dosyasındaki adımları uygulayın."; $("configwarning").classList.remove("hidden")}
+if(configured){app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);onAuthStateChanged(auth,u=>{if(u)startUser(u);else{$("app").classList.add("hidden");$("userbar").classList.add("hidden");$("login").classList.remove("hidden");user=null;profile=null}})}
+</script>
+</body>
+</html>
