@@ -28,7 +28,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, setDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
-const firebaseConfig={apiKey:"BURAYA_API_KEY",authDomain:"BURAYA-PROJE.firebaseapp.com",projectId:"BURAYA-PROJE_ID",storageBucket:"BURAYA-PROJE.firebasestorage.app",messagingSenderId:"BURAYA_SENDER_ID",appId:"BURAYA_APP_ID"};
+const firebaseConfig = {
+  apiKey: "AIzaSyBDUx2AspV-9pSjAb6hSRjBZEM-5JFGy8k",
+  authDomain: "://firebaseapp.com",
+  projectId: "dursunoglu-finans",
+  storageBucket: "dursunoglu-finans.firebasestorage.app",
+  messagingSenderId: "226339047964",
+  appId: "1:226339047964:web:422f2ea3464d35a439edd9"
+};
+
 const CATEGORIES={expense:["Maaş","Danışman primleri","Muhasebe giderleri","Vergi ve SGK","Sahibinden.com","Hepsiemlak","Diğer ilan siteleri","Şube kirası","Elektrik / su / doğalgaz","İnternet / telefon","Mutfak","Temizlik","Reklam / pazarlama","Araç / yakıt / ulaşım","Ofis / kırtasiye","Banka / POS masrafı","Bakım / onarım","Sigorta","Taksitli alışveriş","Muhtelif gider"],income:["Satış komisyonu","Kiralama komisyonu","Danışmanlık geliri","Diğer gelir"]};
 const $=id=>document.getElementById(id), money=n=>new Intl.NumberFormat("tr-TR",{style:"currency",currency:"TRY"}).format(Number(n)||0), trNow=()=>new Date(Date.now()+10800000), today=()=>trNow().toISOString().slice(0,10), dateBack30=()=>{const d=trNow();d.setUTCDate(d.getUTCDate()-30);return d.toISOString().slice(0,10)};
 let app,auth,db,user=null,profile=null,records=[],installments=[],accounts=[],transfers=[],cats=structuredClone(CATEGORIES),defaultShare=50,partners={İstanbul:[],Edremit:[]},activeTab="dashboard";
