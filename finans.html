@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Dursunoğlu Finans Merkezi</title>
+<style>
+:root{--bg:#f1f4f7;--card:#fff;--ink:#14202b;--mut:#5d6b78;--line:#d8dfe5;--ist:#0f766e;--edr:#b45309;--bad:#b42318;--ok:#15803d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{margin:0}main{max-width:1000px;margin:0 auto;padding:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+.narrow{max-width:380px;margin:12vh auto}.mut{color:var(--mut)}.i{color:var(--ist)}.e{color:var(--edr)}.bad{color:var(--bad)}.ok{color:var(--ok)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}nav button{flex:1;min-width:90px}
+button,input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:auto}
+button{cursor:pointer}button.on,button.pri{background:var(--ink);color:#fff;border-color:var(--ink)}button.s{padding:5px 9px;font-size:13px}
+input,select{width:100%}label{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.hero{border-left:6px solid var(--ist);padding:18px}.hero.e{border-left-color:var(--edr)}
+.big{font-size:clamp(22px,5vw,34px);font-weight:700}.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:620px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);font-size:14px}th.n,td.n{text-align:right}tfoot td{font-weight:700}
+.chip{font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}.hidden,[hidden]{display:none!important}
+details summary{cursor:pointer;font-weight:600}
+</style></head><body>
+<div id="login" class="card narrow"><h1>Finans Merkezi</h1><p class="mut">Yalnızca yönetici tarafından yetki verilen kişiler girebilir.</p>
+<p><input id="em" type="email" placeholder="E-posta" autocomplete="username"></p><p><input id="pw" type="password" placeholder="Şifre" autocomplete="current-password"></p>
+<button class="pri" id="go" style="width:100%">Giriş yap</button><p class="bad" id="lerr"></p></div>
+<div id="denied" class="card narrow" hidden><h1 class="bad">Yetkiniz yok.</h1><p class="mut">Bu alana yalnızca yönetici tarafından yetki verilen kişiler girebilir. Yetki için yöneticinizle görüşün.</p><button id="dback">Geri dön</button></div>
+<main id="app" hidden>
+<div class="top"><h1>Dursunoğlu Finans Merkezi</h1><div><span class="mut" id="who"></span> <button id="out" class="s">Çıkış</button></div></div>
+<div class="top"><label style="max-width:190px">Rapor ayı<input type="month" id="mon"></label></div>
+<nav id="nav"><button data-t="ozet" class="on">Özet</button><button data-t="kayit">Kayıtlar</button><button data-t="onay" id="onayb">Onay</button><button data-t="rapor">Aylık rapor</button><button data-t="ort">Ortaklar</button></nav>
+<p class="bad" id="err"></p>
+<section id="ozet"></section>
+<section id="kayit" hidden>
+<details class="card"><summary>+ Yeni kayıt</summary><div class="grid" style="margin-top:12px">
+<label>Tür<select id="fk"><option value="gider">Gider</option><option value="gelir">Gelir</option><option value="transfer">Şubeler arası ödeme</option></select></label>
+<label>Tarih<input id="fd" type="date"></label><label>Tutar (₺) — toplam<input id="fa" type="number" min="0" step="0.01"></label>
+<label>Kategori<select id="fc"></select></label><label>Ödemeyi yapan / tahsil eden şube<select id="fp"></select></label>
+<label>Ödeyen kişi<input id="fn" type="text"></label><label>Hesap<select id="fh"><option>Nakit</option><option>Banka</option><option>Kredi kartı</option></select></label>
+<label>Paylaşım<select id="fs"><option value="1">İki şube arasında paylaşılır</option><option value="0">Paylaşılmaz</option></select></label>
+<label>İstanbul payı (%)<input id="fr" type="number" min="0" max="100" value="50"></label>
+<label>Taksit sayısı (yalnız gider)<input id="ft" type="number" min="1" max="36" value="1"></label>
+<label style="grid-column:1/-1">Açıklama<input id="fx" type="text"></label></div>
+<p><button class="pri" id="add">Kaydet</button> <span id="ferr" class="bad"></span></p>
+<p class="mut" style="font-size:13px">Bugünün tarihli kayıtlar doğrudan işlenir. Geçmiş tarihli kayıtlar (en fazla 1 ay geriye) yönetici onayına gider ve onaylanana kadar hesaplara katılmaz. Taksitli giderde tutar aylara eşit bölünür ve her ay ödeyen hesaptan düşer.</p></details>
+<div class="card scroll" id="klist"></div></section>
+<section id="onay" hidden><div class="card scroll" id="olist"></div></section>
+<section id="rapor" hidden></section>
+<section id="ort" hidden></section>
+</main>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import{getFirestore,collection,doc,getDoc,getDocs,addDoc,updateDoc,deleteDoc,setDoc,query,where,serverTimestamp}from"https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyBL_tANuBKM4mcnVzPfJXNF1M6k92OLi0U",authDomain:"dursunoglu-emlak-crm.firebaseapp.com",projectId:"dursunoglu-emlak-crm",storageBucket:"dursunoglu-emlak-crm.firebasestorage.app",messagingSenderId:"506593684457",appId:"1:506593684457:web:e958dae8e7250a911af978"});
+const auth=getAuth(app),db=getFirestore(app),C=collection(db,"finance_transactions"),B=["İstanbul","Edremit"],$=id=>document.getElementById(id);
+const CAT={gider:["Maaş giderleri","Danışman primleri","Muhasebe giderleri","Vergi ve SGK","Sahibinden.com","Hepsiemlak","Diğer ilan siteleri","Kira giderleri","Elektrik, su, internet","Mutfak ve temizlik","Reklam ve pazarlama","Araç ve ulaşım","Ofis ve kırtasiye","Banka ve POS masrafları","Diğer / muhtelif"],gelir:["Satış komisyonu","Kiralama komisyonu","Diğer gelir"],transfer:["Şubeler arası ödeme"]};
+const TL=n=>(n<0?"-":"")+"₺"+Math.abs(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const today=iso(new Date());let me=null,recs=[],denied=false,part={"İstanbul":[],"Edremit":[]},rbv="";
+const ST={bekliyor:"Onay bekliyor",onayli:"Onaylandı",red:"Reddedildi"};
+const addM=(s,i)=>{const[y,m,d]=s.split("-").map(Number),t=new Date(y,m-1+i,1),dim=new Date(t.getFullYear(),t.getMonth()+1,0).getDate();t.setDate(Math.min(d,dim));return iso(t)};
+const occ=r=>{const n=r.kind==="gider"&&r.taksit>1?r.taksit:1,per=Math.round(r.amount*100/n)/100;return Array.from({length:n},(_,i)=>({r,i,n,date:addM(r.date,i),amt:i<n-1?per:Math.round((r.amount-per*(n-1))*100)/100}))};
+function eff(os){const x={cash:[0,0],acc:[{},{}],inc:[0,0],exp:[0,0],net:0};
+for(const o of os){const r=o.r,p=B.indexOf(r.payerBranch),q=1-p,a=o.amt,ac=r.account||"Nakit",add=(i,v)=>{x.acc[i][ac]=(x.acc[i][ac]||0)+v};
+if(r.kind==="transfer"){x.cash[p]-=a;x.cash[q]+=a;add(p,-a);add(q,a);x.net+=p?-a:a;continue}
+const ist=r.shared?a*(r.istPct??50)/100:(p?0:a),s=[ist,a-ist];
+if(r.kind==="gider"){x.cash[p]-=a;add(p,-a);x.exp[0]+=s[0];x.exp[1]+=s[1];x.net+=p?-s[0]:s[1]}
+else{x.cash[p]+=a;add(p,a);x.inc[0]+=s[0];x.inc[1]+=s[1];x.net-=p?-s[0]:s[1]}}return x}
+const owe=n=>Math.abs(n)<.005?"İki şube arasında borç yok.":n>0?"Edremit, İstanbul'a "+TL(n)+" borçlu.":"İstanbul, Edremit'e "+TL(-n)+" borçlu.";
+const accTxt=a=>Object.entries(a).map(([k,v])=>k+" "+TL(v)).join(" · ")||"—";
+const ptxt=(b,n)=>part[b].length?`<p class="mut" style="margin:4px 0">Ortak payları: ${part[b].map(p=>esc(p.ad)+" %"+p.pct+" → <b>"+TL(n*p.pct/100)+"</b>").join(" · ")}</p>`:"";
+const month=()=>$("mon").value||today.slice(0,7);
+function draw(){if(!me)return;const adm=me.role==="admin",m=month(),all=recs.filter(r=>r.status==="onayli").flatMap(occ);
+const mo=all.filter(o=>o.date.startsWith(m)),cum=eff(all.filter(o=>o.date.slice(0,7)<=m)),e=eff(mo),t=eff(all.filter(o=>o.date<=today));
+const pend=recs.filter(r=>r.status==="bekliyor").length;$("onayb").textContent="Onay"+(pend?" ("+pend+")":"");
+$("ozet").innerHTML=`<div class="card hero ${cum.net<0?"e":""}"><div class="mut">${m} sonu itibarıyla şubeler arası hesap</div><div class="big">${owe(cum.net)}</div><div class="mut">Ay içi hareket: ${owe(e.net)} Onaylı, paylaşılan gider/gelir ve şubeler arası ödemelerden hesaplanır.</div></div>
+<div class="grid">${B.map((n,i)=>adm||n===me.branch?`<div class="card"><h2 class="${i?"e":"i"}">${n}</h2><p class="mut">${m} · payına düşen</p><p>Gelir ${TL(e.inc[i])}<br>Gider ${TL(e.exp[i])}<br><b>Net ${TL(e.inc[i]-e.exp[i])}</b></p>${ptxt(n,e.inc[i]-e.exp[i])}<p class="mut">Bugünkü kasa: <b>${TL(t.cash[i])}</b><br>${accTxt(t.acc[i])}</p></div>`:"").join("")}
+${adm?`<div class="card"><h2>Toplam</h2><p class="mut">${m}</p><p>Gelir ${TL(e.inc[0]+e.inc[1])}<br>Gider ${TL(e.exp[0]+e.exp[1])}<br><b>Net ${TL(e.inc[0]+e.inc[1]-e.exp[0]-e.exp[1])}</b></p></div>`:""}</div>`;
+const can=r=>adm||(r.payerBranch===me.branch&&r.status==="bekliyor"),row=(r,act)=>`<tr><td>${esc(r.date)}</td><td>${r.kind}${r.shared&&r.kind!=="transfer"?" (%"+(r.istPct??50)+"/%"+(100-(r.istPct??50))+")":""}</td><td>${esc(r.category)}<br><span class="mut">${esc(r.note)}</span></td><td>${esc(r.payerBranch)} · ${esc(r.payerName)}<br><span class="mut">${esc(r.account)}</span></td><td class="n">${TL(r.amount)}${r.kind==="gider"&&r.taksit>1?"<br><span class='mut'>"+r.taksit+" taksit</span>":""}</td><td><span class="chip ${r.status==="red"?"bad":r.status==="onayli"?"ok":""}">${ST[r.status]}</span></td><td>${act}</td></tr>`;
+const head="<thead><tr><th>Tarih</th><th>Tür</th><th>Kategori / açıklama</th><th>Ödeyen</th><th class='n'>Tutar</th><th>Durum</th><th></th></tr></thead>";
+const kl=recs.filter(r=>r.date.startsWith(m)).sort((a,b)=>b.date.localeCompare(a.date));
+$("klist").innerHTML="<table>"+head+"<tbody>"+(kl.map(r=>row(r,can(r)?`<button class="s" data-del="${r.id}">Sil</button>`:"")).join("")||"<tr><td colspan='7' class='mut'>Bu ay için kayıt yok.</td></tr>")+"</tbody></table>";
+const pl=recs.filter(r=>r.status==="bekliyor").sort((a,b)=>b.date.localeCompare(a.date));
+$("olist").innerHTML="<table>"+head+"<tbody>"+(pl.map(r=>row(r,adm?`<button class="s pri" data-ap="${r.id}">Onayla</button> <button class="s" data-rj="${r.id}">Reddet</button>`:"")).join("")||"<tr><td colspan='7' class='mut'>Onay bekleyen kayıt yok.</td></tr>")+"</tbody></table>";
+const mo2=mo.filter(o=>!rbv||o.r.payerBranch===rbv||o.r.shared),e2=eff(mo2);const by={};mo.filter(o=>o.r.kind==="gider").forEach(o=>{const k=o.r.payerBranch+" · "+o.r.payerName;by[k]=(by[k]||0)+o.amt});
+const yr=m.slice(0,4),yrows=Array.from({length:12},(_,i)=>{const k=yr+"-"+String(i+1).padStart(2,"0"),x=eff(all.filter(o=>o.date.startsWith(k))),c=eff(all.filter(o=>o.date.slice(0,7)<=k));return x.inc[0]+x.inc[1]+x.exp[0]+x.exp[1]||x.net?`<tr><td>${k}</td><td class="n">${TL(x.inc[0]+x.inc[1])}</td><td class="n">${TL(x.exp[0]+x.exp[1])}</td><td class="n">${TL(x.inc[0]+x.inc[1]-x.exp[0]-x.exp[1])}</td><td>${owe(c.net)}</td></tr>`:""}).join("");
+$("rapor").innerHTML=`<div class="card"><h2>${m} raporu</h2><p class="big">${owe(cum.net)}</p><p class="mut">Ay sonu bakiyesi (önceki aylardan devreden dahil). Ödeme yapan şubenin hesabından ödeme düşülür, diğer şubenin payı alacak olarak yazılır.</p>
+<p><label style="max-width:200px;display:inline-flex">Hareket tablosu şubesi<select id="rb"><option value="">Tümü</option>${B.filter(b=>adm||b===me.branch).map(b=>`<option ${rbv===b?"selected":""}>${b}</option>`).join("")}</select></label></p><p><button id="csv">Excel için dışa aktar (CSV)</button></p></div>
+<div class="card scroll"><h3>Hareketler (onaylı, taksitler ayına göre)</h3><table><thead><tr><th>Tarih</th><th>Tür</th><th>Kategori</th><th>Ödeyen</th><th class="n">Tutar</th><th class="n">İstanbul payı</th><th class="n">Edremit payı</th></tr></thead><tbody>${[...mo2].sort((a,b)=>a.date.localeCompare(b.date)).map(o=>{const r=o.r,x=eff([o]),k=r.kind==="gelir"?"inc":"exp";return`<tr><td>${o.date}</td><td>${r.kind}${o.n>1?" "+(o.i+1)+"/"+o.n:""}</td><td>${esc(r.category)}</td><td>${esc(r.payerBranch)} · ${esc(r.payerName)}</td><td class="n">${TL(o.amt)}</td>${r.kind==="transfer"?"<td class='n'>—</td><td class='n'>—</td>":`<td class="n">${TL(x[k][0])}</td><td class="n">${TL(x[k][1])}</td>`}</tr>`}).join("")||"<tr><td colspan='7' class='mut'>Bu ay onaylı kayıt yok.</td></tr>"}</tbody><tfoot><tr><td colspan="4">Gelir / gider</td><td class="n">${TL(e2.inc[0]+e2.inc[1])} / ${TL(e2.exp[0]+e2.exp[1])}</td><td class="n">${TL(e2.inc[0]-e2.exp[0])}</td><td class="n">${TL(e2.inc[1]-e2.exp[1])}</td></tr></tfoot></table></div>
+<div class="card scroll"><h3>Ortak bölüşümü (şube neti, ${m})</h3><table><thead><tr><th>Şube</th><th>Ortak</th><th class="n">Oran</th><th class="n">Pay</th></tr></thead><tbody>${B.filter(b=>adm||b===me.branch).map(b=>{const i=B.indexOf(b),n=e.inc[i]-e.exp[i];return part[b].length?part[b].map(p=>`<tr><td>${b}</td><td>${esc(p.ad)}</td><td class="n">%${p.pct}</td><td class="n">${TL(n*p.pct/100)}</td></tr>`).join(""):`<tr><td>${b}</td><td colspan="3" class="mut">Ortak tanımlı değil (Ortaklar sekmesi). Şube neti: ${TL(n)}</td></tr>`}).join("")}</tbody></table></div>
+<div class="card"><h3>Bu ay kim ne kadar ödedi (gider)</h3>${Object.entries(by).map(([k,v])=>`<p>${esc(k)}: <b>${TL(v)}</b></p>`).join("")||"<p class='mut'>Kayıt yok.</p>"}</div>
+<div class="card scroll"><h3>${yr} yıllık özet</h3><table><thead><tr><th>Ay</th><th class="n">Gelir</th><th class="n">Gider</th><th class="n">Net</th><th>Ay sonu bakiye</th></tr></thead><tbody>${yrows||"<tr><td colspan='5' class='mut'>Kayıt yok.</td></tr>"}</tbody></table></div>`;
+$("rb").onchange=ev=>{rbv=ev.target.value;draw()};
+$("csv").onclick=()=>{const rows=[["Tarih","Tür","Kategori","Ödeyen şube","Ödeyen kişi","Hesap","Tutar","İstanbul payı","Edremit payı","Açıklama"],...mo2.map(o=>{const r=o.r,x=eff([o]),k=r.kind==="gelir"?"inc":"exp";return[o.date,r.kind+(o.n>1?" "+(o.i+1)+"/"+o.n:""),r.category,r.payerBranch,r.payerName,r.account,o.amt,r.kind==="transfer"?"":x[k][0],r.kind==="transfer"?"":x[k][1],r.note]})];
+const a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent("\ufeff"+rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\n"));a.download="finans-"+m+".csv";a.click()};
+$("ort").innerHTML=`<div class="card"><h2>Şube ortakları</h2><p class="mut">Her satıra bir ortak yazın: <b>Ad Soyad = yüzde</b>. Yüzdeler toplamı 100 olmalı. Şubenin aylık net sonucu (gelir − gider) bu oranlarla bölüşülür.</p><div class="grid">${B.filter(b=>adm||b===me.branch).map(b=>`<label>${b}<textarea id="pt-${b}" rows="5" ${adm?"":"readonly"} style="width:100%;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px">${part[b].map(p=>esc(p.ad)+" = "+p.pct).join("\n")}</textarea></label>`).join("")}</div>${adm?'<p><button class="pri" id="psave">Kaydet</button> <span id="perr" class="bad"></span></p>':""}</div>`;
+if(adm)$("psave").onclick=savePart;
+document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>act(b.dataset.del,"sil"));document.querySelectorAll("[data-ap]").forEach(b=>b.onclick=()=>act(b.dataset.ap,"onayli"));document.querySelectorAll("[data-rj]").forEach(b=>b.onclick=()=>act(b.dataset.rj,"red"))}
+async function savePart(){const out={};$("perr").textContent="";
+for(const b of B){const L=$("pt-"+b).value.split("\n").map(l=>l.trim()).filter(Boolean).map(l=>{const k=l.lastIndexOf("="),a=l.slice(0,k).trim(),v=parseFloat(l.slice(k+1).replace(",","."));return{ad:a,pct:v}});
+if(L.some(x=>!x.ad||!(x.pct>=0)))return $("perr").textContent=b+": satırları 'Ad = yüzde' biçiminde yazın.";
+if(L.length&&Math.abs(L.reduce((t,x)=>t+x.pct,0)-100)>.01)return $("perr").textContent=b+": yüzdeler toplamı 100 olmalı.";out[b]=L}
+try{await setDoc(doc(db,"finance_settings","partners"),{istanbul:out["İstanbul"],edremit:out["Edremit"],updatedBy:me.name,updatedAt:serverTimestamp()});await load();$("perr").textContent="Kaydedildi."}catch(e){$("perr").textContent=e.code==="permission-denied"?"Yetkiniz yok.":e.message}}
+async function act(id,w){try{if(w==="sil"){if(!confirm("Bu kayıt silinsin mi?"))return;await deleteDoc(doc(db,"finance_transactions",id))}else await updateDoc(doc(db,"finance_transactions",id),{status:w,approvedBy:me.name,approvedAt:serverTimestamp()});await load()}catch(e){$("err").textContent=e.code==="permission-denied"?"Yetkiniz yok.":e.message}}
+async function load(){try{let d=[];if(me.role==="admin")d=(await getDocs(C)).docs;else{const[a,b]=await Promise.all([getDocs(query(C,where("payerBranch","==",me.branch))),getDocs(query(C,where("shared","==",true)))]);d=[...a.docs,...b.docs]}
+const m=new Map();d.forEach(x=>m.set(x.id,{id:x.id,...x.data()}));recs=[...m.values()].filter(r=>r.payerBranch&&r.status&&r.date);try{const ps=await getDoc(doc(db,"finance_settings","partners"));if(ps.exists())part={"İstanbul":ps.data().istanbul||[],"Edremit":ps.data().edremit||[]}}catch(e){}$("err").textContent=""}catch(e){$("err").textContent=e.code==="permission-denied"?"Yetkiniz yok.":"Veriler okunamadı: "+e.message}draw()}
+const fill=()=>{$("fc").innerHTML=CAT[$("fk").value].map(x=>`<option>${x}</option>`).join("");const t=$("fk").value==="transfer";$("fs").disabled=t;$("fr").disabled=t;$("ft").disabled=$("fk").value!=="gider"};
+$("fk").onchange=fill;
+$("add").onclick=async()=>{const a=parseFloat($("fa").value),k=$("fk").value,d=$("fd").value,adm=me.role==="admin",min=addM(today,-1);$("ferr").textContent="";
+if(!(a>0)||!d)return $("ferr").textContent="Tarih ve tutar girin.";
+if(!adm&&(d<min||d>today))return $("ferr").textContent="En fazla 1 ay geriye ("+min+" ve sonrası) dönük, ileri olmayan tarih girebilirsiniz.";
+const pct=Math.min(100,Math.max(0,parseFloat($("fr").value)||0)),tk=Math.max(1,Math.min(36,parseInt($("ft").value)||1));
+try{await addDoc(C,{kind:k,date:d,amount:a,category:$("fc").value,account:$("fh").value,payerBranch:adm?$("fp").value:me.branch,payerName:$("fn").value.trim()||me.name,shared:k==="transfer"||$("fs").value==="1",istPct:pct,taksit:k==="gider"?tk:1,note:$("fx").value.trim(),status:adm||d>=today?"onayli":"bekliyor",createdBy:me.name,createdAt:serverTimestamp()});
+["fa","fx"].forEach(i=>$(i).value="");$("ft").value=1;await load();$("ferr").textContent=adm||d>=today?"Kaydedildi.":"Geçmiş tarihli kayıt yönetici onayına gönderildi."}catch(e){$("ferr").textContent=e.code==="permission-denied"?"Yetkiniz yok.":e.message}};
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));["ozet","kayit","onay","rapor","ort"].forEach(i=>$(i).hidden=i!==b.dataset.t)});
+$("mon").onchange=draw;$("mon").value=today.slice(0,7);
+const show=w=>{["login","denied","app"].forEach(i=>$(i).hidden=i!==w)};
+$("go").onclick=async()=>{$("lerr").textContent="";try{await signInWithEmailAndPassword(auth,$("em").value.trim(),$("pw").value);$("pw").value=""}catch(e){$("lerr").textContent=/invalid|wrong|user-not-found/.test(e.code)?"E-posta veya şifre yanlış.":"Giriş yapılamadı ("+e.code+")"}};
+$("pw").onkeydown=e=>{if(e.key==="Enter")$("go").click()};$("out").onclick=()=>signOut(auth);$("dback").onclick=()=>{denied=false;show("login")};
+onAuthStateChanged(auth,async u=>{me=null;if(!u){show(denied?"denied":"login");return}
+let p=null;try{const s=await getDoc(doc(db,"finance_users",u.uid));p=s.exists()?s.data():null}catch(e){}
+if(!p||!(p.role==="admin"||(p.role==="branch"&&B.includes(p.branch)))){denied=true;await signOut(auth);return}
+denied=false;me={uid:u.uid,role:p.role,branch:p.branch||"",name:p.name||u.email};$("who").textContent=p.role==="admin"?"Yönetici":me.name+" · "+me.branch;
+$("fp").innerHTML=(p.role==="admin"?B:[me.branch]).map(b=>`<option>${b}</option>`).join("");$("fn").value=me.name;$("fd").value=today;
+if(p.role!=="admin"){$("fd").min=addM(today,-1);$("fd").max=today}fill();show("app");await load()});
+</script></body></html>
