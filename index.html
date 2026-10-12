@@ -389,7 +389,7 @@ tr:hover td{background:#F4F9FC}
           <div style="font-size:12px;font-weight:700;color:#1A5276;margin-bottom:8px">Ticari işyeri kira bilgileri</div>
           <div class="grid2">
             <div><label>KDV (uygulanıyorsa oran %)</label><input type="text" id="sfKdvKira" placeholder="Uygulanmıyorsa boş bırakın"></div>
-            <div><label>Kiracıdan alınacak işyeri hizmet bedeli (isteğe bağlı)</label><input type="text" id="sfKomisyonKira" placeholder="Boşsa yukarıdaki hizmet bedeli kullanılır"></div>
+            <input type="hidden" id="sfKomisyonKira" value="">
           </div>
           <div style="font-size:11px;color:#666;margin-top:6px">KDV yükümlülüğü ve oranı, kiraya verenin vergi statüsü ve yürürlükteki mevzuata göre mali müşavirle doğrulanmalıdır.</div>
         </div>
@@ -399,7 +399,7 @@ tr:hover td{background:#F4F9FC}
         <div class="grid2" style="margin-bottom:8px">
           <div><label>Sözleşme Tarihi</label><input type="date" id="sfTarih"></div>
           <div><label>Düzenleyen Şube / Ofis</label><select id="sfOfis"><option value="istanbul_merkez">İstanbul Merkez (1AK)</option><option value="istanbul_irtibat">İstanbul İrtibat Bürosu</option><option value="edremit_irtibat">Edremit İrtibat Bürosu</option></select></div>
-          <div class="sf-kira-only"><label>Kiracıdan Alınacak Emlak Hizmet Bedeli</label><input type="text" id="sfKomisyon" placeholder="Örn. 1 aylık kira bedeli + varsa KDV"></div>
+          <input type="hidden" id="sfKomisyon" value="">
         </div>
         <div class="sf-kira-only"><label>Genel Şartlar (taslak; düzenleyebilirsiniz)</label><textarea id="sfGenelSartlar" rows="5" placeholder="Boş bırakırsanız konut/işyeri türüne göre genel maddeler oluşturulur."></textarea></div>
         <div><label>Özel Şartlar / Önemli Notlar</label><textarea id="sfOzelSartlar" rows="3" placeholder="Tarafların ayrıca kararlaştırdığı şartlar: ör. tadilat izni, kullanım sınırlaması, teslim/onarım sorumluluğu..."></textarea></div>
@@ -2001,7 +2001,7 @@ tr:hover td{background:#F4F9FC}
       <!-- SÖZLEŞME FİRMA BİLGİLERİ -->
       <div class="card" style="margin-top:1.25rem;border-color:#F5C16C">
         <div class="section-title" style="color:#784212;border-color:#F5C16C"><i class="ti ti-file-certificate"></i> Sözleşme Firma Bilgileri</div>
-        <p style="font-size:13px;color:#666;margin-bottom:1rem">Bu bilgiler, oluşturduğunuz satış ve kira sözleşmelerinin başlığında ve emlak komisyoncusu bölümünde otomatik olarak kullanılır.</p>
+        <p style="font-size:13px;color:#666;margin-bottom:1rem">Bu bilgiler, oluşturduğunuz satış sözleşmelerinin başlığında ve emlak komisyoncusu bölümünde otomatik olarak kullanılır.</p>
         <div class="grid2" style="margin-bottom:12px">
           <div class="field-row"><label>Firma Unvanı *</label><input type="text" id="sozUnvan" placeholder="ör. Dursunoğlu İnşaat Elk Mlz San ve Tic Ltd Şti" value="DURSUNOĞLU İNŞAAT ELK MLZ SAN VE TİC LTD ŞTİ"></div>
           <div class="field-row"><label>Vergi Dairesi / Vergi No</label><input type="text" id="sozVergi" placeholder="ör. Kadıköy V.D. / 1234567890" value="SULTANBEYLİ V.D 3180523822"></div>
@@ -5024,10 +5024,6 @@ function gosterSozlesmeMetni(d){
     ? d.genelSartlar.split(/\r?\n/).filter(x=>x.trim()).map((x,i)=>`${i+1}. ${x.trim()}`)
     : genelVarsayilan;
   let html=`<div class="sozlesme-doc">`;
-  html+=`<h2>${esc(d.firmaUnvan||'GAYRİMENKUL')}</h2>`;
-  if(d.firmaAdres||d.firmaTel||d.firmaVergi){
-    html+=`<div class="soz-alt">${[esc(d.firmaAdres),d.firmaTel?'Tel: '+esc(d.firmaTel):'',d.firmaVergi?'Vergi: '+esc(d.firmaVergi):''].filter(Boolean).join(' · ')}</div>`;
-  }
   html+=`<h2 style="margin-top:10px">${baslik}</h2>`;
   html+=`<div class="soz-alt">Sözleşme No: ${esc(d.sozlesmeNo||'—')} · Sözleşme Tarihi: ${trTarih(d.tarih)}</div>`;
   html+=`<h3>1. Taraflar</h3><table><tr>
@@ -5038,7 +5034,6 @@ function gosterSozlesmeMetni(d){
   html+=`<h3>3. Kira Bedeli, Vergiler ve Ödeme</h3><table>
     <tr><td>Aylık kira bedeli: <strong>${bedelSayi.toLocaleString('tr-TR')} ₺ (${sayiyiYaziyaCevir(bedelSayi)})</strong>.</td></tr>
     ${isIsyeri && d.kdvKira ? `<tr><td>İşyeri kira bedeline ilişkin KDV: tarafların mali yükümlülükleri ve uygulanacak oran yürürlükteki vergi mevzuatına göre belirlenir. Formda belirtilen KDV oranı: <strong>%${esc(d.kdvKira)}</strong>. KDV uygulanıp uygulanmayacağı kiraya verenin vergi statüsü ve işlem niteliğine göre ayrıca doğrulanmalıdır.</td></tr>`:''}
-    <tr><td>Emlak hizmet bedeli: Hizmet bedeli yalnızca <strong>KİRACI</strong> tarafından ödenir. <strong>KİRAYA VERENDEN emlak hizmet bedeli alınmayacaktır.</strong> ${((isIsyeri && d.komisyonKira) || d.komisyon) ? 'Kararlaştırılan bedel: <strong>'+esc((isIsyeri && d.komisyonKira) || d.komisyon)+'</strong>. Varsa KDV ve ödeme zamanı, yürürlükteki mevzuata uygun şekilde ayrıca belirtilir.' : 'Bedel ve ödeme zamanı taraflarca imza öncesinde yazılı olarak netleştirilmelidir.'}</td></tr>
     ${depozito ? `<tr><td>Depozito/güvence bedeli: <strong>${depozito.toLocaleString('tr-TR')} ₺</strong>. Güvence bedelinin alınması, tutulması ve iadesinde uygulanabilir yasal hükümler saklıdır; iade, tarafların hesaplaşması ve taşınmazın durumu dikkate alınarak mevzuata uygun yapılır.</td></tr>`:''}
     <tr><td>Kira süresi: ${trTarih(d.baslangic)} tarihinde başlar; ${trTarih(d.bitis)} tarihinde sona ermesi öngörülmüştür. Ödeme günü: <strong>${esc(d.odemeGunu||'Taraflarca belirlenecek')}</strong>.</td></tr>
   </table>`;
@@ -5047,7 +5042,6 @@ function gosterSozlesmeMetni(d){
   html+=`<h3>${d.demirbaslar?'6':'5'}. Özel Şartlar</h3><table><tr><td>${d.ozelSartlar?esc(d.ozelSartlar).replace(/\n/g,'<br>'):'Taraflarca ayrıca kararlaştırılmış özel şart bulunmamaktadır.'}</td></tr></table>`;
   html+=`<p style="margin-top:16px;font-size:12.5px">İşbu sözleşme, taraflarca okunup anlaşıldıktan sonra ${trTarih(d.tarih)} tarihinde iki nüsha olarak düzenlenmiştir. Taraflar, doldurulmamış alanları imzadan önce tamamlamalıdır.</p>`;
   html+=`<div class="soz-imza"><div>KİRAYA VEREN<div class="cizgi">${esc(d.t1Ad)}</div></div><div>KİRACI<div class="cizgi">${esc(d.t2Ad)}</div></div></div>`;
-  html+=`<div style="text-align:center;margin-top:30px;font-size:12px">Emlak Danışmanı: <strong>${esc(d.firmaYetkili||'')}</strong>${d.firmaUnvan?' — '+esc(d.firmaUnvan):''}</div>`;
   html+=`<p style="font-size:10px;color:#666;margin-top:20px">Not: Bu metin genel amaçlı sözleşme taslağıdır; tarafların somut durumuna, taşınmazın niteliğine ve güncel mevzuata göre imzadan önce hukukçu ve gerektiğinde mali müşavir tarafından kontrol edilmelidir.</p>`;
   html+=`</div>`;
   document.getElementById('sozlesmePrintArea').innerHTML=html;
