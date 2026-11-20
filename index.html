@@ -339,7 +339,7 @@ tr:hover td{background:#F4F9FC}
         <div style="font-size:13px;font-weight:700;color:#1A5276;margin-bottom:8px" id="sfBedelBaslik">Bedel Bilgileri</div>
         <div class="grid2" style="margin-bottom:8px">
           <div><label id="sfBedelLabel">Satış Bedeli (₺) *</label><input type="text" id="sfBedel" oninput="formatFiyat(this)"></div>
-          <div><label id="sfKaparoLabel">Kaparo (₺)</label><input type="text" id="sfKaparo" oninput="formatFiyat(this)"></div>
+          <div><label id="sfKaparoLabel">Kapora (₺)</label><input type="text" id="sfKaparo" oninput="formatFiyat(this)"></div>
         </div>
         <!-- SATIŞ ALANLARI (Dursunoğlu şablonu — Madde 1-17) -->
         <div class="sf-satis-only grid2" style="margin-bottom:8px">
@@ -1240,7 +1240,7 @@ tr:hover td{background:#F4F9FC}
       <div class="card" style="padding:0;overflow:hidden">
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Müşteri</th><th>Telefon</th><th>Tür</th><th>Mülk / İlan</th><th>Satış/Kira Bedeli</th><th>Kaparo</th><th>Kredi Durumu</th><th>Eksper</th><th>Sonuç</th><th>Bitiş</th><th>Not</th><th>Ekleyen</th><th></th></tr></thead>
+            <thead><tr><th>Müşteri</th><th>Telefon</th><th>Tür</th><th>Mülk / İlan</th><th>Satış/Kira Bedeli</th><th>Kapora</th><th>Kredi Durumu</th><th>Eksper</th><th>Sonuç</th><th>Bitiş</th><th>Not</th><th>Ekleyen</th><th></th></tr></thead>
             <tbody id="ctrackingTable"><tr><td colspan="13" style="text-align:center;color:#aaa;padding:1.5rem">Takip kaydı bulunamadı</td></tr></tbody>
           </table>
         </div>
@@ -1264,7 +1264,7 @@ tr:hover td{background:#F4F9FC}
       <div class="card" style="padding:0;overflow:hidden">
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Müşteri</th><th>Telefon</th><th>Mülk / İlan</th><th>Satış Bedeli</th><th>Kaparo</th><th>Kaparo Yeri</th><th>Kredi</th><th>Banka</th><th>Kredi Onay</th><th>Eksper</th><th>Sonuç</th><th>Bitiş Tarihi</th><th>Not</th><th>Danışman</th><th>Ekleyen</th><th></th></tr></thead>
+            <thead><tr><th>Müşteri</th><th>Telefon</th><th>Mülk / İlan</th><th>Satış Bedeli</th><th>Kapora</th><th>Kapora Yeri</th><th>Kredi</th><th>Banka</th><th>Kredi Onay</th><th>Eksper</th><th>Sonuç</th><th>Bitiş Tarihi</th><th>Not</th><th>Danışman</th><th>Ekleyen</th><th></th></tr></thead>
             <tbody id="salesTable"><tr><td colspan="16" style="text-align:center;color:#aaa;padding:1.5rem">Satış kaydı bulunamadı</td></tr></tbody>
           </table>
         </div>
@@ -1288,7 +1288,7 @@ tr:hover td{background:#F4F9FC}
       <div class="card" style="padding:0;overflow:hidden">
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Müşteri</th><th>Telefon</th><th>Mülk / İlan</th><th>Kira Bedeli</th><th>Kaparo</th><th>Kaparo Yeri</th><th>Sonuç</th><th>Bitiş Tarihi</th><th>Not</th><th>Danışman</th><th>Ekleyen</th><th></th></tr></thead>
+            <thead><tr><th>Müşteri</th><th>Telefon</th><th>Mülk / İlan</th><th>Kira Bedeli</th><th>Kapora</th><th>Kapora Yeri</th><th>Sonuç</th><th>Bitiş Tarihi</th><th>Not</th><th>Danışman</th><th>Ekleyen</th><th></th></tr></thead>
             <tbody id="rentalsTable"><tr><td colspan="12" style="text-align:center;color:#aaa;padding:1.5rem">Kiralama kaydı bulunamadı</td></tr></tbody>
           </table>
         </div>
@@ -1635,7 +1635,7 @@ tr:hover td{background:#F4F9FC}
                 <input type="text" id="tKKVArsaPay" placeholder="ör. %40 arsa, %60 müteahhit"/>
               </div>
               <div>
-                <label>Kaç Daire Projeye Kadar?</label>
+                <label>Kaç Daireli Projeye Kadar?</label>
                 <input type="text" id="tKKVDaireSayisi" placeholder="ör. 8-12 daire"/>
               </div>
             </div>
@@ -1754,7 +1754,7 @@ tr:hover td{background:#F4F9FC}
           <div id="etDaireWrap" class="hidden" style="background:#EAF3DE;border:1px solid #A9DFBF;border-radius:10px;padding:12px">
             <div style="font-size:13px;font-weight:600;color:#1E6A2E;margin-bottom:10px"><i class="ti ti-building"></i> Daire Kriterleri</div>
             <div class="grid2" style="margin-bottom:10px">
-              <div><label>Bütçe Alt (₺)</label><input type="text" id="etButceMin" oninput="formatFiyat(this)"/></div>
+              <div><label>Bütçe Alt Sınır (₺)</label><input type="text" id="etButceMin" oninput="formatFiyat(this)"/></div>
               <div><label>Bütçe Üst (₺)</label><input type="text" id="etButceMax" oninput="formatFiyat(this)"/></div>
             </div>
             <div style="margin-bottom:10px">
@@ -1786,7 +1786,7 @@ tr:hover td{background:#F4F9FC}
               <div><label>Max m²</label><input type="text" id="etArsaM2Max" placeholder="ör. 2000 m²"/></div>
             </div>
             <div class="grid2">
-              <div><label>Bütçe Alt (₺)</label><input type="text" id="etArsaBudMin" oninput="formatFiyat(this)"/></div>
+              <div><label>Bütçe Alt Sınır (₺)</label><input type="text" id="etArsaBudMin" oninput="formatFiyat(this)"/></div>
               <div><label>Bütçe Üst (₺)</label><input type="text" id="etArsaBudMax" oninput="formatFiyat(this)"/></div>
             </div>
             <div style="margin-top:10px">
@@ -1809,7 +1809,7 @@ tr:hover td{background:#F4F9FC}
               <div><label>Max Dönüm/m²</label><input type="text" id="etTarlaMax" placeholder="ör. 20 dönüm"/></div>
             </div>
             <div class="grid2">
-              <div><label>Bütçe Alt (₺)</label><input type="text" id="etTarlaBudMin" oninput="formatFiyat(this)"/></div>
+              <div><label>Bütçe Alt Sınır (₺)</label><input type="text" id="etTarlaBudMin" oninput="formatFiyat(this)"/></div>
               <div><label>Bütçe Üst (₺)</label><input type="text" id="etTarlaBudMax" oninput="formatFiyat(this)"/></div>
             </div>
             <div style="margin-top:10px">
@@ -2032,7 +2032,7 @@ tr:hover td{background:#F4F9FC}
         <i class="ti ti-file-text"></i> <span id="dinamikSozlesmeBaslik">Gayrimenkul Satış Sözleşmesi Metinleri</span>
     </div>
     <p style="font-size:13px; color:#666; margin-bottom:1rem;">
-        Firmanızın kullandığı sözleşme metindeki sabit maddelerdir. Tutar, oran veya isim gibi değişken kısımlar her sözleşmede formdan otomatik doldurulur.
+        Firmanızın kullandığı sözleşme metnindeki sabit maddelerdir. Tutar, oran veya isim gibi değişken kısımlar her sözleşmede formdan otomatik doldurulur.
     </p>
     
     <script>
