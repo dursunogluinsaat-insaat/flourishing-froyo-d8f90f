@@ -3639,7 +3639,7 @@ async function deletePortfolio(id){
 
 /* ============ MÜŞTERİLER ============ */
 /* Tapu (ada/parsel) bilgileri yalnızca satıcı ve kiraya verende istenir */
-const TAPU_ILGILER=['Satıcı','Kiraya Veren'];
+const TAPU_ILGILER=['Satıcı','Kiraya Veren','Müteahhit'];
 function tapuBlokGuncelle(p,temizle){
   const ilgi=document.getElementById(p+'Ilgi')?.value||'';
   const goster=TAPU_ILGILER.includes(ilgi);
