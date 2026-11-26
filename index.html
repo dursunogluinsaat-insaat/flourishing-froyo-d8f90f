@@ -1215,7 +1215,7 @@ tr:hover td{background:#F4F9FC}
       <div id="editTrackingForm" class="card hidden" style="margin-bottom:1rem;border-color:#AED6F1;background:#F9FCFF">
         <div class="section-title"><i class="ti ti-edit"></i> Müşteri Takip Kaydını Düzenle</div>
         <div class="grid2">
-          <div><label>Takip Türü</label><select id="ectTur"><option>Satış Sözleşmesi</option><option>Kira Sözleşmesi</option><option>Müşteri Takip Formu</option></select></div>
+          <div><label>Takip Türü</label><select id="ectTur" onchange="ectKiraAlanlariGuncelle()"><option>Satış Sözleşmesi</option><option>Kira Sözleşmesi</option><option>Müşteri Takip Formu</option></select></div>
           <div><label>Müşteri</label><input id="ectMusteri"></div>
           <div><label>Telefon</label><input id="ectTel"></div>
           <div><label>Mülk / İlan</label><input id="ectIlan"></div>
@@ -1223,12 +1223,12 @@ tr:hover td{background:#F4F9FC}
           <div><label>Komisyon</label><input id="ectKomisyon"></div>
           <div><label>Kapora</label><input id="ectKaparo"></div>
           <div><label>Kapora Kimde?</label><input id="ectKaparoYer"></div>
-          <div><label>Kredi</label><input id="ectKredi"></div>
-          <div><label>Banka / Finans Kuruluşu</label><input id="ectBanka"></div>
-          <div><label>Kredi Durumu</label><select id="ectKrediDurum"><option value="">Seçin</option><option>Onaylandı</option><option>Başvuru Yapıldı</option><option>Reddedildi</option><option>Kullanılmayacak</option></select></div>
-          <div><label>Eksper Düştü mü?</label><select id="ectExperDustu"><option value="">Seçin</option><option>Evet</option><option>Hayır</option></select></div>
-          <div><label>Eksper Sonucu</label><input id="ectExperSonuc"></div>
-          <div><label>Eksper Değeri</label><input id="ectExperDeger"></div>
+          <div class="takip-satis-alan"><label>Kredi</label><input id="ectKredi"></div>
+          <div class="takip-satis-alan"><label>Banka / Finans Kuruluşu</label><input id="ectBanka"></div>
+          <div class="takip-satis-alan"><label>Kredi Durumu</label><select id="ectKrediDurum"><option value="">Seçin</option><option>Onaylandı</option><option>Başvuru Yapıldı</option><option>Reddedildi</option><option>Kullanılmayacak</option></select></div>
+          <div class="takip-satis-alan"><label>Eksper Düştü mü?</label><select id="ectExperDustu"><option value="">Seçin</option><option>Evet</option><option>Hayır</option></select></div>
+          <div class="takip-satis-alan"><label>Eksper Sonucu</label><input id="ectExperSonuc"></div>
+          <div class="takip-satis-alan"><label>Eksper Değeri</label><input id="ectExperDeger"></div>
           <div><label>Sonuç</label><select id="ectSonuc"><option>Devam Ediyor</option><option>Tamamlandı</option><option>İptal / Vazgeçildi</option></select></div>
           <div><label>Bitiş Tarihi</label><input id="ectBitisTarih" type="date"></div>
           <div><label>Oluşturma Tarihi</label><input id="ectOlusTarih" type="date"></div>
@@ -4481,6 +4481,12 @@ function renderContracts(){
   </tr>`).join('');
 }
 
+/* Kira sözleşmesinde kredi, banka ve eksper alanları anlamsızdır: gizlenir */
+function ectKiraAlanlariGuncelle(){
+  const kira = document.getElementById('ectTur')?.value === 'Kira Sözleşmesi';
+  document.querySelectorAll('.takip-satis-alan').forEach(el => el.classList.toggle('hidden', kira));
+}
+
 function editContract(id){
   const c = contracts.find(x => String(x.id) === String(id));
   if(!c) return;
@@ -4498,6 +4504,7 @@ function editContract(id){
   ];
   fields.forEach(([fid, val]) => { const e = document.getElementById(fid); if(e) e.value = val||''; });
   const ef = document.getElementById('editTrackingForm') || document.getElementById('editContractForm');
+  ectKiraAlanlariGuncelle();
   if(ef) ef.classList.remove('hidden');
   ef.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -4524,6 +4531,7 @@ function saveContractEdit(){
   c.experDustu = document.getElementById('ectExperDustu').value;
   c.experSonuc = document.getElementById('ectExperSonuc').value;
   c.experDeger = document.getElementById('ectExperDeger').value.replace(/[^\d]/g,'');
+  if(tur === 'Kira Sözleşmesi'){ c.kredi=''; c.banka=''; c.krediDurum=''; c.experDustu=''; c.experSonuc=''; c.experDeger=''; }
   c.sonuc = document.getElementById('ectSonuc').value;
   c.bitisTarih = document.getElementById('ectBitisTarih').value;
   c.olusTarih = document.getElementById('ectOlusTarih').value;
