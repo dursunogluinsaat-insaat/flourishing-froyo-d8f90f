@@ -1040,6 +1040,15 @@ tr:hover td{background:#F4F9FC}
             </div>
           </div>
           <div class="grid2">
+            <div><label>Kişi Tipi</label>
+              <select id="cTipi" onchange="kimlikTipiGuncelle('c')"><option value="">Seçin</option><option>Şahıs</option><option>Kurumsal</option></select>
+            </div>
+            <div data-kimlik="c" data-tip="Şahıs" class="hidden"><label>T.C. Kimlik No</label><input type="text" id="cTc" maxlength="11" inputmode="numeric" placeholder="11 haneli TC"/></div>
+            <div data-kimlik="c" data-tip="Kurumsal" class="hidden"><label>Vergi Dairesi</label><input type="text" id="cVergiDairesi" placeholder="ör. Kadıköy V.D."/></div>
+            <div data-kimlik="c" data-tip="Kurumsal" class="hidden"><label>Vergi No</label><input type="text" id="cVergiNo" maxlength="11" inputmode="numeric"/></div>
+            <div class="full"><label>Adres</label><textarea id="cAdres" rows="2" placeholder="Açık adres (mahalle, cadde, bina/daire, ilçe / il)"></textarea></div>
+          </div>
+          <div class="grid2">
             <div><label>Meslek</label>
               <select id="cMeslek" onchange="toggleMeslekDiger('cMeslek','cMeslekDiger')">
                 <option value="">Seçin</option>
@@ -1117,6 +1126,15 @@ tr:hover td{background:#F4F9FC}
             <div><label>İlgi Türü</label>
               <select id="ecIlgi" onchange="tapuBlokGuncelle('ec',true)"><option value="">Seçin</option><option>Alıcı</option><option>Satıcı</option><option>Kiracı</option><option>Kiraya Veren</option><option>Müteahhit</option><option>Emlakçı</option><option>Yatırımcı</option></select>
             </div>
+          </div>
+          <div class="grid2">
+            <div><label>Kişi Tipi</label>
+              <select id="ecTipi" onchange="kimlikTipiGuncelle('ec')"><option value="">Seçin</option><option>Şahıs</option><option>Kurumsal</option></select>
+            </div>
+            <div data-kimlik="ec" data-tip="Şahıs" class="hidden"><label>T.C. Kimlik No</label><input type="text" id="ecTc" maxlength="11" inputmode="numeric" placeholder="11 haneli TC"/></div>
+            <div data-kimlik="ec" data-tip="Kurumsal" class="hidden"><label>Vergi Dairesi</label><input type="text" id="ecVergiDairesi" placeholder="ör. Kadıköy V.D."/></div>
+            <div data-kimlik="ec" data-tip="Kurumsal" class="hidden"><label>Vergi No</label><input type="text" id="ecVergiNo" maxlength="11" inputmode="numeric"/></div>
+            <div class="full"><label>Adres</label><textarea id="ecAdres" rows="2" placeholder="Açık adres (mahalle, cadde, bina/daire, ilçe / il)"></textarea></div>
           </div>
           <div class="grid2">
             <div><label>Meslek</label>
@@ -1391,7 +1409,7 @@ tr:hover td{background:#F4F9FC}
       const list=(typeof customers!=='undefined'?customers:[]).filter(c=>user&&(user.role==='admin'||user.permissions?.canViewAllCustomers||String(c.ekleyenId)===String(user.id))).map(c=>{
         const parties=(typeof contracts!=='undefined'?contracts:[]).filter(x=>user&&(user.role==='admin'||String(x.ekleyenId)===String(user.id))).flatMap(x=>[x.alici,x.satici,x.t1,x.t2]).filter(Boolean);
         const old=parties.find(x=>String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===String(c.ad||'').trim().toLocaleLowerCase('tr-TR')&&String(x.tel||'').replace(/\D/g,'')&&String(x.tel||'').replace(/\D/g,'')===String(c.tel||'').replace(/\D/g,''));
-        return {id:c.id,ad:c.ad||'',tc:c.tc||c.vergiNo||(old&&old.tc)||'',tel:c.tel||'',email:c.email||'',adres:c.adres||(old&&old.adres)||[c.il,c.ilce,c.mahalle].filter(Boolean).join(' / ')};
+        return {id:c.id,ad:c.ad||'',tc:musteriKimlikTc(c)||(old&&old.tc)||'',tel:c.tel||'',email:c.email||'',adres:musteriTaraAdres(c)||(old&&old.adres)||''};
       });
     frame.contentWindow.postMessage({source:'dursunoglu-crm',type:'customers-response',data:list},'*');
   };
@@ -3736,6 +3754,40 @@ function showAddCustomerForm(){
   document.getElementById('addCustomerForm').classList.toggle('hidden');
 }
 
+function kimlikTipiGuncelle(p){
+  const t=document.getElementById(p+'Tipi')?.value||'';
+  document.querySelectorAll(`[data-kimlik="${p}"]`).forEach(el=>el.classList.toggle('hidden', !t || el.dataset.tip!==t));
+}
+function kimlikAlanlariOku(p){
+  const tipi=document.getElementById(p+'Tipi').value;
+  const tc=document.getElementById(p+'Tc').value.trim();
+  const vd=document.getElementById(p+'VergiDairesi').value.trim();
+  const vn=document.getElementById(p+'VergiNo').value.trim();
+  return {
+    tipi,
+    tc: tipi==='Şahıs'?tc:'',
+    vergiDairesi: tipi==='Kurumsal'?vd:'',
+    vergiNo: tipi==='Kurumsal'?vn:'',
+    adres: document.getElementById(p+'Adres').value.trim()
+  };
+}
+function kimlikAlanlariYaz(p,m){
+  document.getElementById(p+'Tipi').value=m.tipi||'';
+  document.getElementById(p+'Tc').value=m.tc||'';
+  document.getElementById(p+'VergiDairesi').value=m.vergiDairesi||'';
+  document.getElementById(p+'VergiNo').value=m.vergiNo||'';
+  document.getElementById(p+'Adres').value=m.adres||'';
+  kimlikTipiGuncelle(p);
+}
+// Sözleşmelere giden taraf bilgileri: kurumsalda vergi no TC/VN alanına, vergi dairesi adrese yazılır
+function musteriKimlikTc(m){
+  if(m.tipi==='Kurumsal') return m.vergiNo||'';
+  return m.tc||m.vergiNo||'';
+}
+function musteriTaraAdres(m){
+  const vd=(m.tipi==='Kurumsal'&&m.vergiDairesi)?('Vergi Dairesi: '+m.vergiDairesi+(m.adres?' · ':'')):'';
+  return vd+(m.adres||[m.il,m.ilce,m.mahalle].filter(Boolean).join(' / '));
+}
 function addCustomer(){
   const ad=document.getElementById('cAd').value.trim();
   if(!ad){showToast('Müşteri adı zorunlu','red');return;}
@@ -3745,6 +3797,7 @@ function addCustomer(){
     email:document.getElementById('cEmail').value.trim(),
     ilgi:document.getElementById('cIlgi').value,
     meslek:getMeslekValue('cMeslek','cMeslekDiger'),
+    ...kimlikAlanlariOku('c'),
     il:document.getElementById('cIl').value.trim(),
     ilce:document.getElementById('cIlce').value.trim(),
     mahalle:document.getElementById('cMahalle').value.trim(),
@@ -3761,9 +3814,10 @@ function addCustomer(){
     tarih:new Date().toLocaleDateString('tr-TR')
   });
   saveCustomers();
-  ['cAd','cTel','cEmail','cIlgi','cMeslek','cMeslekDiger','cIl','cIlce','cMahalle','cAda','cParsel','cPafta','cYuzolcum','cTapuTur','cDosyaLink','cNot']
+  ['cAd','cTel','cEmail','cIlgi','cMeslek','cMeslekDiger','cTipi','cTc','cVergiDairesi','cVergiNo','cAdres','cIl','cIlce','cMahalle','cAda','cParsel','cPafta','cYuzolcum','cTapuTur','cDosyaLink','cNot']
     .forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('cGeriAra').checked=false;
+  kimlikTipiGuncelle('c');
   document.getElementById('cMeslekDigerWrap').classList.add('hidden');
   document.getElementById('addCustomerForm').classList.add('hidden');
   renderCustomers();
@@ -3817,6 +3871,7 @@ function editCustomer(id){
   document.getElementById('ecTel').value=c.tel||'';
   document.getElementById('ecEmail').value=c.email||'';
   document.getElementById('ecIlgi').value=c.ilgi||'';
+  kimlikAlanlariYaz('ec',c);
   tapuBlokGuncelle('ec',false);
   const meslekSel=document.getElementById('ecMeslek');
   const standardMeslekler=['Avukat','Bankacı','Doktor','Mühendis','Mimar','Muhasebeci / Mali Müşavir','Öğretmen / Akademisyen','Esnaf / Tüccar','Memur','Emekli','Serbest Meslek'];
@@ -3858,6 +3913,7 @@ function saveCustomerEdit(){
   c.email=document.getElementById('ecEmail').value.trim();
   c.ilgi=document.getElementById('ecIlgi').value;
   c.meslek=getMeslekValue('ecMeslek','ecMeslekDiger');
+  Object.assign(c,kimlikAlanlariOku('ec'));
   c.il=document.getElementById('ecIl').value.trim();
   c.ilce=document.getElementById('ecIlce').value.trim();
   c.mahalle=document.getElementById('ecMahalle').value.trim();
@@ -4367,7 +4423,7 @@ async function kullaniciyiSilFirestore(docId){
 let editingContractId = null;
 
 function ctTakipTarafListeleriniDoldur(){['T1','T2'].forEach(t=>{const sel=document.getElementById('ct'+t+'MusteriSec');if(!sel)return;sel.innerHTML='<option value="">— Kayıtlı müşteriden getir —</option>'+[...customers].sort((a,b)=>String(a.ad||'').localeCompare(String(b.ad||''),'tr')).map(c=>`<option value="${c.id}">${esc(c.ad||'')} — ${esc(c.ilgi||c.tarafRol||'')}</option>`).join('');});}
-function ctTakipTarafGetir(t){const id=document.getElementById('ct'+t+'MusteriSec')?.value;if(!id)return;const m=customers.find(c=>String(c.id)===String(id));if(!m)return;document.getElementById('ct'+t+'Ad').value=m.ad||'';document.getElementById('ct'+t+'Tc').value=m.tc||m.vergiNo||'';document.getElementById('ct'+t+'Tel').value=m.tel||'';document.getElementById('ct'+t+'Email').value=m.email||'';document.getElementById('ct'+t+'Adres').value=m.adres||'';}
+function ctTakipTarafGetir(t){const id=document.getElementById('ct'+t+'MusteriSec')?.value;if(!id)return;const m=customers.find(c=>String(c.id)===String(id));if(!m)return;document.getElementById('ct'+t+'Ad').value=m.ad||'';document.getElementById('ct'+t+'Tc').value=musteriKimlikTc(m);document.getElementById('ct'+t+'Tel').value=m.tel||'';document.getElementById('ct'+t+'Email').value=m.email||'';document.getElementById('ct'+t+'Adres').value=musteriTaraAdres(m);}
 function ctTakipTurDegisti(){const t=document.getElementById('ctTur')?.value,s=t==='Satış Sözleşmesi',r=t==='Kira Sözleşmesi',p=document.getElementById('ctTaraflarPanel');if(!p)return;p.classList.toggle('hidden',!(s||r));document.getElementById('ctT1Title').textContent=s?'ALICI BİLGİLERİ *':'KİRAYA VEREN BİLGİLERİ *';document.getElementById('ctT2Title').textContent=s?'SATICI BİLGİLERİ *':'KİRACI BİLGİLERİ *';document.getElementById('ctT1Label').textContent=s?'Ad Soyad *':'Kiraya Veren Ad Soyad *';document.getElementById('ctT2Label').textContent=s?'Ad Soyad *':'Kiracı Ad Soyad *';document.getElementById('ctT1Ad').placeholder=s?'Alıcı ad soyad':'Kiraya veren ad soyad';document.getElementById('ctT2Ad').placeholder=s?'Satıcı ad soyad':'Kiracı ad soyad';document.getElementById('ctTarafHint').textContent=s?'Satışta alıcı ve satıcı birlikte kaydedilir.':'Kiralamada kiraya veren ve kiracı birlikte kaydedilir.';ctTakipTarafListeleriniDoldur();}
 
 function showAddContractForm(){
@@ -5087,9 +5143,9 @@ function sozlesmeMusteriSec(t){
   const m=customers.find(c=>String(c.id)===String(id));
   if(!m) return;
   document.getElementById('sf'+t+'Ad').value=m.ad||'';
-  document.getElementById('sf'+t+'Tc').value=m.tc||m.vergiNo||'';
+  document.getElementById('sf'+t+'Tc').value=musteriKimlikTc(m);
   document.getElementById('sf'+t+'Tel').value=m.tel||'';
-  document.getElementById('sf'+t+'Adres').value=m.adres||'';
+  document.getElementById('sf'+t+'Adres').value=musteriTaraAdres(m);
   showToast('Kayıtlı müşteri bilgileri forma aktarıldı','blue');
 }
 
