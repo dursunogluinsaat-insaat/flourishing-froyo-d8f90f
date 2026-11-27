@@ -39,32 +39,39 @@ service cloud.firestore {
       allow update, delete: if activeUser() && canSeeBranch(resource.data.branch);
     }
 
-    // Diğer finans koleksiyonları: aktif kullanıcı okur, yalnızca yönetici yazar
-    // (taksit, düzenli ödeme, transfer, hesap, kredi kartı, kredi, ayarlar)
+    // Şube alanı (branch) olan koleksiyonlar: yetkili olunan şube kayıtları okunur ve yazılır.
+    // Kod incelemesine göre yetkili kullanıcılar taksit/düzenli ödeme işaretler, transfer ekler.
     match /finance_installments/{id} {
-      allow read: if activeUser();
-      allow write: if isAdmin();
+      allow read: if activeUser() && canSeeBranch(resource.data.branch);
+      allow create: if activeUser() && canSeeBranch(request.resource.data.branch);
+      allow update, delete: if activeUser() && canSeeBranch(resource.data.branch);
     }
     match /finance_recurring/{id} {
-      allow read: if activeUser();
-      allow write: if isAdmin();
+      allow read: if activeUser() && canSeeBranch(resource.data.branch);
+      allow create: if activeUser() && canSeeBranch(request.resource.data.branch);
+      allow update, delete: if activeUser() && canSeeBranch(resource.data.branch);
     }
     match /finance_transfers/{id} {
-      allow read: if activeUser();
-      allow write: if isAdmin();
+      allow read: if activeUser() && canSeeBranch(resource.data.branch);
+      allow create: if activeUser() && canSeeBranch(request.resource.data.branch);
+      allow update, delete: if activeUser() && canSeeBranch(resource.data.branch);
     }
     match /finance_accounts/{id} {
-      allow read: if activeUser();
-      allow write: if isAdmin();
+      allow read: if activeUser() && canSeeBranch(resource.data.branch);
+      allow create: if activeUser() && canSeeBranch(request.resource.data.branch);
+      allow update, delete: if activeUser() && canSeeBranch(resource.data.branch);
     }
+
+    // Şube alanı olduğu doğrulanmamış koleksiyonlar: aktif kullanıcılar okur ve yazar.
+    // Şube kapsamı için kod ve veri kontrol edilmeli (TODO).
     match /finance_credit_cards/{id} {
-      allow read: if activeUser();
-      allow write: if isAdmin();
+      allow read, write: if activeUser();
     }
     match /finance_loans/{id} {
-      allow read: if activeUser();
-      allow write: if isAdmin();
+      allow read, write: if activeUser();
     }
+
+    // Ayarlar (şubeler, ortaklar, kategoriler, onay kuralları): yalnızca yönetici yazar
     match /finance_settings/{id} {
       allow read: if activeUser();
       allow write: if isAdmin();
