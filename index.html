@@ -2233,6 +2233,10 @@ tr:hover td{background:#F4F9FC}
         <select id="logFTur" onchange="renderIslemTablo()" style="max-width:180px"><option value="">Tüm kayıt türleri</option></select>
         <select id="logFIslem" onchange="renderIslemTablo()" style="max-width:160px"><option value="">Tüm işlemler</option><option>eklendi</option><option>güncellendi</option><option>silindi</option><option>toplu</option></select>
         <button onclick="renderIslemler()" style="width:auto"><i class="ti ti-refresh"></i> Yenile</button>
+        <select id="logSaklama" onchange="islemSaklamaKaydet(this.value)" style="max-width:190px" title="Bu süreden eski kayıtlar otomatik silinir">
+          <option value="30">30 gün sakla</option><option value="90">90 gün sakla</option><option value="180">180 gün sakla</option><option value="365">365 gün sakla</option>
+        </select>
+        <button onclick="islemTemizleElle()" style="width:auto"><i class="ti ti-trash"></i> Eski kayıtları temizle</button>
         <span id="logSayi" style="font-size:12px;color:#777"></span>
       </div>
       <div class="card" style="padding:0;overflow:hidden">
@@ -6828,7 +6832,7 @@ function _lgDiff(st){
   const now=_lgSnap(st), evs=[];
   now.forEach((v,id)=>{const o=st.snap.get(id);
     if(!o) evs.push({islem:'eklendi',etiket:v.l,kayitId:id,ekleyen:v.e,alanlar:[]});
-    else if(o.j!==v.j) evs.push({islem:'güncellendi',etiket:v.l,kayitId:id,ekleyen:v.e,alanlar:_lgChg(o.j,v.j)});});
+    else if(o.j!==v.j){ const al=_lgChg(o.j,v.j); if(al.length) evs.push({islem:'güncellendi',etiket:v.l,kayitId:id,ekleyen:v.e,alanlar:al}); }});
   st.snap.forEach((o,id)=>{ if(!now.has(id)) evs.push({islem:'silindi',etiket:o.l,kayitId:id,ekleyen:o.e,alanlar:[]}); });
   st.snap=now; _lgSend(st,evs);
 }
@@ -6844,11 +6848,50 @@ function _lgInstall(){
 try{_lgInstall();}catch(e){console.warn('İşlem günlüğü kurulamadı:',e);}
 
 let _islemData=[];
+const ISLEM_SAKLAMA_VARSAYILAN=90;
+async function islemGecmisiAyar(){
+  const fs=await fsReady();
+  const s=await fs.getDoc(fs.doc(window.fsDb,'ayarlar','islemGecmisi'));
+  const g=s.exists()?Number(s.data().saklamaGun):0;
+  return g>0?g:ISLEM_SAKLAMA_VARSAYILAN;
+}
+// Saklama süresinden eski işlem kayıtlarını 400'lük gruplar halinde siler
+async function islemGecmisiTemizle(gun){
+  const fs=await fsReady();
+  const esik=new Date(Date.now()-gun*86400000);
+  let toplam=0;
+  for(;;){
+    const snap=await fs.getDocs(fs.query(fs.collection(window.fsDb,'islemler'),fs.where('zaman','<',esik),fs.limit(400)));
+    if(snap.empty) break;
+    const batch=fs.writeBatch(window.fsDb);
+    snap.docs.forEach(d=>batch.delete(d.ref));
+    await batch.commit();
+    toplam+=snap.size;
+    if(snap.size<400) break;
+  }
+  return toplam;
+}
+async function islemSaklamaKaydet(v){
+  const fs=await fsReady();
+  await fs.setDoc(fs.doc(window.fsDb,'ayarlar','islemGecmisi'),{saklamaGun:Number(v)},{merge:true});
+  showToast('Saklama süresi '+v+' gün olarak kaydedildi','green');
+}
+async function islemTemizleElle(){
+  if(!confirm('Saklama süresinden eski işlem kayıtları silinsin mi? Bu işlem geri alınamaz.')) return;
+  try{
+    const n=await islemGecmisiTemizle(await islemGecmisiAyar());
+    showToast(n+' eski işlem kaydı silindi','blue');
+    renderIslemler();
+  }catch(e){ showToast('Temizlenemedi: '+(e.message||e),'red'); }
+}
 async function renderIslemler(){
   const tb=document.getElementById('islemTable'); if(!tb) return;
   tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:#888;padding:1.5rem">Yükleniyor…</td></tr>';
   try{
     const fs=await fsReady();
+    const gun=await islemGecmisiAyar();
+    const sel=document.getElementById('logSaklama'); if(sel) sel.value=String(gun);
+    try{ await islemGecmisiTemizle(gun); }catch(e){ console.warn('Eski işlem kayıtları temizlenemedi:',e); }
     const snap=await fs.getDocs(fs.query(fs.collection(window.fsDb,'islemler'),fs.orderBy('zaman','desc'),fs.limit(300)));
     _islemData=snap.docs.map(d=>({id:d.id,...d.data()}));
     const fill=(id,vals,first)=>{const el=document.getElementById(id),cur=el.value;el.innerHTML='<option value="">'+first+'</option>'+vals.map(v=>'<option>'+esc(v)+'</option>').join('');el.value=cur;};
