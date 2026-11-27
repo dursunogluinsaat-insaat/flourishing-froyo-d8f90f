@@ -4774,10 +4774,15 @@ function musteriNoTamamla(){
   [...customers].sort((a,b)=>(a.id||0)-(b.id||0)).forEach(c=>{ if(!c.musteriNo){ c.musteriNo=nextMusteriNo(); degisti=true; } });
   return degisti;
 }
+function musteriBul(ad,tel){
+  const d=String(tel||'').replace(/\D/g,'').slice(-10);
+  const n=String(ad||'').trim().toLocaleLowerCase('tr-TR');
+  return (d&&customers.find(x=>String(x.tel||'').replace(/\D/g,'').slice(-10)===d))||(n&&customers.find(x=>String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===n))||null;
+}
 function musteriNoBul(ad,tel){
   const d=String(tel||'').replace(/\D/g,'').slice(-10);
   const n=String(ad||'').trim().toLocaleLowerCase('tr-TR');
-  const c=(d&&customers.find(x=>String(x.tel||'').replace(/\D/g,'').slice(-10)===d))||(n&&customers.find(x=>String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===n));
+  const c=musteriBul(ad,tel);
   return c?(c.musteriNo||''):'';
 }
 function musteriNoBulVeyaOlustur(ad,tel,ilgi,ekleyenId,ekleyen){
@@ -4790,6 +4795,22 @@ function musteriNoBulVeyaOlustur(ad,tel,ilgi,ekleyenId,ekleyen){
 }
 function contractMusteriNo(c){ return c.musteriNo||musteriNoBul(c.musteri,c.tel); }
 function dosyaKapat(){ document.getElementById('contractDosyaOverlay')?.remove(); }
+function musteriKartiAc(id){
+  showTab('customers',document.getElementById('tabCustomers'));
+  setTimeout(()=>{ try{ editCustomer(id); }catch(e){ console.warn(e); } },50);
+}
+function musteriNoAta(contractId){
+  const c=contracts.find(x=>String(x.id)===String(contractId));
+  if(!c) return;
+  const isS=c.tur==='Satış Sözleşmesi';
+  const no=musteriNoBulVeyaOlustur(c.musteri,c.tel,isS?'Alıcı':'Kiracı',currentUser.id,((currentUser.ad||'')+' '+(currentUser.soyad||'')).trim());
+  if(!no){ showToast('Müşteri adı olmadan numara verilemez','red'); return; }
+  c.musteriNo=no;
+  saveContracts();
+  showToast('Müşteri no verildi: '+no,'green');
+  dosyaKapat();
+  contractDosyaAc(null,c.id);
+}
 function contractDosyaAc(ev,id){
   if(ev&&ev.target&&ev.target.closest&&ev.target.closest('button,select,a,input,textarea,label')) return;
   const c=contracts.find(x=>String(x.id)===String(id));
@@ -4797,6 +4818,7 @@ function contractDosyaAc(ev,id){
   const bid=c.sozlesmeBelgeId!=null?c.sozlesmeBelgeId:(Number(c.id)>=5000000000?Number(c.id)-5000000000:null);
   const belge=bid!=null?sozlesmeBelgeleri.find(x=>String(x.id)===String(bid)):null;
   const mNo=contractMusteriNo(c)||'—';
+  const cust=musteriBul(c.musteri,c.tel);
   const fiyat=v=>v?formatFiyatDisplay(v):'-';
   const tarih=x=>x?new Date(x).toLocaleDateString('tr-TR'):'-';
   const satir=(k,v)=>`<tr><td style="padding:6px 10px;color:#666;width:40%;border-bottom:1px solid #eee">${esc(k)}</td><td style="padding:6px 10px;font-weight:600;border-bottom:1px solid #eee">${v}</td></tr>`;
@@ -4825,7 +4847,12 @@ function contractDosyaAc(ev,id){
       <div style="font-size:18px;font-weight:700;color:#1A5276">Dosya · ${esc(c.tur||'')}</div>
       <button onclick="dosyaKapat()" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
     </div>
-    <div style="display:inline-block;background:#EBF5FB;color:#1A5276;font-weight:700;padding:4px 10px;border-radius:8px;margin-bottom:12px">Müşteri No: ${esc(mNo)}</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <div style="display:inline-block;background:#EBF5FB;color:#1A5276;font-weight:700;padding:4px 10px;border-radius:8px">Müşteri No: ${esc(mNo)}</div>
+      ${cust
+        ? `<button onclick="dosyaKapat();musteriKartiAc(${cust.id})" style="${btn}">Müşteri dosyasını aç</button>`
+        : `<button onclick="musteriNoAta('${c.id}')" style="${btn}">Müşteri kaydı oluştur ve numara ver</button>`}
+    </div>
     <table style="width:100%;border-collapse:collapse;font-size:13px">
       ${satir('Müşteri',esc(c.musteri||'-'))}
       ${satir('Telefon',esc(c.tel||'-'))}
