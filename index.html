@@ -1040,12 +1040,16 @@ tr:hover td{background:#F4F9FC}
             </div>
           </div>
           <div class="grid2">
-            <div><label>Kişi Tipi</label>
+            <div><label>Müşteri Tipi</label>
               <select id="cTipi" onchange="kimlikTipiGuncelle('c')"><option value="">Seçin</option><option>Şahıs</option><option>Kurumsal</option></select>
             </div>
             <div data-kimlik="c" data-tip="Şahıs" class="hidden"><label>T.C. Kimlik No</label><input type="text" id="cTc" maxlength="11" inputmode="numeric" placeholder="11 haneli TC"/></div>
-            <div data-kimlik="c" data-tip="Kurumsal" class="hidden"><label>Vergi Dairesi</label><input type="text" id="cVergiDairesi" placeholder="ör. Kadıköy V.D."/></div>
-            <div data-kimlik="c" data-tip="Kurumsal" class="hidden"><label>Vergi No</label><input type="text" id="cVergiNo" maxlength="11" inputmode="numeric"/></div>
+          </div>
+          <div class="grid2 hidden" data-kimlik="c" data-tip="Kurumsal">
+            <div><label>Vergi Dairesi</label><input type="text" id="cVergiDairesi" placeholder="ör. Kadıköy V.D."/></div>
+            <div><label>Vergi No</label><input type="text" id="cVergiNo" maxlength="11" inputmode="numeric"/></div>
+          </div>
+          <div class="grid2">
             <div class="full"><label>Adres</label><textarea id="cAdres" rows="2" placeholder="Açık adres (mahalle, cadde, bina/daire, ilçe / il)"></textarea></div>
           </div>
           <div class="grid2">
@@ -1128,12 +1132,16 @@ tr:hover td{background:#F4F9FC}
             </div>
           </div>
           <div class="grid2">
-            <div><label>Kişi Tipi</label>
+            <div><label>Müşteri Tipi</label>
               <select id="ecTipi" onchange="kimlikTipiGuncelle('ec')"><option value="">Seçin</option><option>Şahıs</option><option>Kurumsal</option></select>
             </div>
             <div data-kimlik="ec" data-tip="Şahıs" class="hidden"><label>T.C. Kimlik No</label><input type="text" id="ecTc" maxlength="11" inputmode="numeric" placeholder="11 haneli TC"/></div>
-            <div data-kimlik="ec" data-tip="Kurumsal" class="hidden"><label>Vergi Dairesi</label><input type="text" id="ecVergiDairesi" placeholder="ör. Kadıköy V.D."/></div>
-            <div data-kimlik="ec" data-tip="Kurumsal" class="hidden"><label>Vergi No</label><input type="text" id="ecVergiNo" maxlength="11" inputmode="numeric"/></div>
+          </div>
+          <div class="grid2 hidden" data-kimlik="ec" data-tip="Kurumsal">
+            <div><label>Vergi Dairesi</label><input type="text" id="ecVergiDairesi" placeholder="ör. Kadıköy V.D."/></div>
+            <div><label>Vergi No</label><input type="text" id="ecVergiNo" maxlength="11" inputmode="numeric"/></div>
+          </div>
+          <div class="grid2">
             <div class="full"><label>Adres</label><textarea id="ecAdres" rows="2" placeholder="Açık adres (mahalle, cadde, bina/daire, ilçe / il)"></textarea></div>
           </div>
           <div class="grid2">
