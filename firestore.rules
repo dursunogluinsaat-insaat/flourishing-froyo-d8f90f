@@ -1,0 +1,78 @@
+rules_version = '2';
+// TASLAK: Bu kurallar henüz deploy edilmedi. Önce test ortamında
+// (Firebase emulator veya ayrı bir test kullanıcısıyla) denenmeli.
+// Yanlış yazılırsa finans ekibinin erişimi kesilir.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function me() {
+      return get(/databases/$(database)/documents/finance_users/$(request.auth.uid)).data;
+    }
+    function activeUser() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/finance_users/$(request.auth.uid))
+        && me().active == true;
+    }
+    function isAdmin() {
+      return activeUser() && me().role == 'admin';
+    }
+    function canSeeBranch(b) {
+      return isAdmin() || (b in me().branchIds);
+    }
+
+    // Kullanıcı profilleri: yönetici yönetir, kullanıcı yalnızca kendi adını/telefonunu/ünvanını değiştirir
+    match /finance_users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (request.auth.uid == uid
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['name', 'phone', 'title', 'updatedAt']));
+    }
+
+    // Gelir-gider: yalnızca yetkili olunan şubenin kayıtları
+    match /finance_transactions/{id} {
+      allow read: if activeUser() && canSeeBranch(resource.data.branch);
+      allow create: if activeUser() && canSeeBranch(request.resource.data.branch);
+      allow update, delete: if activeUser() && canSeeBranch(resource.data.branch);
+    }
+
+    // Diğer finans koleksiyonları: aktif kullanıcı okur, yalnızca yönetici yazar
+    // (taksit, düzenli ödeme, transfer, hesap, kredi kartı, kredi, ayarlar)
+    match /finance_installments/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+    match /finance_recurring/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+    match /finance_transfers/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+    match /finance_accounts/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+    match /finance_credit_cards/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+    match /finance_loans/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+    match /finance_settings/{id} {
+      allow read: if activeUser();
+      allow write: if isAdmin();
+    }
+
+    // Diğer her şey kapalı
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
