@@ -1229,6 +1229,7 @@ tr:hover td{background:#F4F9FC}
           <div class="takip-satis-alan"><label>Eksper Düştü mü?</label><select id="ectExperDustu"><option value="">Seçin</option><option>Evet</option><option>Hayır</option></select></div>
           <div class="takip-satis-alan"><label>Eksper Sonucu</label><input id="ectExperSonuc"></div>
           <div class="takip-satis-alan"><label>Eksper Değeri</label><input id="ectExperDeger"></div>
+          <div class="takip-satis-only"><label>Satış Aşaması</label><select id="ectAsama"><option value="">Seçin</option><option>Kapora alındı</option><option>Kredi başvurusu</option><option>Eksper</option><option>Kredi onayı</option><option>Tapu randevusu</option><option>Tapu yapıldı</option></select></div>
           <div><label>Sonuç</label><select id="ectSonuc"><option>Devam Ediyor</option><option>Tamamlandı</option><option>İptal / Vazgeçildi</option></select></div>
           <div><label>Bitiş Tarihi</label><input id="ectBitisTarih" type="date"></div>
           <div><label>Oluşturma Tarihi</label><input id="ectOlusTarih" type="date"></div>
@@ -4513,9 +4514,19 @@ function renderContracts(){
 }
 
 /* Kira sözleşmesinde kredi, banka ve eksper alanları anlamsızdır: gizlenir */
+const SATIS_ASAMALARI = ['Kapora alındı','Kredi başvurusu','Eksper','Kredi onayı','Tapu randevusu','Tapu yapıldı'];
 function ectKiraAlanlariGuncelle(){
-  const kira = document.getElementById('ectTur')?.value === 'Kira Sözleşmesi';
+  const tur = document.getElementById('ectTur')?.value;
+  const kira = tur === 'Kira Sözleşmesi';
   document.querySelectorAll('.takip-satis-alan').forEach(el => el.classList.toggle('hidden', kira));
+  document.querySelectorAll('.takip-satis-only').forEach(el => el.classList.toggle('hidden', tur !== 'Satış Sözleşmesi'));
+}
+function asamaIlerlemeHtml(c){
+  if(c.tur !== 'Satış Sözleşmesi' || !c.asama) return '';
+  const i = SATIS_ASAMALARI.indexOf(c.asama);
+  if(i < 0) return '';
+  const oran = Math.round((i+1)/SATIS_ASAMALARI.length*100);
+  return `<div style="margin-top:4px;font-size:11px;color:#1A5276;white-space:nowrap">${i+1}/${SATIS_ASAMALARI.length} · ${esc(c.asama)}</div><div style="height:5px;width:110px;background:#E5E8E8;border-radius:3px;margin-top:2px"><div style="height:5px;width:${oran}%;background:#1E8449;border-radius:3px"></div></div>`;
 }
 
 function editContract(id){
@@ -4531,7 +4542,7 @@ function editContract(id){
     ['ectKredi', c.kredi?formatFiyatDisplay(c.kredi):''],['ectBanka', c.banka],
     ['ectKrediDurum', c.krediDurum],['ectExperDustu', c.experDustu],
     ['ectExperSonuc', c.experSonuc],['ectExperDeger', c.experDeger?formatFiyatDisplay(c.experDeger):''],
-    ['ectSonuc', c.sonuc],['ectBitisTarih', c.bitisTarih],['ectOlusTarih', c.olusTarih],['ectNot', c.not]
+    ['ectAsama', c.asama],['ectSonuc', c.sonuc],['ectBitisTarih', c.bitisTarih],['ectOlusTarih', c.olusTarih],['ectNot', c.not]
   ];
   fields.forEach(([fid, val]) => { const e = document.getElementById(fid); if(e) e.value = val||''; });
   const ef = document.getElementById('editTrackingForm') || document.getElementById('editContractForm');
@@ -4563,7 +4574,9 @@ function saveContractEdit(){
   c.experSonuc = document.getElementById('ectExperSonuc').value;
   c.experDeger = document.getElementById('ectExperDeger').value.replace(/[^\d]/g,'');
   if(tur === 'Kira Sözleşmesi'){ c.kredi=''; c.banka=''; c.krediDurum=''; c.experDustu=''; c.experSonuc=''; c.experDeger=''; }
-  c.sonuc = document.getElementById('ectSonuc').value;
+  c.asama = tur === 'Satış Sözleşmesi' ? document.getElementById('ectAsama').value : '';
+  if(c.asama && c.asama === SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) c.sonuc = 'Tamamlandı';
+  else c.sonuc = document.getElementById('ectSonuc').value;
   c.bitisTarih = document.getElementById('ectBitisTarih').value;
   c.olusTarih = document.getElementById('ectOlusTarih').value;
   c.not = document.getElementById('ectNot').value.trim();
@@ -4697,7 +4710,7 @@ function renderCTracking(){
     <td style="white-space:nowrap">${c.kaparo?formatFiyatDisplay(c.kaparo):'-'}</td>
     <td>${c.krediDurum?`<span class="badge ${c.krediDurum==='Onaylandı'?'badge-green':c.krediDurum==='Reddedildi'?'badge-red':'badge-amber'}">${esc(c.krediDurum)}</span>`:'-'}</td>
     <td>${c.experDustu?`<span class="badge ${c.experDustu==='Evet'?'badge-green':c.experDustu==='Hayır'?'badge-gray':'badge-amber'}">${esc(c.experDustu)}</span>`:'-'}</td>
-    <td>${c.sonuc?`<span class="badge ${sonucColors[c.sonuc]||'badge-gray'}">${esc(c.sonuc)}</span>`:'-'}</td>
+    <td>${c.sonuc?`<span class="badge ${sonucColors[c.sonuc]||'badge-gray'}">${esc(c.sonuc)}</span>`:'-'}${asamaIlerlemeHtml(c)}</td>
     <td style="font-size:12px;white-space:nowrap">${c.bitisTarih?new Date(c.bitisTarih).toLocaleDateString('tr-TR'):'-'}</td>
     <td style="font-size:12px;color:#888;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.not||'-')}</td>
     <td><span class="badge badge-teal" style="font-size:11px">${esc(c.ekleyen)}</span></td>
@@ -4875,6 +4888,7 @@ function contractDosyaAc(ev,id){
       ${satir('Satış / Kira Bedeli',fiyat(c.satisFiyat))}
       ${satir('Kapora',fiyat(c.kaparo))}
       ${satir('Sonuç',esc(c.sonuc||'-'))}
+      ${asamaIlerlemeHtml(c) ? satir('Satış Aşaması', esc(c.asama)+' ('+(SATIS_ASAMALARI.indexOf(c.asama)+1)+'/'+SATIS_ASAMALARI.length+')') : ''}
       ${satir('Bitiş Tarihi',tarih(c.bitisTarih))}
       ${satir('Not',esc(c.not||'-'))}
     </table>
