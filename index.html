@@ -1466,7 +1466,7 @@ tr:hover td{background:#F4F9FC}
           firmaVergiDairesi:'SULTANBEYLİ V.D.', firmaVergiNo:'3180523822',
           kaynak:'Yeni Sözleşme Merkezi', contractData:d
         };
-        sozlesmeBelgeleri.unshift(belge); saveSozlesmeBelgeleri();
+        sozlesmeBelgeleri.unshift(belge); saveSozlesmeBelgeleri(belge);
         try{ if(typeof renderSozlesmeBelgeleriTable==='function') renderSozlesmeBelgeleriTable(); }catch(_e){}
         if(isSale){
           const id=Date.now();
@@ -4814,18 +4814,15 @@ function renderRentals(){
 
 /* ============ SÖZLEŞME OLUŞTURMA (SATIŞ / KİRA) ============ */
 let sozlesmeBelgeleri = JSON.parse(localStorage.getItem('emlak_sozlesme_belgeleri_v1')||'[]');
-function saveSozlesmeBelgeleri(){localStorage.setItem('emlak_sozlesme_belgeleri_v1',JSON.stringify(sozlesmeBelgeleri));
-      localStorage.setItem('crm_consultants_v1',JSON.stringify(consultants)); try{ if(window.crmBulutSozlesmeleriKaydet) window.crmBulutSozlesmeleriKaydet().catch(e=>{console.error('Sözleşme bulut kaydı:',e); try{showToast('Sözleşme buluta kaydedilemedi: '+(e.message||'hata'),'red');}catch(_e){}}); else console.warn('Sözleşme bulut kancası henüz hazır değil.'); }catch(e){console.error('Sözleşme bulut kancası:',e); try{showToast('Sözleşme bulut bağlantısı kurulamadı.','red');}catch(_e){}} }
-
-function sozlesmeMusteriListeleriniDoldur(){
-  ['T1','T2'].forEach(t=>{
-    const sel=document.getElementById('sf'+t+'MusteriSec');
-    if(!sel) return;
-    const mevcut=sel.value;
-    const list=[...customers].sort((a,b)=>String(a.ad||'').localeCompare(String(b.ad||''),'tr'));
-    sel.innerHTML='<option value="">— Kayıtlı müşteriden seç —</option>'+
-      list.map(c=>`<option value="${c.id}">${esc(c.ad||'')} — ${esc(c.ilgi||c.tarafRol||'')}</option>`).join('');
-    if(list.some(c=>String(c.id)===String(mevcut))) sel.value=mevcut;
+/* Sözleşme belgeleri tarayıcıda tutulmaz; doğrudan Firestore'a yazılır. */
+function saveSozlesmeBelgeleri(item){
+  localStorage.setItem('crm_consultants_v1',JSON.stringify(consultants));
+  if(typeof window.crmBulutSozlesmeleriKaydet!=='function'){ showToast('Sözleşme buluta kaydedilemedi: bağlantı hazır değil','red'); return; }
+  window.crmBulutSozlesmeleriKaydet(item).catch(e=>{
+    console.error('Sözleşme bulut kaydı:',e);
+    if(item) sozlesmeBelgeleri=sozlesmeBelgeleri.filter(x=>x!==item);
+    try{ renderSozlesmeBelgeleriTable(); }catch(_e){}
+    showToast('Sözleşme buluta kaydedilemedi, kayıt iptal edildi: '+(e.message||'hata'),'red');
   });
 }
 
@@ -5043,7 +5040,7 @@ function createSozlesmeBelge(){
   const takip={id:data.id+5000000000,tur:isS?'Satış Sözleşmesi':'Kira Sözleşmesi',musteri:data.t2Ad,tel:data.t2Tel,ilan:[data.mahalle,data.ilce,data.il].filter(Boolean).join(' / '),satisFiyat:data.bedel,komisyon:data.komisyon,kaparo:data.kaparo,kaparoYer:data.kaparoYeri,kredi:data.krediTutar,banka:'',krediDurum:'',experDustu:'',experSonuc:'',experDeger:'',sonuc:'Devam Ediyor',bitisTarih:data.bitis||'',olusTarih:data.tarih,not:data.ozelSartlar||'',link:'',ekleyenId:data.ekleyenId,ekleyen:data.ekleyen,alici:isS?{ad:data.t2Ad,tc:data.t2Tc,tel:data.t2Tel,email:'',adres:data.t2Adres}:null,satici:isS?{ad:data.t1Ad,tc:data.t1Tc,tel:data.t1Tel,email:'',adres:data.t1Adres}:null,kirayaVeren:isS?'':data.t1Ad,kiraci:isS?'':data.t2Ad,sozlesmeNo:data.sozlesmeNo,belgeId:data.id};
   contracts.unshift(takip); saveContracts();
   sozlesmeBelgeleri.unshift(data);
-  saveSozlesmeBelgeleri();
+  saveSozlesmeBelgeleri(data);
   renderSozlesmeBelgeleriTable();
   renderCustomers();
   updateHomeWidgets();
@@ -6261,7 +6258,7 @@ function buildBackupPayload(now){
     customers:     JSON.parse(localStorage.getItem('emlak_customers_v2')||'[]'),
     contracts:     JSON.parse(localStorage.getItem('emlak_contracts_v1')||'[]'),
     talepkayitlari:JSON.parse(localStorage.getItem('emlak_talep_v1')||'[]'),
-    sozlesmeBelgeleri:JSON.parse(localStorage.getItem('emlak_sozlesme_belgeleri_v1')||'[]'),
+    sozlesmeBelgeleri:sozlesmeBelgeleri,
     usefulLinks:   JSON.parse(localStorage.getItem('crm_useful_links')||'null'),
     sysSettings:   JSON.parse(localStorage.getItem('crm_sys_settings')||'{}'),
     systemLogo:    localStorage.getItem('crm_system_logo')||null
@@ -6887,7 +6884,6 @@ function renderIslemTablo(){
       localStorage.setItem('emlak_talep_v1',JSON.stringify(talepkayitlari));
       localStorage.setItem('emlak_appointments_v2',JSON.stringify(appointments));
       localStorage.setItem('emlak_portfolios_v2',JSON.stringify(portfolios));
-      localStorage.setItem('emlak_sozlesme_belgeleri_v1',JSON.stringify(sozlesmeBelgeleri));
       localStorage.setItem('crm_consultants_v1',JSON.stringify(consultants));
       // Mevcut yerel kayıtları da buluta taşı: danışmanlar hariç.
       // Danışmanlar cihazlar arası tutarlılık için yalnızca açık ekleme/silme işlemlerinde buluta yazılır.
@@ -6897,6 +6893,7 @@ function renderIslemTablo(){
       await _upsertAll(SATIS_COL,'s',(contracts||[]).filter(c=>c.tur==='Satış Sözleşmesi'));
       await _upsertAll(KIRALAMA_COL,'k',(contracts||[]).filter(c=>c.tur==='Kira Sözleşmesi'));
       await _upsertAll(SOZLESME_COL,'z',sozlesmeBelgeleri);
+      localStorage.removeItem('emlak_sozlesme_belgeleri_v1'); // eski yerel kopya buluta aktarıldı
       // DİKKAT: burada danışmanları topluca buluta geri yazmıyoruz.
       // Eski telefon/PC localStorage kayıtlarının yeniden canlanmasını önler.
       try{ if(typeof renderSozlesmeBelgeleriTable==='function') renderSozlesmeBelgeleriTable(); }catch(e){}
@@ -6962,7 +6959,7 @@ function renderIslemTablo(){
       await setDoc(doc(window.fsDb,DANISMAN_COL,_safeId('d',item.id)),data,{merge:true});
     }
   };
-  window.crmBulutSozlesmeleriKaydet=async()=>{
+  window.crmBulutSozlesmeleriKaydet=async(tekBelge)=>{
     // Sözleşme belgesini Firestore'a doğrudan ve güvenli biçimde yaz.
     // Büyük data: görsel/base64 alanları Firestore'un 1 MiB belge sınırını aşmasın.
     const temizle=(v)=>{
@@ -6978,7 +6975,7 @@ function renderIslemTablo(){
       }
       return v;
     };
-    const liste=(sozlesmeBelgeleri||[]).map(x=>temizle(x));
+    const liste=tekBelge?[temizle(tekBelge)]:(sozlesmeBelgeleri||[]).map(x=>temizle(x));
     return _upsertAll(SOZLESME_COL,'z',liste);
   };
   window.crmProjeDaireleriniSil=async function(units){
@@ -7071,7 +7068,6 @@ function renderIslemTablo(){
     if(!confirm('Bu sözleşme belgesi Çöp Kutusu’na taşınsın mı?')) return;
     try{ await _softDelete(SOZLESME_COL,'z',item); }catch(e){ showToast('Buluta ulaşılamadı; veri kaybını önlemek için silme iptal edildi.','red'); return; }
     sozlesmeBelgeleri=sozlesmeBelgeleri.filter(d=>String(d.id)!==String(id));
-    localStorage.setItem('emlak_sozlesme_belgeleri_v1',JSON.stringify(sozlesmeBelgeleri));
     try{renderSozlesmeBelgeleriTable();}catch(e){}
     showToast('Sözleşme belgesi Çöp Kutusu’na taşındı','blue');
   };
