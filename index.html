@@ -4605,8 +4605,11 @@ function saveContractEdit(){
   c.experDeger = document.getElementById('ectExperDeger').value.replace(/[^\d]/g,'');
   if(tur === 'Kira Sözleşmesi'){ c.kredi=''; c.banka=''; c.krediDurum=''; c.experDustu=''; c.experSonuc=''; c.experDeger=''; }
   c.asama = tur === 'Satış Sözleşmesi' ? document.getElementById('ectAsama').value : '';
-  if(c.asama && c.asama === SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) c.sonuc = 'Tamamlandı';
-  else c.sonuc = document.getElementById('ectSonuc').value;
+  c.sonuc = document.getElementById('ectSonuc').value;
+  if(c.asama){ // aşama seçiliyse sonuç aşamadan okunur (İptal hariç)
+    if(c.asama === SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) c.sonuc = 'Tamamlandı';
+    else if(c.sonuc === 'Tamamlandı') c.sonuc = 'Devam Ediyor';
+  }
   c.bitisTarih = document.getElementById('ectBitisTarih').value;
   c.olusTarih = document.getElementById('ectOlusTarih').value;
   c.not = document.getElementById('ectNot').value.trim();
@@ -4762,7 +4765,11 @@ function saveNewTracking(){
   const satis=tur==='Satış Sözleşmesi';
   const kira=tur==='Kira Sözleşmesi';
   const asama=satis?document.getElementById('nctAsama').value:'';
-  const sonuc=(asama && asama===SATIS_ASAMALARI[SATIS_ASAMALARI.length-1])?'Tamamlandı':document.getElementById('nctSonuc').value;
+  let sonuc=document.getElementById('nctSonuc').value;
+  if(asama){
+    if(asama===SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) sonuc='Tamamlandı';
+    else if(sonuc==='Tamamlandı') sonuc='Devam Ediyor';
+  }
   const ekleyen=currentUser.ad+' '+currentUser.soyad;
   const musteriNo=musteriNoBulVeyaOlustur(musteri,tel,'',currentUser.id,ekleyen);
   contracts.unshift({
