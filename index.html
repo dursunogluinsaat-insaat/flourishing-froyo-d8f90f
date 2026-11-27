@@ -2237,12 +2237,14 @@ tr:hover td{background:#F4F9FC}
           <option value="30">30 gün sakla</option><option value="90">90 gün sakla</option><option value="180">180 gün sakla</option><option value="365">365 gün sakla</option>
         </select>
         <button onclick="islemTemizleElle()" style="width:auto"><i class="ti ti-trash"></i> Eski kayıtları temizle</button>
+        <button id="logSilSecili" onclick="islemSecilenleriSil()" disabled style="width:auto;color:#c0392b"><i class="ti ti-trash"></i> Seçilenleri sil (0)</button>
+        <button onclick="islemTumunuSil()" style="width:auto;color:#c0392b"><i class="ti ti-alert-triangle"></i> Tüm geçmişi sil</button>
         <span id="logSayi" style="font-size:12px;color:#777"></span>
       </div>
       <div class="card" style="padding:0;overflow:hidden">
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Zaman</th><th>Kullanıcı</th><th>İşlem</th><th>Tür</th><th>Kayıt</th><th>Değişen alanlar</th></tr></thead>
+            <thead><tr><th style="width:36px"><input type="checkbox" id="logSecHepsi" onchange="islemFiltreliSec(this.checked)" title="Listelenenleri seç"></th><th>Zaman</th><th>Kullanıcı</th><th>İşlem</th><th>Tür</th><th>Kayıt</th><th>Değişen alanlar</th></tr></thead>
             <tbody id="islemTable"></tbody>
           </table>
         </div>
@@ -6889,6 +6891,57 @@ function _lgInstall(){
 try{_lgInstall();}catch(e){console.warn('İşlem günlüğü kurulamadı:',e);}
 
 let _islemData=[];
+const _islemSecili=new Set();
+function islemSecimGuncelle(){
+  const b=document.getElementById('logSilSecili'); if(b){ b.textContent='Seçilenleri sil ('+_islemSecili.size+')'; b.disabled=_islemSecili.size===0; }
+  const h=document.getElementById('logSecHepsi');
+  if(h){ const gorunen=[...document.querySelectorAll('.logSec')]; h.checked=gorunen.length>0&&gorunen.every(c=>c.checked); }
+}
+function islemSecimDegisti(cb){ if(cb.checked) _islemSecili.add(cb.value); else _islemSecili.delete(cb.value); islemSecimGuncelle(); }
+function islemFiltreliSec(on){
+  document.querySelectorAll('.logSec').forEach(c=>{ c.checked=on; if(on) _islemSecili.add(c.value); else _islemSecili.delete(c.value); });
+  islemSecimGuncelle();
+}
+async function islemIdleriSil(idler){
+  const fs=await fsReady();
+  for(let i=0;i<idler.length;i+=400){
+    const batch=fs.writeBatch(window.fsDb);
+    idler.slice(i,i+400).forEach(id=>batch.delete(fs.doc(window.fsDb,'islemler',id)));
+    await batch.commit();
+  }
+}
+async function islemSecilenleriSil(){
+  const idler=[..._islemSecili];
+  if(!idler.length) return;
+  if(!confirm(idler.length+' işlem kaydı silinsin mi? Bu işlem geri alınamaz.')) return;
+  try{
+    await islemIdleriSil(idler);
+    _islemData=_islemData.filter(x=>!_islemSecili.has(x.id));
+    _islemSecili.clear();
+    renderIslemTablo();
+    showToast(idler.length+' kayıt silindi','blue');
+  }catch(e){ showToast('Silinemedi: '+(e.message||e),'red'); }
+}
+async function islemTumunuSil(){
+  if(!confirm('TÜM işlem geçmişi silinsin mi? Bu işlem geri alınamaz.')) return;
+  if(!confirm('Emin misiniz? Tüm kayıtlar kalıcı olarak silinecek.')) return;
+  try{
+    const fs=await fsReady();
+    let toplam=0;
+    for(;;){
+      const snap=await fs.getDocs(fs.query(fs.collection(window.fsDb,'islemler'),fs.limit(400)));
+      if(snap.empty) break;
+      const batch=fs.writeBatch(window.fsDb);
+      snap.docs.forEach(d=>batch.delete(d.ref));
+      await batch.commit();
+      toplam+=snap.size;
+      if(snap.size<400) break;
+    }
+    _islemSecili.clear();
+    showToast(toplam+' kayıt silindi','blue');
+    renderIslemler();
+  }catch(e){ showToast('Silinemedi: '+(e.message||e),'red'); }
+}
 const ISLEM_SAKLAMA_VARSAYILAN=90;
 async function islemGecmisiAyar(){
   const fs=await fsReady();
@@ -6950,13 +7003,14 @@ function renderIslemTablo(){
   const rows=_islemData.filter(x=>(!fk||x.kullanici===fk)&&(!ft||x.turAdi===ft)&&(!fi||x.islem===fi));
   document.getElementById('logSayi').textContent=rows.length+' kayıt (en yeni 300 içinden)';
   const renk={eklendi:'#1e8449',güncellendi:'#b9770e',silindi:'#c0392b',toplu:'#5b2c83'};
-  if(!rows.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:#aaa;padding:1.5rem">Kayıt yok</td></tr>';return;}
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:#aaa;padding:1.5rem">Kayıt yok</td></tr>';islemSecimGuncelle();return;}
   tb.innerHTML=rows.map(x=>{
     let z=''; try{z=x.zaman&&x.zaman.toDate?x.zaman.toDate().toLocaleString('tr-TR'):'';}catch(e){}
-    return '<tr><td style="white-space:nowrap;font-size:12px">'+esc(z)+'</td><td style="font-weight:600">'+esc(x.kullanici||'')+'<div style="font-size:11px;color:#888;font-weight:400">'+esc(x.kullaniciAdi||'')+'</div></td>'
+    return '<tr><td><input type="checkbox" class="logSec" value="'+esc(x.id)+'" '+(_islemSecili.has(x.id)?'checked':'')+' onchange="islemSecimDegisti(this)"></td><td style="white-space:nowrap;font-size:12px">'+esc(z)+'</td><td style="font-weight:600">'+esc(x.kullanici||'')+'<div style="font-size:11px;color:#888;font-weight:400">'+esc(x.kullaniciAdi||'')+'</div></td>'
       +'<td><b style="color:'+(renk[x.islem]||'#333')+'">'+esc(x.islem||'')+'</b></td><td>'+esc(x.turAdi||'')+'</td><td>'+esc(x.etiket||'')+(x.ekleyen&&x.ekleyen!==x.kullanici?'<div style="font-size:11px;color:#888">ekleyen: '+esc(x.ekleyen)+'</div>':'')+'</td>'
       +'<td style="font-size:12px;color:#666">'+esc((x.alanlar||[]).join(', '))+'</td></tr>';
   }).join('');
+  islemSecimGuncelle();
 }
 </script>
 
