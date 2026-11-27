@@ -1198,6 +1198,7 @@ tr:hover td{background:#F4F9FC}
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
         <div class="section-title" style="margin-bottom:0;border:none;padding:0"><i class="ti ti-activity"></i> Müşteri Takip</div>
         <div style="display:flex;gap:8px">
+          <button class="primary" onclick="openNewTrackingForm()"><i class="ti ti-plus"></i> Yeni Takip</button>
           <select id="ctrkFilter" style="max-width:180px" onchange="renderCTracking()">
             <option value="">Tüm Durumlar</option>
             <option value="Devam Ediyor">Devam Ediyor</option>
@@ -1210,6 +1211,35 @@ tr:hover td{background:#F4F9FC}
             <option value="Kira Sözleşmesi">Kiralama</option>
             <option value="Müşteri Takip Formu">Takip Formu</option>
           </select>
+        </div>
+      </div>
+      <div id="addTrackingForm" class="card hidden" style="margin-bottom:1rem;border-color:#A9DFBF;background:#F8FFF9">
+        <div class="section-title"><i class="ti ti-plus"></i> Yeni Müşteri Takip Kaydı</div>
+        <div class="grid2">
+          <div><label>Takip Türü</label><select id="nctTur" onchange="nctTurDegisti()"><option>Satış Sözleşmesi</option><option>Kira Sözleşmesi</option><option>Müşteri Takip Formu</option></select></div>
+          <div><label>Kayıtlı Müşteri (opsiyonel)</label><select id="nctMusteriSec" onchange="nctMusteriGetir()"></select></div>
+          <div><label>Müşteri</label><input id="nctMusteri"></div>
+          <div><label>Telefon</label><input id="nctTel"></div>
+          <div><label>Mülk / İlan</label><input id="nctIlan"></div>
+          <div><label>Satış / Kira Bedeli</label><input id="nctSatisFiyat"></div>
+          <div><label>Komisyon</label><input id="nctKomisyon"></div>
+          <div><label>Kapora</label><input id="nctKaparo"></div>
+          <div><label>Kapora Kimde?</label><input id="nctKaparoYer"></div>
+          <div class="nct-satis"><label>Kredi</label><input id="nctKredi"></div>
+          <div class="nct-satis"><label>Banka / Finans Kuruluşu</label><input id="nctBanka"></div>
+          <div class="nct-satis"><label>Kredi Durumu</label><select id="nctKrediDurum"><option value="">Seçin</option><option>Onaylandı</option><option>Başvuru Yapıldı</option><option>Reddedildi</option><option>Kullanılmayacak</option></select></div>
+          <div class="nct-satis"><label>Eksper Düştü mü?</label><select id="nctExperDustu"><option value="">Seçin</option><option>Evet</option><option>Hayır</option></select></div>
+          <div class="nct-satis"><label>Eksper Sonucu</label><input id="nctExperSonuc"></div>
+          <div class="nct-satis"><label>Eksper Değeri</label><input id="nctExperDeger"></div>
+          <div class="nct-asama"><label>Satış Aşaması</label><select id="nctAsama"><option value="">Seçin</option><option>Kapora alındı</option><option>Kredi başvurusu</option><option>Eksper</option><option>Kredi onayı</option><option>Tapu randevusu</option><option>Tapu yapıldı</option></select></div>
+          <div><label>Sonuç</label><select id="nctSonuc"><option>Devam Ediyor</option><option>Tamamlandı</option><option>İptal / Vazgeçildi</option></select></div>
+          <div><label>Bitiş Tarihi</label><input id="nctBitisTarih" type="date"></div>
+          <div><label>Oluşturma Tarihi</label><input id="nctOlusTarih" type="date"></div>
+          <div class="full"><label>Not</label><textarea id="nctNot" rows="2"></textarea></div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:.75rem">
+          <button onclick="document.getElementById('addTrackingForm').classList.add('hidden')">İptal</button>
+          <button class="primary" onclick="saveNewTracking()"><i class="ti ti-check"></i> Kaydet</button>
         </div>
       </div>
       <div id="editTrackingForm" class="card hidden" style="margin-bottom:1rem;border-color:#AED6F1;background:#F9FCFF">
@@ -4575,8 +4605,11 @@ function saveContractEdit(){
   c.experDeger = document.getElementById('ectExperDeger').value.replace(/[^\d]/g,'');
   if(tur === 'Kira Sözleşmesi'){ c.kredi=''; c.banka=''; c.krediDurum=''; c.experDustu=''; c.experSonuc=''; c.experDeger=''; }
   c.asama = tur === 'Satış Sözleşmesi' ? document.getElementById('ectAsama').value : '';
-  if(c.asama && c.asama === SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) c.sonuc = 'Tamamlandı';
-  else c.sonuc = document.getElementById('ectSonuc').value;
+  c.sonuc = document.getElementById('ectSonuc').value;
+  if(c.asama){ // aşama seçiliyse sonuç aşamadan okunur (İptal hariç)
+    if(c.asama === SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) c.sonuc = 'Tamamlandı';
+    else if(c.sonuc === 'Tamamlandı') c.sonuc = 'Devam Ediyor';
+  }
   c.bitisTarih = document.getElementById('ectBitisTarih').value;
   c.olusTarih = document.getElementById('ectOlusTarih').value;
   c.not = document.getElementById('ectNot').value.trim();
@@ -4688,6 +4721,85 @@ function checkAndShowNotifPopups(){
 }
 
 /* ============ MÜŞTERİ TAKİP ============ */
+/* ============ YENİ MÜŞTERİ TAKİP KAYDI ============ */
+const NCT_ALANLAR=['nctMusteri','nctTel','nctIlan','nctSatisFiyat','nctKomisyon','nctKaparo','nctKaparoYer','nctKredi','nctBanka','nctKrediDurum','nctExperDustu','nctExperSonuc','nctExperDeger','nctAsama','nctSonuc','nctBitisTarih','nctNot','nctMusteriSec'];
+function nctTurDegisti(){
+  const tur=document.getElementById('nctTur').value;
+  const satis=tur==='Satış Sözleşmesi';
+  document.querySelectorAll('#addTrackingForm .nct-satis').forEach(el=>el.classList.toggle('hidden',tur==='Kira Sözleşmesi'));
+  document.querySelectorAll('#addTrackingForm .nct-asama').forEach(el=>el.classList.toggle('hidden',!satis));
+}
+function nctMusteriDoldur(){
+  const sel=document.getElementById('nctMusteriSec');
+  const isAdmin=currentUser.role==='admin';
+  const liste=isAdmin?customers:customers.filter(c=>c.ekleyenId===currentUser.id);
+  sel.innerHTML='<option value="">— Kayıtlı müşteri seçin (opsiyonel) —</option>'+liste.map(c=>`<option value="${c.id}">${esc(c.ad)}${c.tel?' · '+esc(c.tel):''}</option>`).join('');
+}
+function nctMusteriGetir(){
+  const id=parseInt(document.getElementById('nctMusteriSec').value);
+  if(!id) return;
+  const c=customers.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('nctMusteri').value=c.ad||'';
+  document.getElementById('nctTel').value=c.tel||'';
+}
+function openNewTrackingForm(tur){
+  document.getElementById('editTrackingForm')?.classList.add('hidden');
+  editingContractId=null;
+  const f=document.getElementById('addTrackingForm');
+  NCT_ALANLAR.forEach(id=>{const e=document.getElementById(id); if(e) e.value='';});
+  document.getElementById('nctTur').value=tur||'Satış Sözleşmesi';
+  document.getElementById('nctSonuc').value='Devam Ediyor';
+  document.getElementById('nctOlusTarih').value=new Date().toISOString().split('T')[0];
+  nctMusteriDoldur();
+  nctTurDegisti();
+  f.classList.remove('hidden');
+  f.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function saveNewTracking(){
+  const tur=document.getElementById('nctTur').value;
+  const musteri=document.getElementById('nctMusteri').value.trim();
+  if(!musteri){showToast('Müşteri adı zorunlu','red');return;}
+  const tel=document.getElementById('nctTel').value;
+  const digits=id=>document.getElementById(id).value.replace(/[^\d]/g,'');
+  const satis=tur==='Satış Sözleşmesi';
+  const kira=tur==='Kira Sözleşmesi';
+  const asama=satis?document.getElementById('nctAsama').value:'';
+  let sonuc=document.getElementById('nctSonuc').value;
+  if(asama){
+    if(asama===SATIS_ASAMALARI[SATIS_ASAMALARI.length-1]) sonuc='Tamamlandı';
+    else if(sonuc==='Tamamlandı') sonuc='Devam Ediyor';
+  }
+  const ekleyen=currentUser.ad+' '+currentUser.soyad;
+  const musteriNo=musteriNoBulVeyaOlustur(musteri,tel,'',currentUser.id,ekleyen);
+  contracts.unshift({
+    id:Date.now(), tur, musteri, tel,
+    t1:{ad:'',tc:'',tel:'',email:'',adres:''}, t2:{ad:'',tc:'',tel:'',email:'',adres:''},
+    ilan:document.getElementById('nctIlan').value.trim(),
+    satisFiyat:digits('nctSatisFiyat'), komisyon:digits('nctKomisyon'), kaparo:digits('nctKaparo'),
+    kaparoYer:document.getElementById('nctKaparoYer').value,
+    kredi:kira?'':digits('nctKredi'), banka:kira?'':document.getElementById('nctBanka').value.trim(),
+    krediDurum:kira?'':document.getElementById('nctKrediDurum').value,
+    experDustu:kira?'':document.getElementById('nctExperDustu').value,
+    experSonuc:kira?'':document.getElementById('nctExperSonuc').value,
+    experDeger:kira?'':digits('nctExperDeger'),
+    asama, sonuc,
+    bitisTarih:document.getElementById('nctBitisTarih').value,
+    olusTarih:document.getElementById('nctOlusTarih').value||new Date().toISOString().split('T')[0],
+    not:document.getElementById('nctNot').value.trim(),
+    musteriNo, ekleyenId:currentUser.id, ekleyen, tarih:new Date().toLocaleDateString('tr-TR')
+  });
+  saveContracts();
+  document.getElementById('addTrackingForm').classList.add('hidden');
+  renderCTracking();
+  renderContracts();
+  updateHomeWidgets();
+  showToast('Müşteri takip kaydı eklendi','green');
+}
+function showAddContractForm(){ openNewTrackingForm('Satış Sözleşmesi'); }
+function openSaleForm(){ showTab('ctracking',document.getElementById('tabCTracking')); openNewTrackingForm('Satış Sözleşmesi'); }
+function openRentalForm(){ showTab('ctracking',document.getElementById('tabCTracking')); openNewTrackingForm('Kira Sözleşmesi'); }
+
 function renderCTracking(){
   const fSonuc = document.getElementById('ctrkFilter').value;
   const fTur = document.getElementById('ctrkTurFilter').value;
