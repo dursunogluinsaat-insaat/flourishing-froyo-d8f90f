@@ -1470,11 +1470,13 @@ tr:hover td{background:#F4F9FC}
         try{ if(typeof renderSozlesmeBelgeleriTable==='function') renderSozlesmeBelgeleriTable(); }catch(_e){}
         if(isSale){
           const id=Date.now();
-          const rec={id,tur:"Satış Sözleşmesi",musteri:d.buyerName||"İsimsiz kayıt",tel:d.buyerPhone||"",ilan:[d.neighborhood,d.district,d.province].filter(Boolean).join(" / "),satisFiyat:String(d.salePrice||0),kaparo:String(d.deposit||0),kaparoYer:d.depositHolder||"",kredi:"",banka:"",krediDurum:"",experDustu:"",experSonuc:"",experDeger:"",sonuc:"Devam Ediyor",bitisTarih:"",olusTarih:d.date||new Date().toISOString().slice(0,10),not:d.extraTerms||"",link:"",ekleyenId:(typeof currentUser!=="undefined"&&currentUser?currentUser.id:""),ekleyen:(typeof currentUser!=="undefined"&&currentUser?(currentUser.ad+" "+currentUser.soyad):""),alici:{ad:d.buyerName||"",tc:d.buyerId||"",tel:d.buyerPhone||"",email:d.buyerEmail||"",adres:d.buyerAddress||""},satici:{ad:d.sellerName||"",tc:d.sellerId||"",tel:d.sellerPhone||"",email:d.sellerEmail||"",adres:d.sellerAddress||""},sozlesmeNo:d.contractNo||("DURS-S-"+id),ofis:d.office||"",ofisAdi:d.officeName||"",danismanId:d.consultantId||"",danisman:d.consultantName||"",hazirlayanDanisman:d.consultantName||"",firmaVergiDairesi:"SULTANBEYLİ V.D.",firmaVergiNo:"3180523822"};
+          const musteriNo=musteriNoBulVeyaOlustur(d.buyerName,d.buyerPhone,"Alıcı",d.ekleyenId,d.ekleyen);
+          const rec={id,sozlesmeBelgeId:belge.id,musteriNo,tur:"Satış Sözleşmesi",musteri:d.buyerName||"İsimsiz kayıt",tel:d.buyerPhone||"",ilan:[d.neighborhood,d.district,d.province].filter(Boolean).join(" / "),satisFiyat:String(d.salePrice||0),kaparo:String(d.deposit||0),kaparoYer:d.depositHolder||"",kredi:"",banka:"",krediDurum:"",experDustu:"",experSonuc:"",experDeger:"",sonuc:"Devam Ediyor",bitisTarih:"",olusTarih:d.date||new Date().toISOString().slice(0,10),not:d.extraTerms||"",link:"",ekleyenId:(typeof currentUser!=="undefined"&&currentUser?currentUser.id:""),ekleyen:(typeof currentUser!=="undefined"&&currentUser?(currentUser.ad+" "+currentUser.soyad):""),alici:{ad:d.buyerName||"",tc:d.buyerId||"",tel:d.buyerPhone||"",email:d.buyerEmail||"",adres:d.buyerAddress||""},satici:{ad:d.sellerName||"",tc:d.sellerId||"",tel:d.sellerPhone||"",email:d.sellerEmail||"",adres:d.sellerAddress||""},sozlesmeNo:d.contractNo||("DURS-S-"+id),ofis:d.office||"",ofisAdi:d.officeName||"",danismanId:d.consultantId||"",danisman:d.consultantName||"",hazirlayanDanisman:d.consultantName||"",firmaVergiDairesi:"SULTANBEYLİ V.D.",firmaVergiNo:"3180523822"};
           contracts.unshift(rec); saveContracts(); if(typeof renderSales==="function") renderSales(); if(typeof updateHomeWidgets==="function") updateHomeWidgets(); if(typeof showToast==="function") showToast("Satış sözleşmesi kaydedildi ve buluta gönderildi","green");
         } else {
           const id=Date.now();
-          const rec={id,tur:"Kira Sözleşmesi",musteri:d.tenantName||"İsimsiz kayıt",tel:d.tenantPhone||"",ilan:[d.neighborhood,d.district,d.province].filter(Boolean).join(" / "),satisFiyat:String(d.rent||0),kaparo:String(d.rentDeposit||0),kaparoYer:"",sonuc:"Devam Ediyor",bitisTarih:"",olusTarih:d.rentStart||d.date||new Date().toISOString().slice(0,10),not:d.extraTerms||"",ekleyenId:(typeof currentUser!=="undefined"&&currentUser?currentUser.id:""),ekleyen:(typeof currentUser!=="undefined"&&currentUser?(currentUser.ad+" "+currentUser.soyad):""),kirayaVeren:{ad:d.landlordName||"",tc:d.landlordId||"",tel:d.landlordPhone||"",adres:d.landlordAddress||""},kiraci:{ad:d.tenantName||"",tc:d.tenantId||"",tel:d.tenantPhone||"",adres:d.tenantAddress||""},aylikKira:String(d.rent||0),depozito:String(d.rentDeposit||0),kiraBaslangic:d.rentStart||"",kiraSuresi:d.rentTerm||12,kiraOdemeGunu:d.rentDay||1,kdv:d.rentVat||0,sozlesmeNo:d.contractNo||("DURS-K-"+id),ofis:d.office||"",ofisAdi:d.officeName||"",danismanId:d.consultantId||"",danisman:d.consultantName||"",hazirlayanDanisman:d.consultantName||"",firmaVergiDairesi:"SULTANBEYLİ V.D.",firmaVergiNo:"3180523822"};
+          const musteriNo=musteriNoBulVeyaOlustur(d.tenantName,d.tenantPhone,"Kiracı",d.ekleyenId,d.ekleyen);
+          const rec={id,sozlesmeBelgeId:belge.id,musteriNo,tur:"Kira Sözleşmesi",musteri:d.tenantName||"İsimsiz kayıt",tel:d.tenantPhone||"",ilan:[d.neighborhood,d.district,d.province].filter(Boolean).join(" / "),satisFiyat:String(d.rent||0),kaparo:String(d.rentDeposit||0),kaparoYer:"",sonuc:"Devam Ediyor",bitisTarih:"",olusTarih:d.rentStart||d.date||new Date().toISOString().slice(0,10),not:d.extraTerms||"",ekleyenId:(typeof currentUser!=="undefined"&&currentUser?currentUser.id:""),ekleyen:(typeof currentUser!=="undefined"&&currentUser?(currentUser.ad+" "+currentUser.soyad):""),kirayaVeren:{ad:d.landlordName||"",tc:d.landlordId||"",tel:d.landlordPhone||"",adres:d.landlordAddress||""},kiraci:{ad:d.tenantName||"",tc:d.tenantId||"",tel:d.tenantPhone||"",adres:d.tenantAddress||""},aylikKira:String(d.rent||0),depozito:String(d.rentDeposit||0),kiraBaslangic:d.rentStart||"",kiraSuresi:d.rentTerm||12,kiraOdemeGunu:d.rentDay||1,kdv:d.rentVat||0,sozlesmeNo:d.contractNo||("DURS-K-"+id),ofis:d.office||"",ofisAdi:d.officeName||"",danismanId:d.consultantId||"",danisman:d.consultantName||"",hazirlayanDanisman:d.consultantName||"",firmaVergiDairesi:"SULTANBEYLİ V.D.",firmaVergiNo:"3180523822"};
           contracts.unshift(rec); saveContracts(); if(typeof renderRentals==="function") renderRentals(); if(typeof updateHomeWidgets==="function") updateHomeWidgets(); if(typeof showToast==="function") showToast("Kiralama sözleşmesi kaydedildi ve buluta gönderildi","green");
         }
       }catch(err){ console.error("Sözleşme kaydı alınamadı",err); if(typeof showToast==="function") showToast("Sözleşme kaydedilemedi: "+(err.message||err),"red"); }
@@ -2326,6 +2328,7 @@ function save(){
   }
 }
 function saveCustomers(){
+  musteriNoTamamla();
   if(typeof window.refreshContractCustomers==='function') window.refreshContractCustomers();
   localStorage.setItem('emlak_customers_v2',JSON.stringify(customers));
   if(typeof window.crmBulutMusterileriKaydet==='function'){
@@ -3737,6 +3740,7 @@ function renderCustomers(){
   const perms=currentUser.permissions||{};
   const canSeeAll=isAdmin||(perms.canViewAllCustomers);
 
+  if(musteriNoTamamla()) saveCustomers();
   const list=canSeeAll?customers:customers.filter(c=>c.ekleyenId===currentUser.id);
   const tb=document.getElementById('customersTable');
   if(!list.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;color:#aaa;padding:1.5rem">Müşteri bulunamadı</td></tr>';return;}
@@ -3750,7 +3754,7 @@ function renderCustomers(){
     if(c.yuzolcum)parselBilgi.push(c.yuzolcum+'m²');
     const parselStr=parselBilgi.length?parselBilgi.join(' · '):'—';
     return `<tr>
-    <td style="font-weight:600">${esc(c.ad)}</td>
+    <td style="font-weight:600">${esc(c.ad)}${c.musteriNo?` <span style="font-size:11px;color:#1A5276;font-weight:700">(${esc(c.musteriNo)})</span>`:''}</td>
     <td style="white-space:nowrap">${esc(c.tel||'-')}</td>
     <td style="font-size:13px">${esc(c.email||'-')}</td>
     <td>${c.ilgi?`<span class="badge ${ilgiColors[c.ilgi]||'badge-gray'}">${esc(c.ilgi)}</span>`:'-'}</td>
@@ -4670,8 +4674,8 @@ function renderCTracking(){
   if(!list.length){tb.innerHTML='<tr><td colspan="13" style="text-align:center;color:#aaa;padding:1.5rem">Takip kaydı bulunamadı</td></tr>';return;}
   const sonucColors={'Tamamlandı':'badge-green','Devam Ediyor':'badge-amber','İptal / Vazgeçildi':'badge-red'};
   const turColors={'Satış Sözleşmesi':'badge-green','Kira Sözleşmesi':'badge-blue','Müşteri Takip Formu':'badge-purple'};
-  tb.innerHTML = list.map(c=>`<tr>
-    <td style="font-weight:600">${esc(c.musteri)}</td>
+  tb.innerHTML = list.map(c=>`<tr class="ctr-row" onclick="contractDosyaAc(event,'${c.id}')" style="cursor:pointer">
+    <td style="font-weight:600">${esc(c.musteri)}<div style="font-size:11px;color:#1A5276;font-weight:700">${esc(contractMusteriNo(c)||'')}</div></td>
     <td style="white-space:nowrap">${esc(c.tel||'-')}</td>
     <td><span class="badge ${turColors[c.tur]||'badge-gray'}">${esc(c.tur||'-')}</span></td>
     <td style="font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.ilan||'-')}</td>
@@ -4755,6 +4759,84 @@ function openRentalForm(){
   document.getElementById('ctTur').value='Kira Sözleşmesi';
   showAddContractForm();
 }
+/* ============ MÜŞTERİ NO VE DOSYA ============ */
+function nextMusteriNo(){
+  let max=0;
+  customers.forEach(c=>{ const m=String(c.musteriNo||'').match(/(\d+)$/); if(m) max=Math.max(max,+m[1]); });
+  return 'M-'+String(max+1).padStart(4,'0');
+}
+function musteriNoTamamla(){
+  let degisti=false;
+  [...customers].sort((a,b)=>(a.id||0)-(b.id||0)).forEach(c=>{ if(!c.musteriNo){ c.musteriNo=nextMusteriNo(); degisti=true; } });
+  return degisti;
+}
+function musteriNoBul(ad,tel){
+  const d=String(tel||'').replace(/\D/g,'').slice(-10);
+  const n=String(ad||'').trim().toLocaleLowerCase('tr-TR');
+  const c=(d&&customers.find(x=>String(x.tel||'').replace(/\D/g,'').slice(-10)===d))||(n&&customers.find(x=>String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===n));
+  return c?(c.musteriNo||''):'';
+}
+function musteriNoBulVeyaOlustur(ad,tel,ilgi,ekleyenId,ekleyen){
+  const mevcut=musteriNoBul(ad,tel);
+  if(mevcut||!String(ad||'').trim()) return mevcut;
+  // Eşleşen müşteri yoksa yeni müşteri kaydı açılır ve numara verilir
+  customers.push({id:Date.now()+7,ad:String(ad).trim(),tel:tel||'',ilgi:ilgi||'',ekleyenId:ekleyenId||'',ekleyen:ekleyen||'',email:'',meslek:'',il:'',ilce:'',mahalle:'',ada:'',parsel:'',notlar:''});
+  musteriNoTamamla(); saveCustomers();
+  return customers[customers.length-1].musteriNo;
+}
+function contractMusteriNo(c){ return c.musteriNo||musteriNoBul(c.musteri,c.tel); }
+function dosyaKapat(){ document.getElementById('contractDosyaOverlay')?.remove(); }
+function contractDosyaAc(ev,id){
+  if(ev&&ev.target&&ev.target.closest&&ev.target.closest('button,select,a,input,textarea,label')) return;
+  const c=contracts.find(x=>String(x.id)===String(id));
+  if(!c) return;
+  const bid=c.sozlesmeBelgeId!=null?c.sozlesmeBelgeId:(Number(c.id)>=5000000000?Number(c.id)-5000000000:null);
+  const belge=bid!=null?sozlesmeBelgeleri.find(x=>String(x.id)===String(bid)):null;
+  const mNo=contractMusteriNo(c)||'—';
+  const fiyat=v=>v?formatFiyatDisplay(v):'-';
+  const tarih=x=>x?new Date(x).toLocaleDateString('tr-TR'):'-';
+  const satir=(k,v)=>`<tr><td style="padding:6px 10px;color:#666;width:40%;border-bottom:1px solid #eee">${esc(k)}</td><td style="padding:6px 10px;font-weight:600;border-bottom:1px solid #eee">${v}</td></tr>`;
+  const btn='font-size:13px;padding:7px 12px;border-radius:8px;cursor:pointer;border:1px solid #1A5276;background:#fff;color:#1A5276';
+  let belgeBolum;
+  if(belge){
+    const imza=belge.imzaliBelge
+      ? `<a href="${esc(belge.imzaliBelge.link)}" target="_blank" rel="noopener" style="font-size:13px;color:#1E8449;font-weight:600">İmzalı belgeyi Drive'da aç</a>`
+      : '<span style="font-size:13px;color:#888">İmzalı belge henüz yüklenmedi</span>';
+    belgeBolum=`<div style="font-weight:700;color:#1A5276;margin:16px 0 8px">Sözleşme Belgesi</div>
+      <div style="font-size:13px;margin-bottom:10px">No: <b>${esc(belge.sozlesmeNo||'-')}</b> · ${esc(belge.olusturmaTarih||'')}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button onclick="dosyaKapat();gosterSozlesmeMetniById(${belge.id})" style="${btn}">Sözleşmeyi aç / yazdır</button>
+        <button onclick="dosyaKapat();imzaliBelgeSec(${belge.id})" style="${btn}">İmzalı belge yükle (Drive)</button>
+        ${imza}
+      </div>`;
+  } else {
+    belgeBolum='<div style="margin-top:14px;color:#888;font-size:13px">Bu kayda bağlı sözleşme belgesi bulunamadı.</div>';
+  }
+  const ov=document.createElement('div');
+  ov.id='contractDosyaOverlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:40px 12px;overflow:auto';
+  ov.onclick=e=>{ if(e.target===ov) dosyaKapat(); };
+  ov.innerHTML=`<div style="background:#fff;border-radius:14px;max-width:640px;width:100%;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.25)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:18px;font-weight:700;color:#1A5276">Dosya · ${esc(c.tur||'')}</div>
+      <button onclick="dosyaKapat()" style="background:none;border:none;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <div style="display:inline-block;background:#EBF5FB;color:#1A5276;font-weight:700;padding:4px 10px;border-radius:8px;margin-bottom:12px">Müşteri No: ${esc(mNo)}</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      ${satir('Müşteri',esc(c.musteri||'-'))}
+      ${satir('Telefon',esc(c.tel||'-'))}
+      ${satir('Mülk / İlan',esc(c.ilan||'-'))}
+      ${satir('Satış / Kira Bedeli',fiyat(c.satisFiyat))}
+      ${satir('Kapora',fiyat(c.kaparo))}
+      ${satir('Sonuç',esc(c.sonuc||'-'))}
+      ${satir('Bitiş Tarihi',tarih(c.bitisTarih))}
+      ${satir('Not',esc(c.not||'-'))}
+    </table>
+    ${belgeBolum}
+  </div>`;
+  document.body.appendChild(ov);
+}
+
 function renderSales(){
   const fSonuc = document.getElementById('salesFilter').value;
   const isAdmin = currentUser.role==='admin';
@@ -4765,8 +4847,8 @@ function renderSales(){
   if(!list.length){tb.innerHTML='<tr><td colspan="15" style="text-align:center;color:#aaa;padding:1.5rem">Satış kaydı bulunamadı</td></tr>';return;}
   const sonucColors={'Tamamlandı':'badge-green','Devam Ediyor':'badge-amber','İptal / Vazgeçildi':'badge-red'};
   const krediColors={'Onaylandı':'badge-green','Başvuru Yapıldı':'badge-amber','Reddedildi':'badge-red','Kullanılmayacak':'badge-gray'};
-  tb.innerHTML = list.map(c=>`<tr>
-    <td style="font-weight:600">${esc(c.musteri)}</td>
+  tb.innerHTML = list.map(c=>`<tr class="ctr-row" onclick="contractDosyaAc(event,'${c.id}')" style="cursor:pointer">
+    <td style="font-weight:600">${esc(c.musteri)}<div style="font-size:11px;color:#1A5276;font-weight:700">${esc(contractMusteriNo(c)||'')}</div></td>
     <td style="white-space:nowrap">${esc(c.tel||'-')}</td>
     <td style="font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c.ilan||'')}">${esc(c.ilan||'-')}</td>
     <td style="white-space:nowrap;font-weight:600;color:#1E8449">${c.satisFiyat?formatFiyatDisplay(c.satisFiyat):'-'}</td>
@@ -4795,8 +4877,8 @@ function renderRentals(){
   const tb = document.getElementById('rentalsTable');
   if(!list.length){tb.innerHTML='<tr><td colspan="11" style="text-align:center;color:#aaa;padding:1.5rem">Kiralama kaydı bulunamadı</td></tr>';return;}
   const sonucColors={'Tamamlandı':'badge-green','Devam Ediyor':'badge-amber','İptal / Vazgeçildi':'badge-red'};
-  tb.innerHTML = list.map(c=>`<tr>
-    <td style="font-weight:600">${esc(c.musteri)}</td>
+  tb.innerHTML = list.map(c=>`<tr class="ctr-row" onclick="contractDosyaAc(event,'${c.id}')" style="cursor:pointer">
+    <td style="font-weight:600">${esc(c.musteri)}<div style="font-size:11px;color:#1A5276;font-weight:700">${esc(contractMusteriNo(c)||'')}</div></td>
     <td style="white-space:nowrap">${esc(c.tel||'-')}</td>
     <td style="font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c.ilan||'')}">${esc(c.ilan||'-')}</td>
     <td style="white-space:nowrap;font-weight:600;color:#1A5276">${c.satisFiyat?formatFiyatDisplay(c.satisFiyat):'-'}</td>
@@ -5037,7 +5119,7 @@ function createSozlesmeBelge(){
   data.sozlesmeNo=`DURS-${isS?'S':'K'}-${String(data.tarih||'').replace(/-/g,'')}-${String(data.id).slice(-5)}`;
   data.durum='Devam Ediyor';
   saveCustomers();
-  const takip={id:data.id+5000000000,tur:isS?'Satış Sözleşmesi':'Kira Sözleşmesi',musteri:data.t2Ad,tel:data.t2Tel,ilan:[data.mahalle,data.ilce,data.il].filter(Boolean).join(' / '),satisFiyat:data.bedel,komisyon:data.komisyon,kaparo:data.kaparo,kaparoYer:data.kaparoYeri,kredi:data.krediTutar,banka:'',krediDurum:'',experDustu:'',experSonuc:'',experDeger:'',sonuc:'Devam Ediyor',bitisTarih:data.bitis||'',olusTarih:data.tarih,not:data.ozelSartlar||'',link:'',ekleyenId:data.ekleyenId,ekleyen:data.ekleyen,alici:isS?{ad:data.t2Ad,tc:data.t2Tc,tel:data.t2Tel,email:'',adres:data.t2Adres}:null,satici:isS?{ad:data.t1Ad,tc:data.t1Tc,tel:data.t1Tel,email:'',adres:data.t1Adres}:null,kirayaVeren:isS?'':data.t1Ad,kiraci:isS?'':data.t2Ad,sozlesmeNo:data.sozlesmeNo,belgeId:data.id};
+  const takip={id:data.id+5000000000,sozlesmeBelgeId:data.id,musteriNo:musteriNoBulVeyaOlustur(data.t2Ad,data.t2Tel,isS?"Alıcı":"Kiracı",data.ekleyenId,data.ekleyen),tur:isS?'Satış Sözleşmesi':'Kira Sözleşmesi',musteri:data.t2Ad,tel:data.t2Tel,ilan:[data.mahalle,data.ilce,data.il].filter(Boolean).join(' / '),satisFiyat:data.bedel,komisyon:data.komisyon,kaparo:data.kaparo,kaparoYer:data.kaparoYeri,kredi:data.krediTutar,banka:'',krediDurum:'',experDustu:'',experSonuc:'',experDeger:'',sonuc:'Devam Ediyor',bitisTarih:data.bitis||'',olusTarih:data.tarih,not:data.ozelSartlar||'',link:'',ekleyenId:data.ekleyenId,ekleyen:data.ekleyen,alici:isS?{ad:data.t2Ad,tc:data.t2Tc,tel:data.t2Tel,email:'',adres:data.t2Adres}:null,satici:isS?{ad:data.t1Ad,tc:data.t1Tc,tel:data.t1Tel,email:'',adres:data.t1Adres}:null,kirayaVeren:isS?'':data.t1Ad,kiraci:isS?'':data.t2Ad,sozlesmeNo:data.sozlesmeNo,belgeId:data.id};
   contracts.unshift(takip); saveContracts();
   sozlesmeBelgeleri.unshift(data);
   saveSozlesmeBelgeleri(data);
@@ -5446,7 +5528,7 @@ function doGlobalSearch(q){
   let cList=[];
   if(isAdmin||perms.canViewCustomers){
     const myC=isAdmin?customers:customers.filter(c=>c.ekleyenId===currentUser.id);
-    cList=myC.filter(c=>[c.ad,c.soyad,c.tel,c.email,c.tc,c.adres,c.notlar].join(' ').toLowerCase().includes(q));
+    cList=myC.filter(c=>[c.ad,c.soyad,c.tel,c.email,c.tc,c.adres,c.notlar,c.musteriNo].join(' ').toLowerCase().includes(q));
   }
   // Randevu
   let aList=(appointments||[]).filter(a=>[a.musteri,a.konu,a.not,a.tel,a.tarih].join(' ').toLowerCase().includes(q));
