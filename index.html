@@ -5206,11 +5206,64 @@ function renderSozlesmeBelgeleriTable(){
       <td style="font-size:12px">${esc(d.ekleyen)}</td>
       <td style="font-size:12px;color:#aaa;white-space:nowrap">${esc(d.olusturmaTarih)}</td>
       <td style="display:flex;gap:4px">
+        ${d.imzaliBelge?`<a href="${esc(d.imzaliBelge.link)}" target="_blank" rel="noopener" style="font-size:12px;padding:4px 8px;color:#1e8449" title="İmzalı belge (Drive) — ${esc(d.imzaliBelge.yuklemeTarihi||'')}"><i class="ti ti-file-check"></i></a>`:''}
+        ${isAdmin||d.ekleyenId===currentUser.id?`<button onclick="imzaliBelgeSec(${d.id})" style="font-size:12px;padding:4px 8px;color:#1A5276" title="İmzalı belgeyi Google Drive'a yükle"><i class="ti ti-upload"></i></button>`:''}
         <button onclick="gosterSozlesmeMetniById(${d.id})" style="font-size:12px;padding:4px 8px;color:#1A5276" title="Görüntüle/Yazdır"><i class="ti ti-printer"></i></button>
         ${isAdmin||d.ekleyenId===currentUser.id?`<button onclick="deleteSozlesmeBelge(${d.id})" style="font-size:12px;padding:4px 8px;color:#c00" title="Sil"><i class="ti ti-trash"></i></button>`:''}
       </td>
     </tr>`;
   }).join('');
+}
+/* İmzalı sözleşmeyi doğrudan Google Drive'a yükler; linki o sözleşme kaydına bağlar */
+let imzaliHedefId=null;
+function imzaliBelgeSec(id){
+  if(!gdriveAccessToken){ showToast('Önce Ayarlar > Google Drive\'a Bağlan ile bağlantı kurun.','red'); return; }
+  imzaliHedefId=id;
+  let inp=document.getElementById('imzaliBelgeInput');
+  if(!inp){
+    inp=document.createElement('input'); inp.type='file'; inp.id='imzaliBelgeInput';
+    inp.accept='application/pdf,image/*'; inp.style.display='none';
+    inp.addEventListener('change',()=>{ const f=inp.files&&inp.files[0]; inp.value=''; if(f) imzaliBelgeYukle(imzaliHedefId,f); });
+    document.body.appendChild(inp);
+  }
+  inp.click();
+}
+async function driveKlasorBul(ad){
+  const headers={Authorization:'Bearer '+gdriveAccessToken};
+  const q=encodeURIComponent("name='"+ad.replace(/'/g,"\\'")+"' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+  const r=await fetch('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id)',{headers});
+  if(!r.ok) throw new Error(r.status+' klasör aranamadı');
+  const j=await r.json();
+  if(j.files&&j.files[0]) return j.files[0].id;
+  const c=await fetch('https://www.googleapis.com/drive/v3/files?fields=id',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({name:ad,mimeType:'application/vnd.google-apps.folder'})});
+  if(!c.ok) throw new Error(c.status+' klasör oluşturulamadı');
+  return (await c.json()).id;
+}
+async function imzaliBelgeYukle(id,file){
+  const belge=sozlesmeBelgeleri.find(x=>String(x.id)===String(id));
+  if(!belge){ showToast('Sözleşme kaydı bulunamadı','red'); return; }
+  if(file.size>25*1024*1024){ showToast('Dosya 25 MB üstü olamaz','red'); return; }
+  try{
+    showToast('İmzalı belge Google Drive\'a yükleniyor…','blue');
+    const klasorId=await driveKlasorBul('Dursunoğlu Sözleşmeler');
+    const uzanti=(file.name.match(/\.[^.]+$/)||[''])[0];
+    const ad=((belge.sozlesmeNo||('belge-'+belge.id))+'_'+(belge.t1Ad||'')+'_'+(belge.t2Ad||'')+'_imzali'+uzanti).replace(/[\/\\]/g,'-');
+    const boundary='crmimza_'+Date.now();
+    const meta=JSON.stringify({name:ad,parents:[klasorId]});
+    const head='--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+meta+'\r\n--'+boundary+'\r\nContent-Type: '+(file.type||'application/octet-stream')+'\r\n\r\n';
+    const body=new Blob([head,file,'\r\n--'+boundary+'--']);
+    const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink',{method:'POST',headers:{Authorization:'Bearer '+gdriveAccessToken,'Content-Type':'multipart/related; boundary='+boundary},body});
+    if(!r.ok) throw new Error(r.status+' '+await r.text());
+    const f=await r.json();
+    belge.imzaliBelge={driveId:f.id,link:f.webViewLink||('https://drive.google.com/file/d/'+f.id+'/view'),ad,yuklemeTarihi:new Date().toLocaleString('tr-TR')};
+    await window.crmBulutSozlesmeleriKaydet(belge);
+    renderSozlesmeBelgeleriTable();
+    showToast('İmzalı belge yüklendi ve sözleşmeye bağlandı ✓','green');
+  }catch(err){
+    console.error('İmzalı belge yükleme:',err);
+    const yetki=String(err.message).startsWith('401')?' — Google Drive bağlantısını yenileyin.':'';
+    showToast('İmzalı belge yüklenemedi: '+err.message+yetki,'red');
+  }
 }
 function gosterSozlesmeMetniById(id){
   const d=sozlesmeBelgeleri.find(x=>x.id===id);
